@@ -21,3 +21,5 @@ Imports:
     maptools
 RoxygenNote: 5.0.1
 Suggests: testthat
+URL: https://github.com/AndyPL22/ForestTools
+BugReports: https://github.com/AndyPL22/ForestTools/issues

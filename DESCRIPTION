@@ -1,0 +1,23 @@
+Package: ForestTools
+Type: Package
+Title: A Package for Analyzing Geospatial Forest Data
+Version: 0.1.0
+Author: Andrew Plowright
+Maintainer: Andrew Plowright <andrew.plowright@alumni.ubc.ca>
+Description: Forest Tools provides functions for analyzing remotely sensed forest data.
+    Functions like TreeTopFinder and SegmentCrowns are applied to rasterized
+    canopy height models, while PLACEHOLDER operate on 3D points clouds. Note that point
+    cloud analysis functions require the installation of FUSION.
+License: What license is it under?
+Encoding: UTF-8
+LazyData: true
+Imports:
+    imager,
+    sp,
+    raster,
+    rgeos,
+    rgdal,
+    TileManager,
+    maptools
+RoxygenNote: 5.0.1
+Suggests: testthat

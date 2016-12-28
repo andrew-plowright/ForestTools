@@ -1,7 +1,7 @@
 Package: ForestTools
 Type: Package
 Title: A Package for Analyzing Geospatial Forest Data
-Version: 0.1.0
+Version: 0.1.1
 Author: Andrew Plowright
 Maintainer: Andrew Plowright <andrew.plowright@alumni.ubc.ca>
 Description: Forest Tools provides functions for analyzing remotely sensed forest data.

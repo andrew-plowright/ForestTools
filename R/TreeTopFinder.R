@@ -26,7 +26,7 @@
 #'
 #' # Detect treetops in demo canopy height model
 #' ttops <- TreeTopFinder(CHMdemo, winFunction, minHgt)
-#' @seealso \code{\link{SegmentCrowns}}
+#' @seealso \code{\link{SegmentCrowns}} \code{\link{TreeTopSummary}}
 #' @export
 
 TreeTopFinder <- function(CHM, winFun, minHeight = NULL, maxCells = 2000000, maxWinDiameter = 30, verbose = FALSE){

@@ -28,9 +28,16 @@
 
 ### TO DO LIST
 
-  # ADD VIGNETTES
 
-  # Look up DevTools global ootions to see if global options can be changed
-  # permanently
+  # COMMIT 1 - Create Vignette
 
-  # Remove 'PLACEHOLDER' from DESCRIPTION and package documentation
+  # COMMIT 2 - Upload to CRAN
+
+    # Remove 'PLACEHOLDER' from DESCRIPTION and package documentation
+
+  # BACKBURNER
+
+    # Look up DevTools global options to see if global options can be changed
+    # permanently
+
+

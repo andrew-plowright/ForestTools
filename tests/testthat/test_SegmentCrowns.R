@@ -4,11 +4,11 @@ context("Tests for SegmentCrowns")
 
 ### LOAD TEST DATA
 
-  inCHM <- raster::raster("testFiles\\testCHM.tif")
+  inCHM <- raster::raster("testFiles\\testCHM\\testCHM.tif")
   emptyCHM <- inCHM
   emptyCHM[] <- NA
-  inTiles <- list.files("testFiles\\tiledCHM", full.names = TRUE, pattern = "\\.tif$")
-  trees <- rgdal::readOGR("testFiles", "testTrees1", verbose = FALSE)
+  inTiles <- list.files("testFiles\\testCHM\\tiledCHM", full.names = TRUE, pattern = "\\.tif$")
+  trees <- rgdal::readOGR("testFiles\\testCHM", "testTrees1", verbose = FALSE)
 
 ### PERFORM TESTS
 

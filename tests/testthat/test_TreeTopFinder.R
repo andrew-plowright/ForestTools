@@ -4,10 +4,10 @@ context("Tests for TreeTopFinder")
 
 ### LOAD TEST DATA
 
-  inCHM <- raster::raster("testFiles\\testCHM.tif")
+  inCHM <- raster::raster("testFiles\\testCHM\\testCHM.tif")
   emptyCHM <- inCHM
   emptyCHM[] <- NA
-  inTiles <- list.files("testFiles\\tiledCHM", full.names = TRUE, pattern = "\\.tif$")
+  inTiles <- list.files("testFiles\\testCHM\\tiledCHM", full.names = TRUE, pattern = "\\.tif$")
 
 ### PERFORM TESTS
 

@@ -48,6 +48,6 @@ ttops <- TreeTopFinder(CHMdemo, winFunction, minHgt)
 Popescu, S. C., & Wynne, R. H. (2004). Seeing the trees in the forest. Photogrammetric Engineering & Remote Sensing, 70(5), 589-604.
 }
 \seealso{
-\code{\link{SegmentCrowns}}
+\code{\link{SegmentCrowns}} \code{\link{TreeTopSummary}}
 }
 

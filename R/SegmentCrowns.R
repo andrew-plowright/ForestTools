@@ -13,6 +13,10 @@
 #' height of \code{treetops}.
 #' @param maxCells numeric. If the number of raster cells for the \code{CHM} exceeds this value, the \link[TileManager]{TileScheme} function
 #' will be applied to break apart the input into tiles to speed up processing.
+#' @param tileBuffer numeric. If the function breaks the CHM into tiles for processing, an
+#' overlapping spatial buffer is applied around each tile to prevent edge effects. The
+#' \code{tileBuffer} argument defines the width of this buffer, and should be equal to half
+#' the diameter of the widest expected tree crown.
 #' @return A \link[raster]{raster} of crown segments. The \link[raster]{rasterToPolygons} function can be used to convert this into
 #' polygons.
 #' @references Meyer, F., & Beucher, S. (1990). Morphological segmentation. Journal of visual communication and image representation, 1(1), 21-46.
@@ -43,7 +47,7 @@ SegmentCrowns <- function(treetops, CHM, minHeight = 0, maxCells = 2000000, tile
     # Remove treetops that are not within the CHM's input extent
     totalExt <- rgeos::gUnaryUnion(sp::SpatialPolygons(
       lapply(1:length(CHM), function(tileNum){
-        sp::spChFIDs(as(raster::extent(CHM[[tileNum]]), "SpatialPolygons"), as.character(tileNum))@polygons[[1]]
+        sp::spChFIDs(methods::as(raster::extent(CHM[[tileNum]]), "SpatialPolygons"), as.character(tileNum))@polygons[[1]]
       })))
     raster::crs(totalExt) <- raster::crs(treetops)
     treetops <- treetops[!is.na(sp::over(treetops,totalExt)),]

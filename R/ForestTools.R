@@ -8,6 +8,5 @@
 #'
 #' @docType package
 #' @name ForestTools
-#' @import methods
 
 NULL

@@ -20,6 +20,11 @@ height of \code{treetops}.}
 
 \item{maxCells}{numeric. If the number of raster cells for the \code{CHM} exceeds this value, the \link[TileManager]{TileScheme} function
 will be applied to break apart the input into tiles to speed up processing.}
+
+\item{tileBuffer}{numeric. If the function breaks the CHM into tiles for processing, an
+overlapping spatial buffer is applied around each tile to prevent edge effects. The
+\code{tileBuffer} argument defines the width of this buffer, and should be equal to half
+the diameter of the widest expected tree crown.}
 }
 \value{
 A \link[raster]{raster} of crown segments. The \link[raster]{rasterToPolygons} function can be used to convert this into

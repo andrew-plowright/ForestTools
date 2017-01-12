@@ -3,4 +3,5 @@
 export(SegmentCrowns)
 export(TreeTopFinder)
 export(TreeTopSummary)
-import(methods)
+importFrom(stats,median)
+importFrom(stats,sd)

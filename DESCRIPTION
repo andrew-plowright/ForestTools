@@ -1,11 +1,12 @@
 Package: ForestTools
 Type: Package
 Title: A Package for Analyzing Geospatial Forest Data
-Version: 0.1.1
+Version: 0.0.0.9000
 Author: Andrew Plowright
 Maintainer: Andrew Plowright <andrew.plowright@alumni.ubc.ca>
 Description: Forest Tools provides functions for analyzing remotely sensed forest data.
-License: What license is it under?
+Depends: R (>= 3.3.2)
+License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: true
 Imports:
@@ -15,7 +16,9 @@ Imports:
     rgeos,
     rgdal,
     TileManager,
-    maptools
+    maptools,
+    APtools,
+    methods
 RoxygenNote: 5.0.1
 Suggests: testthat
 URL: https://github.com/AndyPL22/ForestTools

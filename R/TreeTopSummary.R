@@ -26,7 +26,9 @@
 #'
 #' @examples
 #' # Load sample data
-#' data("kootenayTrees", "kootenayAreas")
+#' library(ForestTools)
+#' library(sp)
+#' data("kootenayTrees", "kootenayBlocks")
 #'
 #' # Get total tree count
 #' TreeTopSummary(kootenayTrees)
@@ -35,7 +37,7 @@
 #' TreeTopSummary(kootenayTrees, variables = "height")
 #'
 #' # Get tree count and height statistics for specific areas of interest
-#' areaStats <- TreeTopSummary(kootenayTrees, areas = kootenayAreas, variables = "height")
+#' areaStats <- TreeTopSummary(kootenayTrees, areas = kootenayBlocks, variables = "height")
 #'
 #' # Plot according to tree count
 #' plot(areaStats, col = heat.colors(3)[order(areaStats$TreeCount)])
@@ -48,7 +50,7 @@
 #' plot(gridStats$heightMax)
 #'
 #' @seealso \code{\link{TreeTopFinder}}
-#'
+#' @importFrom stats median sd
 #' @export
 
 TreeTopSummary <- function(treetops, areas = NULL, grid = NULL, variables = NULL){

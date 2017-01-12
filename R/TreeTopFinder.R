@@ -27,6 +27,7 @@
 #' # Detect treetops in demo canopy height model
 #' ttops <- TreeTopFinder(CHMdemo, winFunction, minHgt)
 #' @seealso \code{\link{SegmentCrowns}} \code{\link{TreeTopSummary}}
+
 #' @export
 
 TreeTopFinder <- function(CHM, winFun, minHeight = NULL, maxCells = 2000000, maxWinDiameter = 30, verbose = FALSE){
@@ -42,10 +43,10 @@ TreeTopFinder <- function(CHM, winFun, minHeight = NULL, maxCells = 2000000, max
 
   ### PRE-PROCESS: CREATE FUNCTION TO RETURN EMPTY SPDF
 
-    emptyOutput <- function(){
+    emptyOutput <- function(inCRS){
       sp::SpatialPointsDataFrame(crds <- matrix(0, nrow = 1, ncol = 2),
                                data = data.frame(height = 0, radius = 0),
-                               proj4string = raster::crs(CHM.tile))[0,]
+                               proj4string = inCRS)[0,]
     }
 
   ### PRE-PROCESS: COMPUTE RANGE OF SEARCH WINDOWS
@@ -53,8 +54,8 @@ TreeTopFinder <- function(CHM, winFun, minHeight = NULL, maxCells = 2000000, max
     if(verbose) cat("Reading input raster", "\n")
 
     # Get maximum and minimum values
-    CHM.max <- max(sapply(CHM, function(tile) suppressWarnings(max(tile[], na.rm = TRUE))))
-    CHM.min <- min(sapply(CHM, function(tile) suppressWarnings(min(tile[], na.rm = TRUE))))
+    CHM.max <- max(sapply(CHM, function(tile) suppressWarnings(max(raster::getValues(tile), na.rm = TRUE))))
+    CHM.min <- min(sapply(CHM, function(tile) suppressWarnings(min(raster::getValues(tile), na.rm = TRUE))))
     if(is.infinite(CHM.max) | is.infinite(CHM.min)){stop("Input CHM does not contain any usable values. Check input data or lower minimum canopy height.")}
     if(!is.null(minHeight)){
       if(minHeight > CHM.min){CHM.min <- minHeight}
@@ -166,7 +167,7 @@ TreeTopFinder <- function(CHM, winFun, minHeight = NULL, maxCells = 2000000, max
       if(length(localMaxima.cellNumbers) == 0){
 
         # Return a dummy SPDF with no coordinates
-        localMaxima.spdf <- emptyOutput()
+        localMaxima.spdf <- emptyOutput(raster::crs(CHM.tile))
 
       # If local maxima WERE found...
       }else{
@@ -195,7 +196,7 @@ TreeTopFinder <- function(CHM, winFun, minHeight = NULL, maxCells = 2000000, max
       pointsRbind <- function(...) {
         dots = list(...)
         names(dots) <- NULL # bugfix Clement Calenge 100417
-        sp = do.call(sp::rbind.SpatialPoints, lapply(dots, function(x) as(x, "SpatialPoints")))
+        sp = do.call(sp::rbind.SpatialPoints, lapply(dots, function(x) methods::as(x, "SpatialPoints")))
         df = do.call(rbind, lapply(dots, function(x) x@data))
         sp::SpatialPointsDataFrame(sp, df, coords.nrs = dots[[1]]@coords.nrs)
       }

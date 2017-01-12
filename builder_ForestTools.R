@@ -5,10 +5,6 @@
 
 ### SET PACKAGE SETTINGS
 
-  library(rgeos)
-  library(raster)
-  library(rgdal)
-  library(imager)
   devtools::use_package("imager")
   devtools::use_package("sp")
   devtools::use_package("raster")
@@ -16,18 +12,22 @@
   devtools::use_package("rgdal")
   devtools::use_package("TileManager")
   devtools::use_package("maptools")
+  devtools::use_package("APtools")
+  devtools::use_package("methods")
 
   devtools::use_testthat()
   devtools::use_data_raw()
+
+  devtools::use_build_ignore("builder_ForestTools.R")
 
 ### PERFORM ACTIONS
 
   devtools::test()
   devtools::document()
   devtools::load_all()
+  devtools::check()
 
 ### TO DO LIST
-
 
   # COMMIT 1 - Create Vignette
 

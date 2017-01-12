@@ -20,7 +20,7 @@ context("Tests for TreeTopSummary")
 
   test_that("TreeTopSummary: Error message with invalid inputs", {
 
-    expect_error(TreeTopSummary(kootenayAreas, variables = c("height", "radius")), "Invalid input")
+    expect_error(TreeTopSummary(kootenayBlocks, variables = c("height", "radius")), "Invalid input")
     expect_error(TreeTopSummary(kootenayTrees, areas = "this is an error"), "Invalid input")
     expect_error(TreeTopSummary(kootenayTrees, variables = c("height", "nonExistant")),
                  "Invalid input: 'treetops' does not contain variables: 'nonExistant'")
@@ -32,7 +32,7 @@ context("Tests for TreeTopSummary")
                  "Invalid input: variables 'charVar' is/are non-numeric")
 
     expect_error(TreeTopSummary(kootenayTrees, grid = "this is an error"), "Invalid input")
-    expect_error(TreeTopSummary(kootenayTrees, areas = kootenayAreas, grid = 10),
+    expect_error(TreeTopSummary(kootenayTrees, areas = kootenayBlocks, grid = 10),
                  "Cannot compute output for both")
 
   })

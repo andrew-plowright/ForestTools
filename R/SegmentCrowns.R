@@ -37,7 +37,7 @@ SegmentCrowns <- function(treetops, CHM, minHeight = 0, maxCells = 2000000, tile
   ### GATE-KEEPER
 
     # Convert single Raster object or paths to raster files into a list of Raster objects
-    CHM <- TileManager::TileInput(CHM, "CHM")
+    CHM <- TileManager:::TileInput(CHM, "CHM")
 
     # Get maximum height and ensure that 'minHeight' does not exceed it
     CHM.max <- max(sapply(CHM, function(tile) suppressWarnings(max(tile[], na.rm = TRUE))))
@@ -57,13 +57,13 @@ SegmentCrowns <- function(treetops, CHM, minHeight = 0, maxCells = 2000000, tile
   ### PRE-PROCESS: MULTI-TILES CHECK
 
     # Detect/generate tiling scheme
-    tiles <- TileManager::TileApply(CHM, maxCells = maxCells, tileBuffer = tileBuffer)
+    tiles <- TileManager:::TileApply(CHM, maxCells = maxCells, tileBuffer = tileBuffer)
 
     # If input raster exceeds maximum number of cells, apply tiling scheme
     if(length(CHM) == 1 & raster::ncell(CHM[[1]]) > maxCells){
 
-      CHM <- TileManager::TempTiles(CHM[[1]], tiles)
-      on.exit(TileManager::removeTempTiles(), add = TRUE)
+      CHM <- TileManager:::TempTiles(CHM[[1]], tiles)
+      on.exit(TileManager:::removeTempTiles(), add = TRUE)
     }
 
   ### PROCESS

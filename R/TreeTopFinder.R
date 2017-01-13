@@ -35,7 +35,7 @@ TreeTopFinder <- function(CHM, winFun, minHeight = NULL, maxCells = 2000000, max
   ### GATE-KEEPER
 
     # Convert single Raster object or paths to raster files into a list of Raster objects
-    CHM <- TileManager::TileInput(CHM, "CHM")
+    CHM <- TileManager:::TileInput(CHM, "CHM")
 
     if(!is.null(minHeight)){
       if(minHeight <= 0){stop("Minimum canopy height must be set to a positive value.")}
@@ -81,13 +81,13 @@ TreeTopFinder <- function(CHM, winFun, minHeight = NULL, maxCells = 2000000, max
   ### PRE-PROCESS: MULTI-TILES CHECK
 
     # Detect/generate tiling scheme
-    tiles <- TileManager::TileApply(CHM, maxCells = maxCells, tileBuffer = ceiling((maxDimension - 1) / 2), verbose = verbose)
+    tiles <- TileManager:::TileApply(CHM, maxCells = maxCells, tileBuffer = ceiling((maxDimension - 1) / 2), verbose = verbose)
 
     # If input raster exceeds maximum number of cells, apply tiling scheme
     if(length(CHM) == 1 & raster::ncell(CHM[[1]]) > maxCells){
 
-      CHM <- TileManager::TempTiles(CHM[[1]], tiles)
-      on.exit(TileManager::removeTempTiles(), add = TRUE)
+      CHM <- TileManager:::TempTiles(CHM[[1]], tiles)
+      on.exit(TileManager:::removeTempTiles(), add = TRUE)
     }
 
   ### PRE-PROCESS: CREATE WINDOW OBJECTS AND VWF FUNCTION

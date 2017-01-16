@@ -147,8 +147,8 @@ TreeTopSummary <- function(treetops, areas = NULL, grid = NULL, variables = NULL
       # Create new extent that completely overlaps all treetops
       ras.ext.xmin <- treetops.ext@xmin
       ras.ext.ymax <- treetops.ext@ymax
-      ras.ext.xmax <- APtools::AProunder(treetops.ext@xmax, interval = grid, direction = "up", snap = ras.ext.xmin)
-      ras.ext.ymin <- APtools::AProunder(treetops.ext@ymin, interval = grid, direction = "down", snap = ras.ext.ymax)
+      ras.ext.xmax <- APfun::AProunder(treetops.ext@xmax, interval = grid, direction = "up", snap = ras.ext.xmin)
+      ras.ext.ymin <- APfun::AProunder(treetops.ext@ymin, interval = grid, direction = "down", snap = ras.ext.ymax)
       ras.ext <- raster::extent(ras.ext.xmin, ras.ext.xmax, ras.ext.ymin, ras.ext.ymax)
 
       # Create gridded raster

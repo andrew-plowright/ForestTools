@@ -1,7 +1,8 @@
 Package: ForestTools
 Type: Package
-Title: A Package for Analyzing Geospatial Forest Data
-Version: 0.0.0.9000
+Title: Analysing Remotely Sensed Forest Data
+Version: 0.1.0
+Date: 2017-01-16
 Author: Andrew Plowright
 Maintainer: Andrew Plowright <andrew.plowright@alumni.ubc.ca>
 Description: Forest Tools provides functions for analyzing remotely sensed forest data.
@@ -17,9 +18,12 @@ Imports:
     rgdal,
     TileManager,
     maptools,
-    APtools,
+    APfun,
     methods
 RoxygenNote: 5.0.1
-Suggests: testthat
+Suggests: testthat,
+    knitr,
+    rmarkdown
 URL: https://github.com/AndyPL22/ForestTools
 BugReports: https://github.com/AndyPL22/ForestTools/issues
+VignetteBuilder: knitr

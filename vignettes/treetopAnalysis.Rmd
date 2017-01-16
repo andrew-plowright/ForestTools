@@ -1,0 +1,197 @@
+---
+title: "Canopy analysis in R using Forest Tools"
+author: "Andrew Plowright"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Canopy analysis}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+```{r global_options, include=FALSE, dpi =  300}
+knitr::opts_knit$set(global.par = TRUE)
+```
+
+## Introduction
+
+The Forest Tools R package offers functions to analyze remotely sensed forest data. Currently, tools to detect dominant treetops and outline tree crowns have been implemented, both of which are applied to a rasterized **canopy height model (CHM)**, which is generally derived from LiDAR or photogrammetric point clouds. A function to summarize the height and count of treetops within user-defined geographical areas is also available.
+
+The following vignette provides examples for detecting treetops, outlining their respective crowns and summarizing tree counts. All data used in this example is included in the Forest Tools package.
+
+## Installation
+
+Check that R is up-to-date. This can be done automatically using the `installr` package.
+
+```{r, eval = FALSE}
+install.packages("installr")
+library(installr)
+updateR()
+```
+
+Download and install the Forest Tools package from CRAN (the Comprehensive R Archive Network)
+using the `install.packages` function.
+
+```{r, eval = FALSE}
+install.packages("ForestTools")
+```
+
+## Loading a CHM
+
+### The _raster_ package
+
+The Forest Tools package is built on the [raster](https://cran.r-project.org/web/packages/raster/raster.pdf) library, which is automatically installed when `ForestTools` is downloaded. The `raster` package defines a variety of classes and functions for working with raster datasets in R. Although it is recommended that any user performing geospatial analyses in R be familiar with the `raster` package (the library's author has written a very easy and straightforward [introductory guide](https://cran.r-project.org/web/packages/raster/vignettes/Raster.pdf)), it is not necessary for the examples contained in this document.
+
+### Viewing an CHM
+
+Begin by loading the sample CHM included in the Forest Tools package. It is a CHM of a small 1.5 hectare swath of a forest in the Kootenay Mountains, British Columbia.
+
+```{r, message = FALSE}
+# Attach the Forest Tools and raster libraries
+library(ForestTools)
+library(raster)
+
+# Load sample data
+data("kootenayCHM")
+```
+
+View the CHM using the `plot` function. The cell values are equal to the canopy's height above ground.
+
+```{r, fig.width = 4, fig.height = 2.51}
+# Remove plot margins (optional)
+par(mar = rep(0.5, 4))
+
+# Plot CHM (extra optional arguments remove labels and tick marks from the plot)
+plot(kootenayCHM, xlab = "", ylab = "", xaxt='n', yaxt = 'n')
+```
+
+### Detecting treetops
+
+Dominant treetops can be detected using `TreeTopFinder`. This function implements the _variable window filter_ algorithm developped by Popescu and Wynne (2004). In short, a moving window scans the CHM, and if a given cell is found to be the highest within the window, it is tagged as a treetop. The size of the window itself changes depending on the height of the cell on which it is centered. This is to compensate for varying crown sizes, with tall trees having wide crowns and vice versa.
+
+Therefore, the first step is to define the **function that will define the dynamic window size**. Essentially, this function should take a **CHM cell value** (i.e.: the height of the canopy above ground at that location) and return the **radius of the search window**. Here, we will define a simple linear equation, but any function with a single input and output will work.
+
+```{r}
+lin <- function(x){x * 0.05 + 0.6}
+```
+We do not wish for the `TreeTopFinder` to tag low-lying underbrush or other spurious treetops, and so we also set a minimum height of 2 m. Any cell with a lower value will not be tagged as a treetop.
+
+```{r}
+ttops <- TreeTopFinder(CHM = kootenayCHM, winFun = lin, minHeight = 2)
+```
+
+We can now plot these treetops on top of the CHM.
+
+```{r, fig.width = 4, fig.height = 2.51}
+# Plot CHM
+plot(kootenayCHM, xlab = "", ylab = "", xaxt='n', yaxt = 'n')
+
+# Plot treetops
+plot(ttops, col = "blue", pch = 20, cex = 0.5, add = TRUE)
+
+```
+
+The `ttops` object created by `TreeTopFinder` contains the spatial coordinates of each detected treetop, as well as two default attributes: _height_ and _radius_. These correspond to the tree's height above ground and the radius of the moving window where the tree was located. Note that _radius_ **does not necessarily correspond to crown radius**.
+
+```{r}
+# Get the mean treetop height
+mean(ttops$height)
+```
+
+## Spatial statistics
+
+Managed forests are often divided into discrete spatial units. In British Columbia, for instance, these can range from cut blocks measuring a few hectares to [timber supply areas](https://www.for.gov.bc.ca/ftp/HTH/external/!publish/web/timber-tenures/tfl-regions-tsas-districts-map-350-dpi-april-10-2014.pdf) spanning several hundred square kilometers. The forest composition within these spatial units can be characterized through summarized statistics of tree attributes. For instance, a timber license holder may want a rough estimate of the number of dominant trees within a woodlot, while the standard deviation of tree height is of interest to anyone mapping heterogeneous old growth forest.
+
+The `TreeTopSummary` function can be used to count trees within a set of spatial units, as well as compute statistics of the trees' attributes. These spatial units can be in the form of spatial polygons, or can be generated in the form of a continuous raster.
+
+When no specific area is defined, `TreeTopSummary` will simply return the count of all inputted trees.
+```{r}
+TreeTopSummary(ttops)
+```
+
+By defining `variables`, `TreeTopSummary` can also generate summarized statistics.
+
+```{r}
+TreeTopSummary(ttops, variables = "height")
+```
+
+### Stastics by polygon
+
+The Forest Tools package includes the boundaries of three cutting blocks that can be overlayed on `kootenayCHM`. Tree counts and height statistics can be summarized within these boundaries.
+
+```{r, fig.width = 4, fig.height = 2.51, message = FALSE}
+data("kootenayBlocks")
+
+# Compute tree count and height statistics for cut blocks
+blockStats <- TreeTopSummary(ttops, areas = kootenayBlocks, variables = "height")
+
+# Plot CHM
+plot(kootenayCHM, xlab = "", ylab = "", xaxt='n', yaxt = 'n')
+
+# Plot blocks
+plot(kootenayBlocks, add = TRUE, border =  "darkmagenta", lwd = 2)
+
+# Add tree counts to plot
+library(rgeos)
+text(gCentroid(kootenayBlocks, byid = TRUE), blockStats[["TreeCount"]], col = "darkmagenta", font = 2)
+
+# View height statistics
+blockStats@data
+```
+
+### Stastics by grid
+
+Instead of defining polygonal areas, the `TreeTopStatistics` function can also generate counts and stastics in raster format.
+
+
+## Outlining tree crowns
+
+Canopy height models often represent continuous, dense forests, where tree crowns abut against eachother. Outlining discrete crown shapes from this type of forest is often refered to as _canopy segmentation_, where each crown outline is refered to as a _segment_. Once a set of treetops have been detected from a canopy height model, the `SegmentCrowns` function can be used for this purpose.
+
+The `SegmentCrowns` functions implements the _watershed_ algorithm from the [imager](https://cran.r-project.org/web/packages/imager/imager.pdf) library. Watershed algorithms are frequently used in topograhical analysis to outline drainage basins. Given the morphological similarity between an inverted canopy and a terrain model, this same process can be used to outline tree crowns. However, a potential problem is the issue of _oversegmentation_, whereby branches, bumps and other spurious treetops are assigned their own segments. This source of error can be mitigated by using a variant of the algorithm known as _marker-controlled segmentation_ (Beucher & Meyer, 1993), whereby the watershed algorithm is constrained by a set of markers--in this case, treetops.
+
+The `SegmentCrowns` function also takes a `minHeight` argument, although this value should be lower than that which was assigned to `TreeTopFinder`. For the latter, `minHeight` defines the lowest expected treetop, whereas for the former it should correspond to the height above ground of the fringes of the lowest trees. 
+
+```{r, fig.width = 4, fig.height = 2.51}
+crowns <- SegmentCrowns(treetops = ttops, CHM = kootenayCHM, minHeight = 1.5)
+
+# Plot crowns
+plot(crowns, col = sample(rainbow(50), length(crowns), replace = TRUE), legend = FALSE, , xlab = "", ylab = "", xaxt='n', yaxt = 'n')
+```
+
+The `SegmentCrowns` returns a raster, where each crown is given a unique cell value. Depending on the intended purpose of the crown map, it may be preferable to store these outlines as polygons. The `rasterize` function from the `raster` package can be used for this purpose. Note that this conversion can be very slow for large datasets.
+
+```{r, fig.width = 4, fig.height = 2.51}
+# Convert raster crown map to polygons
+crownsPoly <- rasterToPolygons(crowns, dissolve = TRUE)
+
+# Plot CHM
+plot(kootenayCHM, xlab = "", ylab = "", xaxt='n', yaxt = 'n')
+
+# Plot crown outlines
+plot(crownsPoly, border = "blue", lwd = 0.5, add = TRUE)
+```
+
+Once converted to polygons, the two-dimensional area of each outline can be computed using the `gArea` function from the [rgeos](https://cran.r-project.org/web/packages/rgeos/rgeos.pdf) package (also automatically installed during the installation of Forest Tools).
+
+```{r, message = FALSE}
+library(rgeos)
+
+# Compute crown area
+crownsPoly[["area"]] <- gArea(crownsPoly, byid = TRUE)
+```
+
+Assuming that each crown has a roughly circular shape, we can use the crown's area to compute it's average circular diameter.
+
+```{r}
+crownsPoly[["diameter"]] <- sqrt(crownsPoly[["area"]]/ pi) * 2
+
+# Mean crown diameter
+mean(crownsPoly$diameter)
+```
+
+
+## References
+
+Popescu, S. C., & Wynne, R. H. (2004). [Seeing the trees in the forest](http://www.ingentaconnect.com/content/asprs/pers/2004/00000070/00000005/art00003). _Photogrammetric Engineering & Remote Sensing, 70_(5), 589-604.
+
+Beucher, S., and Meyer, F. (1993). [The morphological approach to segmentation: the watershed transformation](https://www.researchgate.net/profile/Serge_Beucher/publication/233950923_Segmentation_The_Watershed_Transformation_Mathematical_Morphology_in_Image_Processing/links/55f7c6ce08aeba1d9efe4072.pdf). _Mathematical morphology in image processing_, 433-481.

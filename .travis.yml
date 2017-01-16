@@ -1,0 +1,17 @@
+# R for travis: see documentation at https://docs.travis-ci.com/user/languages/r
+
+language: R
+sudo: required
+dist: trusty
+
+apt_packages:
+  - gdal-bin
+  - libgdal1-dev
+  - libproj-dev
+
+r_packages:
+  - rgdal
+  - testthat
+  - devtools
+  - raster
+

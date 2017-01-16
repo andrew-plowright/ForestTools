@@ -12,13 +12,17 @@
   devtools::use_package("rgdal")
   devtools::use_package("TileManager")
   devtools::use_package("maptools")
-  devtools::use_package("APtools")
+  devtools::use_package("APfun")
   devtools::use_package("methods")
 
   devtools::use_testthat()
-  devtools::use_data_raw()
+  devtools::use_travis()
+  devtools::use_readme_rmd()
+  devtools::use_news_md()
+  devtools::use_cran_comments()
 
   devtools::use_build_ignore("builder_ForestTools.R")
+  devtools::use_vignette("treetopAnalysis")
 
 ### PERFORM ACTIONS
 
@@ -26,6 +30,7 @@
   devtools::document()
   devtools::load_all()
   devtools::check()
+  devtools::build_win()
 
 ### TO DO LIST
 

@@ -2,3 +2,7 @@
 ^\.Rproj\.user$
 ^data-raw$
 ^builder_ForestTools\.R$
+^\.travis\.yml$
+^README\.Rmd$
+^README-.*\.png$
+^cran-comments\.md$

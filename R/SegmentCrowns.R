@@ -29,7 +29,7 @@
 #'
 #' # Use SegmentCrowns to outline tree crowns
 #' segs <- SegmentCrowns(ttops, CHMdemo, minCrwnHgt)
-#' @seealso \code{\link{TreeTopFinder}}
+#' @seealso \code{\link{TreeTopFinder}}  \code{\link[imager]{watershed}}
 #' @export
 
 SegmentCrowns <- function(treetops, CHM, minHeight = 0, maxCells = 2000000, tileBuffer = 20){
@@ -40,7 +40,7 @@ SegmentCrowns <- function(treetops, CHM, minHeight = 0, maxCells = 2000000, tile
     CHM <- TileManager:::TileInput(CHM, "CHM")
 
     # Get maximum height and ensure that 'minHeight' does not exceed it
-    CHM.max <- max(sapply(CHM, function(tile) suppressWarnings(max(tile[], na.rm = TRUE))))
+    CHM.max <- max(sapply(CHM, function(tile) suppressWarnings(max(raster::getValues(tile), na.rm = TRUE))))
     if(is.infinite(CHM.max)){stop("Input CHM does not contain any usable values.")}
     if(minHeight > CHM.max){stop("\'minHeight\' is set higher than the highest cell value in \'CHM\'")}
 

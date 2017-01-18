@@ -22,6 +22,8 @@
   devtools::use_cran_comments()
 
   devtools::use_build_ignore("builder_ForestTools.R")
+  devtools::use_build_ignore("testdata-raw")
+
   devtools::use_vignette("treetopAnalysis")
 
 ### PERFORM ACTIONS

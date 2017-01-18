@@ -6,9 +6,9 @@ context("Tests for TreeTopSummary")
 
   data("kootenayTrees")
 
-  areas.overlap <- rgdal::readOGR("testFiles\\kootenayTests", "areas-overlap", verbose = FALSE)
-  areas.partial <- rgdal::readOGR("testFiles\\kootenayTests", "areas-partial", verbose = FALSE)
-  areas.outside <- rgdal::readOGR("testFiles\\kootenayTests", "areas-outside", verbose = FALSE)
+  load("testdata\\areas-overlap.Rda")
+  load("testdata\\areas-outside.Rda")
+  load("testdata\\areas-partial.Rda")
 
   grid.small <- raster::raster(raster::extent(kootenayTrees), res = c(2,2), vals = 0, crs = sp::proj4string(kootenayTrees))
   grid.med <- raster::raster(raster::extent(kootenayTrees), res = c(10,10), vals = 0, crs = sp::proj4string(kootenayTrees))

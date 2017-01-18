@@ -4,11 +4,10 @@ context("Tests for SegmentCrowns")
 
 ### LOAD TEST DATA
 
-  inCHM <- raster::raster("testFiles\\testCHM\\testCHM.tif")
-  emptyCHM <- inCHM
-  emptyCHM[] <- NA
-  inTiles <- list.files("testFiles\\testCHM\\tiledCHM", full.names = TRUE, pattern = "\\.tif$")
-  trees <- rgdal::readOGR("testFiles\\testCHM", "testTrees1", verbose = FALSE)
+load("testdata\\trees.Rda")
+load("testdata\\inTiles.Rda")
+load("testdata\\inCHM.Rda")
+load("testdata\\emptyCHM.Rda")
 
 ### PERFORM TESTS
 
@@ -54,9 +53,9 @@ context("Tests for SegmentCrowns")
 
     err <- "No input treetops intersect with CHM"
 
-    trees.crop <- raster::crop(trees, raster::raster(inTiles[[1]]))
+    trees.crop <- raster::crop(trees, inTiles[[1]])
 
-    expect_error(SegmentCrowns(trees.crop, raster::raster(inTiles[[3]]), minHeight = 1), err)
+    expect_error(SegmentCrowns(trees.crop, inTiles[[3]], minHeight = 1), err)
     expect_error(SegmentCrowns(trees[0,], inCHM), err)
   })
 

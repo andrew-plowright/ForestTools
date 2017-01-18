@@ -49,6 +49,6 @@ segs <- SegmentCrowns(ttops, CHMdemo, minCrwnHgt)
 Meyer, F., & Beucher, S. (1990). Morphological segmentation. Journal of visual communication and image representation, 1(1), 21-46.
 }
 \seealso{
-\code{\link{TreeTopFinder}}
+\code{\link{TreeTopFinder}}  \code{\link[imager]{watershed}}
 }
 

@@ -4,10 +4,10 @@ context("Tests for SegmentCrowns")
 
 ### LOAD TEST DATA
 
-load("testdata\\trees.Rda")
-load("testdata\\inTiles.Rda")
-load("testdata\\inCHM.Rda")
-load("testdata\\emptyCHM.Rda")
+load("trees.Rda")
+load("inTiles.Rda")
+load("inCHM.Rda")
+load("emptyCHM.Rda")
 
 ### PERFORM TESTS
 

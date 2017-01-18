@@ -6,9 +6,9 @@ context("Tests for TreeTopSummary")
 
   data("kootenayTrees")
 
-  load("testdata\\areas-overlap.Rda")
-  load("testdata\\areas-outside.Rda")
-  load("testdata\\areas-partial.Rda")
+  load("areas-overlap.Rda")
+  load("areas-outside.Rda")
+  load("areas-partial.Rda")
 
   grid.small <- raster::raster(raster::extent(kootenayTrees), res = c(2,2), vals = 0, crs = sp::proj4string(kootenayTrees))
   grid.med <- raster::raster(raster::extent(kootenayTrees), res = c(10,10), vals = 0, crs = sp::proj4string(kootenayTrees))

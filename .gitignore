@@ -4,4 +4,5 @@
 .Ruserdata
 builder-ForestTools.R
 data-raw
+testdata-raw
 inst/doc

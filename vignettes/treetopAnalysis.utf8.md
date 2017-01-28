@@ -1,16 +1,14 @@
 ---
 title: "Canopy analysis in R using Forest Tools"
 author: "Andrew Plowright"
-date: "`r Sys.Date()`"
+date: "2017-01-21"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Canopy analysis}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
-```{r global_options, include=FALSE, dpi =  300}
-knitr::opts_knit$set(global.par = TRUE)
-```
+
 
 ## Introduction
 
@@ -22,7 +20,8 @@ The following vignette provides examples for using these functions.
 
 Check that R is up-to-date. This can be done automatically using the `installr` package.
 
-```{r, eval = FALSE}
+
+```r
 install.packages("installr")
 library(installr)
 updateR()
@@ -31,7 +30,8 @@ updateR()
 Download and install the Forest Tools package from CRAN (the Comprehensive R Archive Network)
 using the `install.packages` function.
 
-```{r, eval = FALSE}
+
+```r
 install.packages("ForestTools")
 ```
 
@@ -39,7 +39,8 @@ install.packages("ForestTools")
 
 A sample CHM is included in the Forest Tools package. It represents a small 1.5 hectare swath of forest in the Kootenay Mountains, British Columbia. The following examples use this sample, but if you would rather use your own data, it can be loaded into R using the `raster` function. A brief section on [reading and writing geospatial data in R](#readsave) is included in this document. Otherwise, begin by loading the necessary libraries and the sample CHM using the `library` and `data` functions respectively.
 
-```{r, message = FALSE}
+
+```r
 # Attach the Forest Tools and raster libraries
 library(ForestTools)
 library(raster)
@@ -50,7 +51,8 @@ data("kootenayCHM")
 
 View the CHM using the `plot` function. The cell values are equal to the canopy's height above ground.
 
-```{r, fig.width = 4, fig.height = 2.51}
+
+```r
 # Remove plot margins (optional)
 par(mar = rep(0.5, 4))
 
@@ -58,37 +60,48 @@ par(mar = rep(0.5, 4))
 plot(kootenayCHM, xlab = "", ylab = "", xaxt='n', yaxt = 'n')
 ```
 
+![](treetopAnalysis_files/figure-html/unnamed-chunk-4-1.png)<!-- -->
+
 ## Detecting treetops
 
 Dominant treetops can be detected using `TreeTopFinder`. This function implements the _variable window filter_ algorithm developped by Popescu and Wynne (2004). In short, a moving window scans the CHM, and if a given cell is found to be the highest within the window, it is tagged as a treetop. The size of the window itself changes depending on the height of the cell on which it is centered. This is to compensate for varying crown sizes, with tall trees having wide crowns and vice versa.
 
 Therefore, the first step is to define the **function that will define the dynamic window size**. Essentially, this function should take a **CHM cell value** (i.e.: the height of the canopy above ground at that location) and return the **radius of the search window**. Here, we will define a simple linear equation, but any function with a single input and output will work.
 
-```{r}
+
+```r
 lin <- function(x){x * 0.05 + 0.6}
 ```
 We do not wish for the `TreeTopFinder` to tag low-lying underbrush or other spurious treetops, and so we also set a minimum height of 2 m using the `minHeight` argument. Any cell with a lower value will not be tagged as a treetop.
 
-```{r}
+
+```r
 ttops <- TreeTopFinder(CHM = kootenayCHM, winFun = lin, minHeight = 2)
 ```
 
 We can now plot these treetops on top of the CHM.
 
-```{r, fig.width = 4, fig.height = 2.51}
+
+```r
 # Plot CHM
 plot(kootenayCHM, xlab = "", ylab = "", xaxt='n', yaxt = 'n')
 
 # Add dominant treetops to the plot
 plot(ttops, col = "blue", pch = 20, cex = 0.5, add = TRUE)
-
 ```
+
+![](treetopAnalysis_files/figure-html/unnamed-chunk-7-1.png)<!-- -->
 
 The `ttops` object created by `TreeTopFinder` in this example contains the spatial coordinates of each detected treetop, as well as two default attributes: _height_ and _radius_. These correspond to the tree's height above ground and the radius of the moving window where the tree was located. Note that this _radius_ **is not necessarily equivalent to crown radius**.
 
-```{r}
+
+```r
 # Get the mean treetop height
 mean(ttops$height)
+```
+
+```
+## [1] 5.070345
 ```
 
 ## Spatial statistics
@@ -98,21 +111,39 @@ Managed forests are often divided into discrete spatial units. In British Columb
 The `TreeTopSummary` function can be used to count trees within a set of spatial units, as well as compute statistics of the trees' attributes. These spatial units can be in the form of spatial polygons, or can be generated in the form of a raster grid.
 
 When no specific area is defined, `TreeTopSummary` will simply return the count of all inputted trees.
-```{r}
+
+```r
 TreeTopSummary(ttops)
+```
+
+```
+##           Value
+## TreeCount  1211
 ```
 
 By defining `variables`, `TreeTopSummary` can also generate summarized statistics.
 
-```{r}
+
+```r
 TreeTopSummary(ttops, variables = "height")
 ```
 
-### Statistics by polygon
+```
+##                    Value
+## TreeCount    1211.000000
+## heightMean      5.070345
+## heightMedian    3.910026
+## heightSD        2.957289
+## heightMin       2.002042
+## heightMax      13.491207
+```
+
+### Stastics by polygon
 
 The Forest Tools package includes the boundaries of three cutting blocks that can be overlayed on `kootenayCHM`. Tree counts and height statistics can be summarized within these boundaries using the `areas` argument.
 
-```{r, fig.width = 4, fig.height = 2.51, message = FALSE}
+
+```r
 data("kootenayBlocks")
 
 # Compute tree count and height statistics for cut blocks
@@ -127,17 +158,33 @@ plot(kootenayBlocks, add = TRUE, border =  "darkmagenta", lwd = 2)
 # Add tree counts to the plot
 library(rgeos)
 text(gCentroid(kootenayBlocks, byid = TRUE), blockStats[["TreeCount"]], col = "darkmagenta", font = 2)
+```
 
+![](treetopAnalysis_files/figure-html/unnamed-chunk-11-1.png)<!-- -->
+
+```r
 # View height statistics
 blockStats@data
 ```
 
-### Statistics by grid
+```
+##   BlockID Shape_Leng Shape_Area TreeCount heightMean heightMedian
+## 0     101   304.3290   3706.389       313   7.329356     7.523089
+## 1    3308   508.6240   6712.607       627   2.988681     2.668048
+## 2     113   239.5202   2767.266       265   7.333409     7.997055
+##    heightSD heightMin heightMax
+## 0 2.7266677  2.003668 13.491207
+## 1 0.9605248  2.002042  7.125149
+## 2 2.7344077  2.033117 12.583441
+```
+
+### Stastics by grid
 
 Instead of defining polygonal areas, the `TreeTopStatistics` function can also generate counts and stastics in raster format. In this case, the `grid` argument should be used instead of `areas`.
 If you have an existing raster with the extent, cell size and alignment that you would like to use, it can be input as the `grid` argument. Otherwise, simply entering a numeric value will generate a raster with that cell size.
 
-```{r, fig.width = 4, fig.height = 2.51}
+
+```r
 # Compute tree count within a 10 m x 10 m cell grid
 gridCount <- TreeTopSummary(treetops = ttops, grid = 10)
 
@@ -145,9 +192,12 @@ gridCount <- TreeTopSummary(treetops = ttops, grid = 10)
 plot(gridCount, col = heat.colors(255), xlab = "", ylab = "", xaxt='n', yaxt = 'n')
 ```
 
+![](treetopAnalysis_files/figure-html/unnamed-chunk-12-1.png)<!-- -->
+
 If, in addition to tree count, tree attribute statistics are computed, the object returned by `TreeTopSummary` will be a [RasterBrick](https://cran.r-project.org/package=raster/raster.pdf#page=36), i.e.: a multi-layered raster.
 
-```{r}
+
+```r
 # Compute tree height statistics within a 10 m x 10 m cell grid
 gridStats <- TreeTopSummary(treetops = ttops, grid = 10, variables = "height")
 
@@ -155,12 +205,20 @@ gridStats <- TreeTopSummary(treetops = ttops, grid = 10, variables = "height")
 names(gridStats)
 ```
 
+```
+## [1] "TreeCount"    "heightMean"   "heightMedian" "heightSD"    
+## [5] "heightMin"    "heightMax"
+```
+
 Use the `[[]]` subsetting operator to extract a single layer.
 
-```{r, fig.width = 4, fig.height = 2.51}
+
+```r
 # Plot mean tree height within 10 m x 10 m cell grid
 plot(gridStats[["heightMean"]], col = heat.colors(255), xlab = "", ylab = "", xaxt='n', yaxt = 'n')
 ```
+
+![](treetopAnalysis_files/figure-html/unnamed-chunk-14-1.png)<!-- -->
 
 
 ## Outlining tree crowns
@@ -171,7 +229,8 @@ The `SegmentCrowns` function implements the `watershed` algorithm from the [imag
 
 The `SegmentCrowns` function also takes a `minHeight` argument, although this value should be lower than that which was assigned to `TreeTopFinder`. For the latter, `minHeight` defines the lowest expected treetop, whereas for the former it should correspond to the height above ground of the fringes of the lowest trees. 
 
-```{r, fig.width = 4, fig.height = 2.51}
+
+```r
 # Create crown map
 crowns <- SegmentCrowns(treetops = ttops, CHM = kootenayCHM, minHeight = 1.5)
 
@@ -179,9 +238,12 @@ crowns <- SegmentCrowns(treetops = ttops, CHM = kootenayCHM, minHeight = 1.5)
 plot(crowns, col = sample(rainbow(50), length(crowns), replace = TRUE), legend = FALSE, xlab = "", ylab = "", xaxt='n', yaxt = 'n')
 ```
 
+![](treetopAnalysis_files/figure-html/unnamed-chunk-15-1.png)<!-- -->
+
 `SegmentCrowns` returns a raster, where each crown is given a unique cell value. Depending on the intended purpose of the crown map, it may be preferable to store these outlines as polygons. The `rasterToPolygons` function from the `raster` package can be used for this purpose. Note that this conversion can be very slow for large datasets.
 
-```{r, fig.width = 4, fig.height = 2.51}
+
+```r
 # Convert raster crown map to polygons
 crownsPoly <- rasterToPolygons(crowns, dissolve = TRUE)
 
@@ -192,9 +254,12 @@ plot(kootenayCHM, xlab = "", ylab = "", xaxt='n', yaxt = 'n')
 plot(crownsPoly, border = "blue", lwd = 0.5, add = TRUE)
 ```
 
+![](treetopAnalysis_files/figure-html/unnamed-chunk-16-1.png)<!-- -->
+
 Once converted to polygons, the two-dimensional area of each outline can be computed using the `gArea` function from the [rgeos](https://cran.r-project.org/package=rgeos/rgeos.pdf) package (also is installed during the installation of Forest Tools).
 
-```{r, message = FALSE}
+
+```r
 library(rgeos)
 
 # Compute crown area
@@ -203,12 +268,17 @@ crownsPoly[["area"]] <- gArea(crownsPoly, byid = TRUE)
 
 Assuming that each crown has a roughly circular shape, we can use the crown's area to compute it's average circular diameter.
 
-```{r}
+
+```r
 # Compute average crown diameter
 crownsPoly[["diameter"]] <- sqrt(crownsPoly[["area"]]/ pi) * 2
 
 # Mean crown diameter
 mean(crownsPoly$diameter)
+```
+
+```
+## [1] 2.710377
 ```
 
 ## Handling large datasets
@@ -230,24 +300,20 @@ It is recommended that any user performing geospatial analyses in R be familiar 
 
 ### Geospatial classes used by Forest Tools
 
-```{r, echo = FALSE}
-forestData <- data.frame(
-  c("Canopy height model", "Treetops", "Crown outlines", "Gridded statistics"),
-  c("Single-layer raster", "Points", "Polygons", "Multi-layer raster"),
-  c("[RasterLayer](https://cran.r-project.org/package=raster/raster.pdf#page=159)", 
-    "[SpatialPointsDataFrame](https://cran.r-project.org/package=sp/sp.pdf#page=84)", 
-    "[SpatialPolygonsDataFrame](https://cran.r-project.org/package=sp/sp.pdf#page=89)", 
-    "[RasterBrick](https://cran.r-project.org/package=raster/raster.pdf#page=159)")
-)
-names(forestData) <- c("Data product", "Data type", "Object class")
-knitr::kable(forestData)
-```
+
+Data product          Data type             Object class                                                                     
+--------------------  --------------------  ---------------------------------------------------------------------------------
+Canopy height model   Single-layer raster   [RasterLayer](https://cran.r-project.org/package=raster/raster.pdf#page=159)     
+Treetops              Points                [SpatialPointsDataFrame](https://cran.r-project.org/package=sp/sp.pdf#page=84)   
+Crown outlines        Polygons              [SpatialPolygonsDataFrame](https://cran.r-project.org/package=sp/sp.pdf#page=89) 
+Gridded statistics    Multi-layer raster    [RasterBrick](https://cran.r-project.org/package=raster/raster.pdf#page=159)     
 
 ### Raster files
 
 To load a raster file, such as a CHM, use the `raster` function from the `raster` library (both the function and the library have the same name). Simply provide a path to a valid raster file. Don't forget to use either double backslashes `\\` or forward slashes `/` in the file path.
 
-```{r, eval = FALSE}
+
+```r
 library(raster)
 
 # Load a canopy height model
@@ -256,7 +322,8 @@ inCHM <- raster("C:\\myFiles\\inputs\\testCHM.tif")
 
 Once you have performed your analysis, use the `writeRaster` function to save any raster files you may have produced. Setting an appropriate [dataType](https://cran.r-project.org/package=raster/raster.pdf#page=65) is optional, but can save disk space.
 
-```{r, eval = FALSE}
+
+```r
 # Write a crown map raster file
 writeRaster(crowns, "C:\\myFiles\\outputs\\crowns.tif", dataType = "INT2U")
 ```
@@ -267,20 +334,20 @@ There are many options for saving point and polygon files to disk. The [rgdal](h
 
 Use the `readOGR` function to load a polygonal ESRI Shapefile. Instead of providing an entire file path, `readOGR` takes two separate arguments: the file's directory, followed by the file name _without_ an extension. The following would import a file named _"C:\\myFiles\\blockBoundaries\\block375.shp"_.
 
-```{r, eval = FALSE}
+
+```r
 library(rgdal)
 
 # Load the 'block375.shp' file
 blk375boundary <- readOGR("C:\\myFiles\\blockBoundaries", "block375")
-
 ```
 
 Follow this same convention for saving a vector file to disk using `writeOGR`. A `driver` must also be specified.
 
-```{r, eval = FALSE}
+
+```r
 # Save a set of dominant treetops
 writeOGR(ttops, "C:\\myFiles\\outputs", "treetops", driver = "ESRI Shapefile")
-
 ```
 
 ## References

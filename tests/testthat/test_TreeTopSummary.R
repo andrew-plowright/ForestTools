@@ -151,12 +151,3 @@ context("Tests for TreeTopSummary")
     expect_true(all(is.na(sum.gridoutside[])))
   })
 
-  #######################################################################
-
-  # which(sum.lgrid[["TreeCount"]][] > 10)
-  #
-  # raster::writeRaster(sum.intgrid[["TreeCount"]], "C:\\Users\\Andy\\Desktop\\DEL\\intgrid-count.tif", overwrite = TRUE)
-  # raster::writeRaster(sum.lgrid[["heightMax"]], "C:\\Users\\Andy\\Desktop\\DEL\\lgrid-hgtmax.tif")
-  # rgdal::writeOGR(sum.areaoverlap, "C:\\Users\\Percival\\Desktop\\DEL", "sumoverlap", driver = "ESRI Shapefile")
-
-

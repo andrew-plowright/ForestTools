@@ -23,6 +23,7 @@
 
   devtools::use_build_ignore("builder_ForestTools.R")
   devtools::use_build_ignore("testdata-raw")
+  devtools::use_build_ignore("oldfunctions")
 
   devtools::use_vignette("treetopAnalysis")
 
@@ -33,6 +34,7 @@
   devtools::load_all()
   devtools::check()
   devtools::build_win()
+  devtools::release()
 
 ### TO DO LIST
 

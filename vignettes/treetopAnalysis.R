@@ -119,10 +119,10 @@ mean(crownsPoly$diameter)
 forestData <- data.frame(
   c("Canopy height model", "Treetops", "Crown outlines", "Gridded statistics"),
   c("Single-layer raster", "Points", "Polygons", "Multi-layer raster"),
-  c("[RasterLayer](https://cran.r-project.org/web/packages/raster/raster.pdf#page=159)", 
-    "[SpatialPointsDataFrame](https://cran.r-project.org/web/packages/sp/sp.pdf#page=84)", 
-    "[SpatialPolygonsDataFrame](https://cran.r-project.org/web/packages/sp/sp.pdf#page=89)", 
-    "[RasterBrick](https://cran.r-project.org/web/packages/raster/raster.pdf#page=159)")
+  c("[RasterLayer](https://cran.r-project.org/package=raster/raster.pdf#page=159)", 
+    "[SpatialPointsDataFrame](https://cran.r-project.org/package=sp/sp.pdf#page=84)", 
+    "[SpatialPolygonsDataFrame](https://cran.r-project.org/package=sp/sp.pdf#page=89)", 
+    "[RasterBrick](https://cran.r-project.org/package=raster/raster.pdf#page=159)")
 )
 names(forestData) <- c("Data product", "Data type", "Object class")
 knitr::kable(forestData)

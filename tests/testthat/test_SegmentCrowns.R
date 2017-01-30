@@ -4,61 +4,57 @@ context("Tests for SegmentCrowns")
 
 ### LOAD TEST DATA
 
-load("trees.Rda")
-load("inTiles.Rda")
-load("inCHM.Rda")
+load("testTrees.Rda")
+load("testCHM.Rda")
 load("emptyCHM.Rda")
+load("orphanCHM.Rda")
+load("orphantrees.Rda")
 
 ### PERFORM TESTS
 
   test_that("SegmentCrown: expected results using standard parameters", {
 
-    segs.std <- SegmentCrowns(trees, inCHM, minHeight = 1)
+    segs.std <- SegmentCrowns(testTrees, testCHM, minHeight = 1, verbose = FALSE)
 
     expect_equal(length(unique(segs.std[])), 1116)
   })
 
-  test_that("SegmentCrowns: expected results using forced tiling", {
-
-    segs.ftile <- SegmentCrowns(trees, inCHM, minHeight = 1, maxCells = 100000)
-
-    expect_equal(length(unique(segs.ftile[])), 1116)
-  })
-
-  test_that("SegmentCrowns: expected results using pre-tiled CHM", {
-
-    segs.ptile <- SegmentCrowns(trees, inTiles, minHeight = 1)
-
-    expect_equal(length(unique(segs.ptile[])), 1116)
-  })
-
   test_that("SegmentCrowns: returns an error if 'minHeight' is too high",{
 
-    err <- "\'minHeight\' is set higher than the highest cell value in \'CHM\'"
-
-    expect_error(SegmentCrowns(trees, inCHM, minHeight = 30), err)
-    expect_error(SegmentCrowns(trees, inTiles, minHeight = 30), err)
-    expect_error(SegmentCrowns(trees, inCHM, minHeight = 30, maxCells = 100000), err)
+    expect_error(SegmentCrowns(testTrees, testCHM, minHeight = 30, verbose = FALSE),
+                 "\'minHeight\' is set higher than the highest cell value in \'CHM\'")
   })
 
   test_that("SegmentCrowns: returns an error if 'CHM' is empty",{
 
-    err <-  "Input CHM does not contain any usable values."
-
-    expect_error(SegmentCrowns(trees, emptyCHM), err)
-    expect_error(SegmentCrowns(trees, emptyCHM, minHeight = 30, maxCells = 100000), err)
+    expect_error(SegmentCrowns(testTrees, emptyCHM, verbose = FALSE),
+                 "Input CHM does not contain any usable values.")
   })
 
-  test_that("SegmentCrowns: returns an error if no treetops were contained within raster extent",{
+  test_that("SegmentCrowns: removes trees outside of CHM area and those that over NA values",{
 
-    err <- "No input treetops intersect with CHM"
+    # Perform segmentation on 'orphan trees' test dataset
+    segs.poly <- SegmentCrowns(orphantrees, orphanCHM, format = "polygons", verbose = FALSE)
+    segs.ras <- SegmentCrowns(orphantrees, orphanCHM, verbose = FALSE)
+    segs.poly.min2 <- SegmentCrowns(orphantrees, orphanCHM, minHeight = 2, format = "polygons", verbose = FALSE)
+    segs.ras.min2 <- SegmentCrowns(orphantrees, orphanCHM, minHeight = 2, verbose = FALSE)
 
-    trees.crop <- raster::crop(trees, inTiles[[1]])
+    # Count number of trees inside of area, that are
+    treesOutside <- raster::crop(orphantrees, orphanCHM)
+    treesVals <- raster::extract(orphanCHM, treesOutside)
+    treesNoNA <- treesOutside[!is.na(treesVals),]
+    treesMin2 <- treesOutside[!is.na(treesVals) & treesVals >= 2,]
 
-    expect_error(SegmentCrowns(trees.crop, inTiles[[3]], minHeight = 1), err)
-    expect_error(SegmentCrowns(trees[0,], inCHM), err)
+    # Count unique segments for raster segments
+    segs.ras.unique <- unique(raster::getValues(segs.ras))
+    segs.ras.unique <- segs.ras.unique[!is.na(segs.ras.unique)]
+    segs.ras.unique.min2 <- unique(raster::getValues(segs.ras.min2))
+    segs.ras.unique.min2 <- segs.ras.unique.min2[!is.na(segs.ras.unique.min2)]
+
+    expect_equal(length(treesNoNA), length(segs.poly))
+    expect_equal(length(treesNoNA), length(segs.ras.unique))
+    expect_equal(length(treesMin2), length(segs.poly.min2))
+    expect_equal(length(treesMin2), length(segs.ras.unique.min2))
   })
-
-
 
 

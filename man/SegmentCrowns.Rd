@@ -4,36 +4,44 @@
 \alias{SegmentCrowns}
 \title{SegmentCrowns}
 \usage{
-SegmentCrowns(treetops, CHM, minHeight = 0, maxCells = 2e+06,
-  tileBuffer = 20)
+SegmentCrowns(treetops, CHM, minHeight = 0, format = "raster",
+  verbose = TRUE)
 }
 \arguments{
 \item{treetops}{\link[sp]{SpatialPointsDataFrame}. The point locations of treetops. The function will generally produce a
 number of crown segments equal to the number of treetops.}
 
-\item{CHM}{Canopy height model. Either in \link[raster]{raster} format, or a path directing to a raster file. A character vector of multiple paths directing to a
-tiled raster dataset can also be used.}
+\item{CHM}{Canopy height model in \link[raster]{raster} format.}
 
 \item{minHeight}{numeric. The minimum height value for a \code{CHM} pixel to be considered as part of a crown segment.
 All \code{CHM} pixels beneath this value will be masked out. Note that this value should be lower than the minimum
 height of \code{treetops}.}
 
-\item{maxCells}{numeric. If the number of raster cells for the \code{CHM} exceeds this value, the \link[TileManager]{TileScheme} function
-will be applied to break apart the input into tiles to speed up processing.}
+\item{format}{string. Format of the function's ouput. Can be set to either 'raster' or 'polygons'.}
 
-\item{tileBuffer}{numeric. If the function breaks the CHM into tiles for processing, an
-overlapping spatial buffer is applied around each tile to prevent edge effects. The
-\code{tileBuffer} argument defines the width of this buffer, and should be equal to half
-the diameter of the widest expected tree crown.}
+\item{verbose}{logical. Print processing progress to console.}
 }
 \value{
-A \link[raster]{raster} of crown segments. The \link[raster]{rasterToPolygons} function can be used to convert this into
-polygons.
+Depending on the argument set with \code{format}, this function will return a map of outlined
+crowns as either a \link[raster]{raster}, in which distinct crowns are given a unique cell value, or a
+\link[sp]{SpatialPolygonsDataFrame}, in which each crown is represented by a polygon.
 }
 \description{
-Implements the \link[imager]{watershed} function to segment crowns from a canopy height model. Segmentation is
-guided by the point locations of treetops, typically detected using the \link{TreeTopFinder} function. See Meyer
-& Beucher (1990) for details on watershed segmentation.
+Implements the \link[imager]{watershed} function to segment (i.e.: outline) crowns from a canopy height model.
+Segmentation is guided by the point locations of treetops, typically detected using the \link{TreeTopFinder} function.
+See Meyer & Beucher (1990) for details on watershed segmentation.
+}
+\details{
+This function can return a crown map as either a \link[raster]{raster} or a \link[sp]{SpatialPolygonsDataFrame},
+which are defined using the \code{format} argument. For most analytical purposes, it is preferable to have
+crown outlines as polygons. However, polygonal crown maps take up significantly more disk space, and take
+much longer to process. It is advisable to run this function using a raster output first, in order to check
+its results and adjust parameters.
+
+Although it is slower, using the 'polygons' output \code{format} provides the added benefit of transfering
+treetop attributes (such as height) to the newly created polygons. The area of each crown will also
+automatically be calculated and added to the polygons' attributes. Furthermore, 'orphaned' segments (i.e.:
+outlines without an associated treetop) will be removed when \code{format} is set to 'polygons'.
 }
 \examples{
 # Use TreeTopFinder to detect treetops in demo canopy height model
@@ -46,7 +54,8 @@ minCrwnHgt <- 1
 segs <- SegmentCrowns(ttops, CHMdemo, minCrwnHgt)
 }
 \references{
-Meyer, F., & Beucher, S. (1990). Morphological segmentation. Journal of visual communication and image representation, 1(1), 21-46.
+Meyer, F., & Beucher, S. (1990). Morphological segmentation. Journal of visual communication and
+image representation, 1(1), 21-46.
 }
 \seealso{
 \code{\link{TreeTopFinder}}  \code{\link[imager]{watershed}}

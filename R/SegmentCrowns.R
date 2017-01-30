@@ -1,25 +1,33 @@
 #' SegmentCrowns
 #'
-#' Implements the \link[imager]{watershed} function to segment crowns from a canopy height model. Segmentation is
-#' guided by the point locations of treetops, typically detected using the \link{TreeTopFinder} function. See Meyer
-#' & Beucher (1990) for details on watershed segmentation.
+#' Implements the \link[imager]{watershed} function to segment (i.e.: outline) crowns from a canopy height model.
+#' Segmentation is guided by the point locations of treetops, typically detected using the \link{TreeTopFinder} function.
+#' See Meyer & Beucher (1990) for details on watershed segmentation.
+#'
+#' This function can return a crown map as either a \link[raster]{raster} or a \link[sp]{SpatialPolygonsDataFrame},
+#' which are defined using the \code{format} argument. For most analytical purposes, it is preferable to have
+#' crown outlines as polygons. However, polygonal crown maps take up significantly more disk space, and take
+#' much longer to process. It is advisable to run this function using a raster output first, in order to check
+#' its results and adjust parameters.
+#'
+#' Although it is slower, using the 'polygons' output \code{format} provides the added benefit of transfering
+#' treetop attributes (such as height) to the newly created polygons. The area of each crown will also
+#' automatically be calculated and added to the polygons' attributes. Furthermore, 'orphaned' segments (i.e.:
+#' outlines without an associated treetop) will be removed when \code{format} is set to 'polygons'.
 #'
 #' @param treetops \link[sp]{SpatialPointsDataFrame}. The point locations of treetops. The function will generally produce a
 #' number of crown segments equal to the number of treetops.
-#' @param CHM Canopy height model. Either in \link[raster]{raster} format, or a path directing to a raster file. A character vector of multiple paths directing to a
-#' tiled raster dataset can also be used.
+#' @param CHM Canopy height model in \link[raster]{raster} format.
 #' @param minHeight numeric. The minimum height value for a \code{CHM} pixel to be considered as part of a crown segment.
 #' All \code{CHM} pixels beneath this value will be masked out. Note that this value should be lower than the minimum
 #' height of \code{treetops}.
-#' @param maxCells numeric. If the number of raster cells for the \code{CHM} exceeds this value, the \link[TileManager]{TileScheme} function
-#' will be applied to break apart the input into tiles to speed up processing.
-#' @param tileBuffer numeric. If the function breaks the CHM into tiles for processing, an
-#' overlapping spatial buffer is applied around each tile to prevent edge effects. The
-#' \code{tileBuffer} argument defines the width of this buffer, and should be equal to half
-#' the diameter of the widest expected tree crown.
-#' @return A \link[raster]{raster} of crown segments. The \link[raster]{rasterToPolygons} function can be used to convert this into
-#' polygons.
-#' @references Meyer, F., & Beucher, S. (1990). Morphological segmentation. Journal of visual communication and image representation, 1(1), 21-46.
+#' @param format string. Format of the function's ouput. Can be set to either 'raster' or 'polygons'.
+#' @param verbose logical. Print processing progress to console.
+#' @return Depending on the argument set with \code{format}, this function will return a map of outlined
+#' crowns as either a \link[raster]{raster}, in which distinct crowns are given a unique cell value, or a
+#' \link[sp]{SpatialPolygonsDataFrame}, in which each crown is represented by a polygon.
+#' @references Meyer, F., & Beucher, S. (1990). Morphological segmentation. Journal of visual communication and
+#' image representation, 1(1), 21-46.
 #' @examples
 #' # Use TreeTopFinder to detect treetops in demo canopy height model
 #' ttops <- TreeTopFinder(CHMdemo, winFun = function(x){x * 0.06 + 0.5}, minHeight = 2)
@@ -32,86 +40,126 @@
 #' @seealso \code{\link{TreeTopFinder}}  \code{\link[imager]{watershed}}
 #' @export
 
-SegmentCrowns <- function(treetops, CHM, minHeight = 0, maxCells = 2000000, tileBuffer = 20){
+SegmentCrowns <- function(treetops, CHM, minHeight = 0, format = "raster", verbose = TRUE){
+
+  if(verbose) cat("Begun 'SegmentCrowns' process at", format(Sys.time(), "%Y-%m-%d, %X"), "\n\n")
 
   ### GATE-KEEPER
 
-    # Convert single Raster object or paths to raster files into a list of Raster objects
-    CHM <- TileManager:::TileInput(CHM, "CHM")
+    # if(!is.null(treeID)){
+    #   if(!treeID %in% names(treetops)) stop("Field for 'treeID': \"", treeID, "\", not found")
+    #   if(class(treetops[[treeID]]) != "numeric") stop("Field for 'treeID' must be numeric")
+    #   if(any(duplicated(treetops[[treeID]]))) stop("Duplicated IDs detected in the \"", treeID, "\", field")
+    # }
+
+    # Ensure that 'format' is set to either 'raster' or 'polygons'.
+    if(!toupper(format) %in% c("RASTER", "POLYGONS", "POLYGON", "POLY")){stop("'format' must be set to either 'raster' or 'polygons'")}
+
+    if(verbose) cat("..Checking inputs", "\n")
 
     # Get maximum height and ensure that 'minHeight' does not exceed it
-    CHM.max <- max(sapply(CHM, function(tile) suppressWarnings(max(raster::getValues(tile), na.rm = TRUE))))
+    CHM.max <- suppressWarnings(max(raster::getValues(CHM), na.rm = TRUE))
     if(is.infinite(CHM.max)){stop("Input CHM does not contain any usable values.")}
-    if(minHeight > CHM.max){stop("\'minHeight\' is set higher than the highest cell value in \'CHM\'")}
+    if(minHeight > CHM.max){stop("'minHeight' is set higher than the highest cell value in \'CHM\'")}
 
-    # Remove treetops that are not within the CHM's input extent
-    totalExt <- rgeos::gUnaryUnion(sp::SpatialPolygons(
-      lapply(1:length(CHM), function(tileNum){
-        sp::spChFIDs(methods::as(raster::extent(CHM[[tileNum]]), "SpatialPolygons"), as.character(tileNum))@polygons[[1]]
-      })))
-    raster::crs(totalExt) <- raster::crs(treetops)
-    treetops <- treetops[!is.na(sp::over(treetops,totalExt)),]
-    if(length(treetops) == 0){stop("No input treetops intersect with CHM")}
-    treetops[["treeNum"]] <- 1:length(treetops)
+    # Remove treetops that are not within the CHM's input extent, or whose height is lower than 'minHeight'
+    raster::crs(CHM) <- raster::crs(treetops)
+    treetopsVals <- raster::extract(CHM, treetops)
+    treetops <- treetops[!is.na(treetopsVals) & treetopsVals >= minHeight,]
+    if(length(treetops) == 0){stop("No usable treetops. Treetops are either outside of CHM's extent, or are located elow the 'minHeight' value")}
 
-  ### PRE-PROCESS: MULTI-TILES CHECK
+  ### GENERATE UNIQUE TREE IDENTIFIER
 
-    # Detect/generate tiling scheme
-    tiles <- TileManager:::TileApply(CHM, maxCells = maxCells, tileBuffer = tileBuffer)
-
-    # If input raster exceeds maximum number of cells, apply tiling scheme
-    if(length(CHM) == 1 & raster::ncell(CHM[[1]]) > maxCells){
-
-      CHM <- TileManager:::TempTiles(CHM[[1]], tiles)
-      on.exit(TileManager:::removeTempTiles(), add = TRUE)
+    # If a field named 'treeNum' already exists, append a number to it so the original 'treeNum' won't be overwritten
+    if("treeNum" %in% names(treetops)){
+      i <- 1
+      while(paste0("treeNum", i) %in% names(treetops)) i <- i + 1
+      treeID <- paste0("treeNum", i)
+    }else{
+      treeID <- "treeNum"
     }
 
-  ### PROCESS
+    # Create sequence if tree identifiers
+    treetops[[treeID]] <- 1:length(treetops)
 
-    # Create tiles
-    seg.tiles <- lapply(1:length(CHM), function(tileNum){
+    # if(is.null(treeID)){
+    #   treeID <- "treeNum"
+    #   notree <- 0
+    #   treetops[[treeID]] <- 1:length(treetops)
+    # }else{
+    #   notree <- max(treetops[[treeID]]) + 1
+    # }
 
-      # Extract CHM tile and non-overlapping buffered extent
-      CHM.tile <- CHM[[tileNum]]
-      nbuff.tile <- tiles$nbuffPolygons[tileNum,]
+  ### APPLY WATERSHED SEGMENTATION
+
+      if(verbose) cat("..Masking areas below minimum crown height", "\n")
 
       # Create NA mask
-      CHM.mask <- is.na(CHM.tile) | CHM.tile < minHeight
+      CHM.mask <- is.na(CHM) | CHM < minHeight
 
       # Replace NAs temporarily with 0s (the 'imager' functions cannot handle NA values)
-      CHM.tile[CHM.mask] <- 0
+      CHM[CHM.mask] <- 0
+
+      if(verbose) cat("..Seeding treetop locations", "\n")
 
       # Convert treetops to a raster
-      ttops.tile <- raster::rasterize(treetops, CHM.tile, "treeNum", background = 0)
+      ttops.ras <- raster::rasterize(treetops, CHM, "treeNum", background = 0)
 
-      # Convert tiled data to 'img' files
-      CHM.img <- imager::as.cimg(raster::as.matrix(CHM.tile))
-      ttops.img <- imager::as.cimg(raster::as.matrix(ttops.tile))
+      # Convert data to 'img' files
+      CHM.img <- imager::as.cimg(raster::as.matrix(CHM))
+      ttops.img <- imager::as.cimg(raster::as.matrix(ttops.ras))
+
+      if(verbose) cat("..Applying watershed segmentation algorithm", "\n")
 
       # Apply watershed function
       ws.img <- imager::watershed(ttops.img, CHM.img)
 
       # Convert watershed back to raster
-      ws.ras <- raster::raster(vals = ws.img[,,1,1], nrows = nrow(CHM.tile), ncols =  ncol(CHM.tile),
-                       ext = raster::extent(CHM.tile), crs = raster::crs(CHM.tile))
+      ws.ras <- raster::raster(vals = ws.img[,,1,1], nrows = nrow(CHM), ncols =  ncol(CHM),
+                       ext = raster::extent(CHM), crs = raster::crs(CHM))
       ws.ras[CHM.mask] <- NA
 
-      # Crop tile to non-overlapping buffered extent
-      ws.ras.crop <- raster::crop(ws.ras, raster::extent(nbuff.tile))
+  ### CONVERT TO POLYGONS
 
-      return(ws.ras.crop)
-    })
+      if(toupper(format) %in% c("POLYGONS", "POLYGON", "POLY")){
 
-    # Merge segment tiles
-    if(length(seg.tiles) > 1){
-      seg.tiles$fun <- max
-      seg.mosaic <- do.call(raster::mosaic, seg.tiles)
-    }else{
-      seg.mosaic <- seg.tiles[[1]]
-    }
-    rm(seg.tiles)
-    raster::crs(seg.mosaic) <- raster::crs(treetops)
+        if(verbose) cat("..Converting to segments to polygons (this could take a while)", "\n")
 
-  ### RETURN SEGMENTS
-  return(seg.mosaic)
+        # Convert raster to polygons
+        polys <- raster::rasterToPolygons(ws.ras)
+        polys <- rgeos::gUnaryUnion(polys, id = polys[["layer"]])
+
+        if(verbose) cat("..Matching polygons to treetops", "\n")
+
+        # Disaggregate multi-part polygons
+        polys.dag <- sp::disaggregate(polys)
+
+        # Perform spatial overlay, transfer data from treetops to polygons, and remove polygons with no associated treetops
+        polys.over <- sp::over(polys.dag, treetops)
+        polys.out <- sp::SpatialPolygonsDataFrame(polys.dag, subset(polys.over, select= -which(names(polys.over) != treeID)))
+        polys.out <- polys.out[match(treetops[[treeID]], polys.over[,treeID]),]
+
+        if(verbose) cat("..Computing segment areas", "\n")
+
+        # Set new field for crown areas
+        if("crownArea" %in% names(polys.out)){
+          i <- 1
+          while(paste0("crownArea", i) %in% names(polys.out)) i <- i + 1
+          crownArea <- paste0("crownArea", i)
+          warning("Input data already has a 'crownArea' field. Writing new crown area values to the 'crownArea",i,"' field")
+        }else{
+          crownArea <- "crownArea"
+        }
+
+        # Compute crown areas
+        polys.out[[crownArea]] <- rgeos::gArea(polys.out, byid = TRUE)
+
+        if(verbose) cat("..Returning crown outlines as polygons\n\nFinished at:", format(Sys.time(), "%Y-%m-%d, %X"), "\n")
+        return(polys.out)
+
+      }else{
+
+        if(verbose) cat("..Returning crown outlines as a raster\n\nFinished at:", format(Sys.time(), "%Y-%m-%d, %X"), "\n")
+        return(ws.ras)
+      }
 }

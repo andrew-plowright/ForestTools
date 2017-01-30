@@ -4,16 +4,16 @@ context("Tests for TreeTopFinder")
 
 ### LOAD TEST DATA
 
-load("trees.Rda")
-load("inTiles.Rda")
-load("inCHM.Rda")
+load("testTrees.Rda")
+load("testCHMtiles.Rda")
+load("testCHM.Rda")
 load("emptyCHM.Rda")
 
 ### PERFORM TESTS
 
   test_that("TreeTopFinder: expected results using standard parameters", {
 
-    trees.std <- TreeTopFinder(inCHM, function(x){x * 0.05 + 0.8}, minHeight = 1.5)
+    trees.std <- TreeTopFinder(testCHM, function(x){x * 0.05 + 0.8}, minHeight = 1.5)
 
     expect_equal(length(trees.std), 1115)
     expect_equal(mean(trees.std[["height"]]), 5.857549, tolerance = 0.0000001)
@@ -23,7 +23,7 @@ load("emptyCHM.Rda")
 
   test_that("TreeTopFinder: expected results using forced tiling", {
 
-    trees.tiled <- TreeTopFinder(inCHM, function(x){x * 0.05 + 0.8}, minHeight = 1.5, maxCells = 10000)
+    trees.tiled <- TreeTopFinder(testCHM, function(x){x * 0.05 + 0.8}, minHeight = 1.5, maxCells = 10000)
 
     expect_equal(length(trees.tiled), 1115)
     expect_equal(mean(trees.tiled[["height"]]), 5.857549, tolerance = 0.0000001)
@@ -34,7 +34,7 @@ load("emptyCHM.Rda")
 
   test_that("TreeTopFinder: expected results using pre-tiled CHM", {
 
-    trees.tiled <- TreeTopFinder(inTiles, function(x){x * 0.05 + 0.8}, minHeight = 1.5, maxCells = 10000)
+    trees.tiled <- TreeTopFinder(testCHM.tiles, function(x){x * 0.05 + 0.8}, minHeight = 1.5, maxCells = 10000)
 
     expect_equal(length(trees.tiled), 1115)
     expect_equal(mean(trees.tiled[["height"]]), 5.857549, tolerance = 0.0000001)
@@ -43,9 +43,9 @@ load("emptyCHM.Rda")
   })
 
   test_that("TreeTopFinder: returns an error if the input function produces windows that are too large", {
-    expect_error(TreeTopFinder(inCHM, function(x){x * 0.2 + 20}, minHeight = 1, maxWinDiameter = 20),
+    expect_error(TreeTopFinder(testCHM, function(x){x * 0.2 + 20}, minHeight = 1, maxWinDiameter = 20),
                  "Input function for \'winFun\' yields a window size")
-    expect_error(TreeTopFinder(inCHM, function(x){x * 0.2 + 20}, minHeight = 1, maxWinDiameter = 20, maxCells = 5000),
+    expect_error(TreeTopFinder(testCHM, function(x){x * 0.2 + 20}, minHeight = 1, maxWinDiameter = 20, maxCells = 5000),
                  "Input function for \'winFun\' yields a window size")
   })
 
@@ -53,9 +53,9 @@ load("emptyCHM.Rda")
 
     err <- "\'minHeight\' is set higher than the highest cell value in \'CHM\'"
 
-    expect_error(TreeTopFinder(inCHM, function(x){x * 0.05 + 0.8}, minHeight = 40), err)
-    expect_error(TreeTopFinder(inCHM, function(x){x * 0.05 + 0.8}, minHeight = 40, maxWinDiameter = 10), err)
-    expect_error(TreeTopFinder(inCHM, function(x){x * 0.05 + 0.8}, minHeight = 40, maxCells = 5000), err)
+    expect_error(TreeTopFinder(testCHM, function(x){x * 0.05 + 0.8}, minHeight = 40), err)
+    expect_error(TreeTopFinder(testCHM, function(x){x * 0.05 + 0.8}, minHeight = 40, maxWinDiameter = 10), err)
+    expect_error(TreeTopFinder(testCHM, function(x){x * 0.05 + 0.8}, minHeight = 40, maxCells = 5000), err)
   })
 
   test_that("TreeTopFinder: returns an error if 'CHM' is empty",{

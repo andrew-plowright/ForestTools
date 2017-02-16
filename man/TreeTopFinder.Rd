@@ -27,8 +27,8 @@ by setting to \code{NULL}.}
 }
 \value{
 \link[sp]{SpatialPointsDataFrame}. The point locations of detected treetops. The object contains two fields in its
-data table: \code{height} is the height of the tree, as extracted from the \code{CHM}, and \code{radius} is the radius
-of the search window when the treetop was detected. Note that \code{radius} does not necessarily correspond to the radius
+data table: \emph{height} is the height of the tree, as extracted from the \code{CHM}, and \emph{winRadius} is the radius
+of the search window when the treetop was detected. Note that \emph{winRadius} does not necessarily correspond to the radius
 of the tree's crown.
 }
 \description{
@@ -45,9 +45,9 @@ minHgt <- 2
 ttops <- TreeTopFinder(CHMdemo, winFunction, minHgt)
 }
 \references{
-Popescu, S. C., & Wynne, R. H. (2004). Seeing the trees in the forest. Photogrammetric Engineering & Remote Sensing, 70(5), 589-604.
+Popescu, S. C., & Wynne, R. H. (2004). Seeing the trees in the forest. \emph{Photogrammetric Engineering & Remote Sensing, 70}(5), 589-604.
 }
 \seealso{
-\code{\link{SegmentCrowns}} \code{\link{TreeTopSummary}}
+\code{\link{SegmentCrowns}} \code{\link{SpatialStatistics}}
 }
 

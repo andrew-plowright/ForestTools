@@ -10,10 +10,11 @@
 #' much longer to process. It is advisable to run this function using a raster output first, in order to check
 #' its results and adjust parameters.
 #'
-#' Although it is slower, using the 'polygons' output \code{format} provides the added benefit of transfering
-#' treetop attributes (such as height) to the newly created polygons. The area of each crown will also
-#' automatically be calculated and added to the polygons' attributes. Furthermore, 'orphaned' segments (i.e.:
-#' outlines without an associated treetop) will be removed when \code{format} is set to 'polygons'.
+#' Although it is slower, using the 'polygons' output \code{format} provides the added benefit of transferring
+#' treetop attributes (such as \emph{height}) to the newly created polygons. The area of each crown will also
+#' automatically be calculated and added to the polygons' data under the \emph{crownArea} field. Furthermore,
+#' "orphaned" segments (i.e.: outlines without an associated treetop) will be removed when
+#' \code{format} is set to 'polygons'.
 #'
 #' @param treetops \link[sp]{SpatialPointsDataFrame}. The point locations of treetops. The function will generally produce a
 #' number of crown segments equal to the number of treetops.
@@ -24,10 +25,11 @@
 #' @param format string. Format of the function's ouput. Can be set to either 'raster' or 'polygons'.
 #' @param verbose logical. Print processing progress to console.
 #' @return Depending on the argument set with \code{format}, this function will return a map of outlined
-#' crowns as either a \link[raster]{raster}, in which distinct crowns are given a unique cell value, or a
-#' \link[sp]{SpatialPolygonsDataFrame}, in which each crown is represented by a polygon.
-#' @references Meyer, F., & Beucher, S. (1990). Morphological segmentation. Journal of visual communication and
-#' image representation, 1(1), 21-46.
+#' crowns as either a RasterLayer (see \link[raster]raster{}), in which distinct crowns
+#' are given a unique cell value, or a \link[sp]{SpatialPolygonsDataFrame}, in which each crown
+#' is represented by a polygon.
+#' @references Meyer, F., & Beucher, S. (1990). Morphological segmentation. \emph{Journal of visual communication and
+#' image representation, 1}(1), 21-46.
 #' @examples
 #' # Use TreeTopFinder to detect treetops in demo canopy height model
 #' ttops <- TreeTopFinder(CHMdemo, winFun = function(x){x * 0.06 + 0.5}, minHeight = 2)
@@ -37,7 +39,7 @@
 #'
 #' # Use SegmentCrowns to outline tree crowns
 #' segs <- SegmentCrowns(ttops, CHMdemo, minCrwnHgt)
-#' @seealso \code{\link{TreeTopFinder}}  \code{\link[imager]{watershed}}
+#' @seealso \code{\link{TreeTopFinder}} \code{\link{SpatialStatistics}} \code{\link[imager]{watershed}}
 #' @export
 
 SegmentCrowns <- function(treetops, CHM, minHeight = 0, format = "raster", verbose = TRUE){
@@ -136,7 +138,7 @@ SegmentCrowns <- function(treetops, CHM, minHeight = 0, format = "raster", verbo
 
         # Perform spatial overlay, transfer data from treetops to polygons, and remove polygons with no associated treetops
         polys.over <- sp::over(polys.dag, treetops)
-        polys.out <- sp::SpatialPolygonsDataFrame(polys.dag, subset(polys.over, select= -which(names(polys.over) != treeID)))
+        polys.out <- sp::SpatialPolygonsDataFrame(polys.dag, subset(polys.over, select= which(names(polys.over) != treeID)))
         polys.out <- polys.out[match(treetops[[treeID]], polys.over[,treeID]),]
 
         if(verbose) cat("..Computing segment areas", "\n")

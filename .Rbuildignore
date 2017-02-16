@@ -8,3 +8,4 @@
 ^cran-comments\.md$
 ^testdata-raw$
 ^oldfunctions$
+^vignettes$

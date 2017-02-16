@@ -10,11 +10,11 @@ knitr::opts_knit$set(global.par = TRUE)
 #  install.packages("ForestTools")
 
 ## ---- message = FALSE----------------------------------------------------
-# Attach the Forest Tools and raster libraries
+# Attach the 'ForestTools' and 'raster' libraries
 library(ForestTools)
 library(raster)
 
-# Load sample data
+# Load sample canopy height model
 data("kootenayCHM")
 
 ## ---- fig.width = 4, fig.height = 2.51-----------------------------------
@@ -42,17 +42,41 @@ plot(ttops, col = "blue", pch = 20, cex = 0.5, add = TRUE)
 # Get the mean treetop height
 mean(ttops$height)
 
-## ------------------------------------------------------------------------
-TreeTopSummary(ttops)
+## ---- fig.width = 4, fig.height = 2.51-----------------------------------
+# Create crown map
+crowns <- SegmentCrowns(treetops = ttops, CHM = kootenayCHM, minHeight = 1.5, verbose = FALSE)
+
+# Plot crowns
+plot(crowns, col = sample(rainbow(50), length(crowns), replace = TRUE), legend = FALSE, xlab = "", ylab = "", xaxt='n', yaxt = 'n')
+
+## ---- fig.width = 4, fig.height = 2.51-----------------------------------
+# Convert raster crown map to polygons
+crownsPoly <- SegmentCrowns(treetops = ttops, CHM = kootenayCHM, format = "polygons", minHeight = 1.5, verbose = FALSE)
+
+# Plot CHM
+plot(kootenayCHM, xlab = "", ylab = "", xaxt='n', yaxt = 'n')
+
+# Add crown outlines to the plot
+plot(crownsPoly, border = "blue", lwd = 0.5, add = TRUE)
 
 ## ------------------------------------------------------------------------
-TreeTopSummary(ttops, variables = "height")
+# Compute average crown diameter
+crownsPoly[["crownDiameter"]] <- sqrt(crownsPoly[["crownArea"]]/ pi) * 2
+
+# Mean crown diameter
+mean(crownsPoly$crownDiameter)
+
+## ------------------------------------------------------------------------
+SpatialStatistics(ttops)
+
+## ------------------------------------------------------------------------
+SpatialStatistics(crownsPoly, variables = c("crownArea", "height"))
 
 ## ---- fig.width = 4, fig.height = 2.51, message = FALSE------------------
 data("kootenayBlocks")
 
 # Compute tree count and height statistics for cut blocks
-blockStats <- TreeTopSummary(ttops, areas = kootenayBlocks, variables = "height")
+blockStats <- SpatialStatistics(ttops, areas = kootenayBlocks, variables = "height")
 
 # Plot CHM
 plot(kootenayCHM, xlab = "", ylab = "", xaxt='n', yaxt = 'n')
@@ -69,14 +93,14 @@ blockStats@data
 
 ## ---- fig.width = 4, fig.height = 2.51-----------------------------------
 # Compute tree count within a 10 m x 10 m cell grid
-gridCount <- TreeTopSummary(treetops = ttops, grid = 10)
+gridCount <- SpatialStatistics(ttops, grid = 10)
 
 # Plot grid
 plot(gridCount, col = heat.colors(255), xlab = "", ylab = "", xaxt='n', yaxt = 'n')
 
 ## ------------------------------------------------------------------------
 # Compute tree height statistics within a 10 m x 10 m cell grid
-gridStats <- TreeTopSummary(treetops = ttops, grid = 10, variables = "height")
+gridStats <- SpatialStatistics(trees = ttops, grid = 10, variables = "height")
 
 # View layer names
 names(gridStats)
@@ -85,35 +109,17 @@ names(gridStats)
 # Plot mean tree height within 10 m x 10 m cell grid
 plot(gridStats[["heightMean"]], col = heat.colors(255), xlab = "", ylab = "", xaxt='n', yaxt = 'n')
 
-## ---- fig.width = 4, fig.height = 2.51-----------------------------------
-# Create crown map
-crowns <- SegmentCrowns(treetops = ttops, CHM = kootenayCHM, minHeight = 1.5)
-
-# Plot crowns
-plot(crowns, col = sample(rainbow(50), length(crowns), replace = TRUE), legend = FALSE, xlab = "", ylab = "", xaxt='n', yaxt = 'n')
-
-## ---- fig.width = 4, fig.height = 2.51-----------------------------------
-# Convert raster crown map to polygons
-crownsPoly <- rasterToPolygons(crowns, dissolve = TRUE)
-
-# Plot CHM
-plot(kootenayCHM, xlab = "", ylab = "", xaxt='n', yaxt = 'n')
-
-# Add crown outlines to the plot
-plot(crownsPoly, border = "blue", lwd = 0.5, add = TRUE)
-
-## ---- message = FALSE----------------------------------------------------
-library(rgeos)
-
-# Compute crown area
-crownsPoly[["area"]] <- gArea(crownsPoly, byid = TRUE)
+## ------------------------------------------------------------------------
+quant98 <- function(x, ...) quantile(x, c(.98), na.rm = TRUE)
 
 ## ------------------------------------------------------------------------
-# Compute average crown diameter
-crownsPoly[["diameter"]] <- sqrt(crownsPoly[["area"]]/ pi) * 2
+# Create list of functions
+custFuns <- list(quant98, max)
+names(custFuns) <- c("98thQuantile", "Max")
 
-# Mean crown diameter
-mean(crownsPoly$diameter)
+# Generate statistics for crown areas and tree heights
+SpatialStatistics(crownsPoly, variables = c("crownArea", "height"), statFuns = custFuns)
+
 
 ## ---- echo = FALSE-------------------------------------------------------
 forestData <- data.frame(
@@ -121,8 +127,8 @@ forestData <- data.frame(
   c("Single-layer raster", "Points", "Polygons", "Multi-layer raster"),
   c("[RasterLayer](https://cran.r-project.org/package=raster/raster.pdf#page=159)", 
     "[SpatialPointsDataFrame](https://cran.r-project.org/package=sp/sp.pdf#page=84)", 
-    "[SpatialPolygonsDataFrame](https://cran.r-project.org/package=sp/sp.pdf#page=89)", 
-    "[RasterBrick](https://cran.r-project.org/package=raster/raster.pdf#page=159)")
+    "[RasterLayer](https://cran.r-project.org/package=raster/raster.pdf#page=159), [SpatialPolygonsDataFrame](https://cran.r-project.org/package=sp/sp.pdf#page=89)", 
+    "[RasterLayer](https://cran.r-project.org/package=raster/raster.pdf#page=159),  [RasterBrick](https://cran.r-project.org/package=raster/raster.pdf#page=159)")
 )
 names(forestData) <- c("Data product", "Data type", "Object class")
 knitr::kable(forestData)

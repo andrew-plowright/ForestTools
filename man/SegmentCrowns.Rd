@@ -38,10 +38,11 @@ crown outlines as polygons. However, polygonal crown maps take up significantly 
 much longer to process. It is advisable to run this function using a raster output first, in order to check
 its results and adjust parameters.
 
-Although it is slower, using the 'polygons' output \code{format} provides the added benefit of transfering
+Although it is slower, using the 'polygons' output \code{format} provides the added benefit of transferring
 treetop attributes (such as height) to the newly created polygons. The area of each crown will also
-automatically be calculated and added to the polygons' attributes. Furthermore, 'orphaned' segments (i.e.:
-outlines without an associated treetop) will be removed when \code{format} is set to 'polygons'.
+automatically be calculated and added to the polygons' data under the \emph{crownArea} field. Furthermore,
+'orphaned' segments (i.e.: outlines without an associated treetop) will be removed when
+\code{format} is set to 'polygons'.
 }
 \examples{
 # Use TreeTopFinder to detect treetops in demo canopy height model
@@ -54,10 +55,10 @@ minCrwnHgt <- 1
 segs <- SegmentCrowns(ttops, CHMdemo, minCrwnHgt)
 }
 \references{
-Meyer, F., & Beucher, S. (1990). Morphological segmentation. Journal of visual communication and
-image representation, 1(1), 21-46.
+Meyer, F., & Beucher, S. (1990). Morphological segmentation. \emph{Journal of visual communication and
+image representation, 1}(1), 21-46.
 }
 \seealso{
-\code{\link{TreeTopFinder}}  \code{\link[imager]{watershed}}
+\code{\link{TreeTopFinder}} \code{\link{SpatialStatistics}} \code{\link[imager]{watershed}}
 }
 

@@ -3,19 +3,22 @@
 #' Implements the variable window filter algorithm (Popescu & Wynne, 2004) for detecting treetops from a canopy height model.
 #' @param CHM Canopy height model. Either in \link[raster]{raster} format, or a path directing to a raster file. A character vector of multiple paths directing to a
 #' tiled raster dataset can also be used.
-#' @param winFun function. Should take the value of a given \code{CHM} pixel as its only argument, and return the radius of the corresponding search window.
+#' @param winFun function. The function that determines the size of the window at any given location on the
+#' canopy. It should take the value of a given \code{CHM} pixel as its only argument, and return the desired radius of
+#' the circular search window when centered on that pixel.
 #' @param minHeight numeric. The minimum height value for a \code{CHM} pixel to be considered as a potential treetop. All \code{CHM} pixels beneath
 #' this value will be masked out.
-#' @param maxCells numeric. If the number of raster cells for the \code{CHM} exceeds this value, the \link[TileManager]{TileScheme} function
-#' will be applied to break apart the input into tiles to speed up processing.
-#' @param maxWinDiameter numeric. This parameter prevents \code{TreeTopFinder} from being run with a function that would
-#' produce very large windows, which will affect performance and is likely a sign of an inappropriate window function. Can be disabled
-#' by setting to \code{NULL}.
+#' @param maxCells numeric. If the number of raster cells (i.e.: pixels) for the \code{CHM} exceeds this value,
+#' the \link[TileManager]{TileScheme} function
+#' will be applied internally to break apart the CHM into tiles to speed up processing.
+#' @param maxWinDiameter numeric. This parameter sets a cap on the maximum window size. If an improperly calibrated
+#' function is set for \code{winFun}, it may produce overly large windows that would perform poorly and significantly
+#' slow processing time. This setting can be disabled by setting to \code{NULL}.
 #' @param verbose logical. Print progress to console if set to \code{TRUE}.
-#' @references Popescu, S. C., & Wynne, R. H. (2004). Seeing the trees in the forest. Photogrammetric Engineering & Remote Sensing, 70(5), 589-604.
+#' @references Popescu, S. C., & Wynne, R. H. (2004). Seeing the trees in the forest. \emph{Photogrammetric Engineering & Remote Sensing, 70}(5), 589-604.
 #' @return \link[sp]{SpatialPointsDataFrame}. The point locations of detected treetops. The object contains two fields in its
-#' data table: \code{height} is the height of the tree, as extracted from the \code{CHM}, and \code{radius} is the radius
-#' of the search window when the treetop was detected. Note that \code{radius} does not necessarily correspond to the radius
+#' data table: \emph{height} is the height of the tree, as extracted from the \code{CHM}, and \emph{winRadius} is the radius
+#' of the search window when the treetop was detected. Note that \emph{winRadius} does not necessarily correspond to the radius
 #' of the tree's crown.
 #' @examples
 #' # Set function for determining variable window radius
@@ -26,7 +29,7 @@
 #'
 #' # Detect treetops in demo canopy height model
 #' ttops <- TreeTopFinder(CHMdemo, winFunction, minHgt)
-#' @seealso \code{\link{SegmentCrowns}} \code{\link{TreeTopSummary}}
+#' @seealso \code{\link{SegmentCrowns}} \code{\link{SpatialStatistics}}
 
 #' @export
 
@@ -45,7 +48,7 @@ TreeTopFinder <- function(CHM, winFun, minHeight = NULL, maxCells = 2000000, max
 
     emptyOutput <- function(inCRS){
       sp::SpatialPointsDataFrame(crds <- matrix(0, nrow = 1, ncol = 2),
-                               data = data.frame(height = 0, radius = 0),
+                               data = data.frame(height = 0, winRadius = 0),
                                proj4string = inCRS)[0,]
     }
 
@@ -182,7 +185,7 @@ TreeTopFinder <- function(CHM, winFun, minHeight = NULL, maxCells = 2000000, max
         localMaxima.points <- raster::xyFromCell(localMaxima.raster, localMaxima.cellNumbers, spatial = TRUE)
 
         # Create SpatialPointsDataFrame object from point locations of local maxima, their heights and their radii.
-        localMaxima.spdf <- sp::SpatialPointsDataFrame(localMaxima.points, data.frame(height = localMaxima.heights, radius = localMaxima.radius))
+        localMaxima.spdf <- sp::SpatialPointsDataFrame(localMaxima.points, data.frame(height = localMaxima.heights, winRadius = localMaxima.radius))
 
         # Subset local maxima that are within tile's non-overlapping buffered extent
         localMaxima.spdf <- localMaxima.spdf[rgeos::gContains(nbuff.tile, localMaxima.spdf, byid = TRUE)[,1],]

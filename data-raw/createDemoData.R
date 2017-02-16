@@ -45,11 +45,15 @@
   kootenayTrees <- ForestTools::TreeTopFinder(kootenayCHM, function(x){x * 0.07 + 0.8}, 2)
   rgdal::writeOGR(kootenayTrees, "C:\\Users\\Percival\\Dropbox\\Scripts\\Libraries\\ForestTools\\data-raw", "kootenayTrees", driver = "ESRI Shapefile")
 
+  # Outline crowns
+  kootenayCrowns <- ForestTools::SegmentCrowns(kootenayTrees, kootenayCHM, minHeight = 1.5, format = "polygons")
+
   # Plot data
   par(mar = rep(0,4))
   raster::plot(kootenayCHM)
   sp::plot(kootenayBlocks, add = T)
   sp::plot(kootenayTrees, add = T, pch = ".", cex = 2)
+  sp::plot(kootenayCrowns, add = T)
 
   # Save data to package
-  devtools::use_data(kootenayCHM, kootenayBlocks, kootenayTrees)
+  devtools::use_data(kootenayCHM, kootenayBlocks, kootenayTrees, kootenayCrowns)

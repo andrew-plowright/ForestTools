@@ -18,7 +18,7 @@ A canopy height model of a 1.5 hectare section of forest in the Kootenay mountai
 British Columbia, Canada.
 }
 \seealso{
-\link{kootenayTrees} \link{kootenayBlocks}
+\link{kootenayTrees} \link{kootenayBlocks} \link{kootenayCrowns}
 }
 \keyword{datasets}
 

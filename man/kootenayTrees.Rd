@@ -7,7 +7,7 @@
 \format{A \link[sp]{SpatialPointsDataFrame} with the following attributes:
 \describe{
   \item{height}{height of the tree's apex, in meters above ground}
-  \item{radius}{radius of the moving window (see \code{\link{TreeTopFinder}}) at
+  \item{winRadius}{radius of the moving window (see \code{\link{TreeTopFinder}}) at
   the treetop's location}
   }}
 \usage{
@@ -20,7 +20,7 @@ function to the \link{kootenayCHM} raster dataset. Only trees over 2 m above gro
 were detected.
 }
 \seealso{
-\link{kootenayCHM} \link{kootenayBlocks}
+\link{kootenayCHM} \link{kootenayBlocks} \link{kootenayCrowns}
 }
 \keyword{datasets}
 

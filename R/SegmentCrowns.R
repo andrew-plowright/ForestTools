@@ -25,7 +25,7 @@
 #' @param format string. Format of the function's ouput. Can be set to either 'raster' or 'polygons'.
 #' @param verbose logical. Print processing progress to console.
 #' @return Depending on the argument set with \code{format}, this function will return a map of outlined
-#' crowns as either a RasterLayer (see \link[raster]raster{}), in which distinct crowns
+#' crowns as either a RasterLayer (see \link[raster]{raster}), in which distinct crowns
 #' are given a unique cell value, or a \link[sp]{SpatialPolygonsDataFrame}, in which each crown
 #' is represented by a polygon.
 #' @references Meyer, F., & Beucher, S. (1990). Morphological segmentation. \emph{Journal of visual communication and

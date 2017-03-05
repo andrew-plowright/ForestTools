@@ -47,10 +47,10 @@ mean(ttops$height)
 crowns <- SegmentCrowns(treetops = ttops, CHM = kootenayCHM, minHeight = 1.5, verbose = FALSE)
 
 # Plot crowns
-plot(crowns, col = sample(rainbow(50), length(crowns), replace = TRUE), legend = FALSE, xlab = "", ylab = "", xaxt='n', yaxt = 'n')
+plot(crowns, col = sample(rainbow(50), length(unique(crowns[])), replace = TRUE), legend = FALSE, xlab = "", ylab = "", xaxt='n', yaxt = 'n')
 
 ## ---- fig.width = 4, fig.height = 2.51-----------------------------------
-# Convert raster crown map to polygons
+# Create polygon crown map
 crownsPoly <- SegmentCrowns(treetops = ttops, CHM = kootenayCHM, format = "polygons", minHeight = 1.5, verbose = FALSE)
 
 # Plot CHM

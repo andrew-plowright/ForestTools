@@ -16,10 +16,10 @@ kootenayBlocks
 \description{
 Boundaries of cut blocks within a 1.5 hectare section of forest in
 the Kootenay mountains, in British Columbia, Canada. Each block contains trees of different
-levels of maturity. Overlaps with \link{kootenayTrees} and \link{kootenayCHM}.
+levels of maturity. Overlaps with \link{kootenayTrees}, \link{kootenayCrowns} and \link{kootenayCHM}.
 }
 \seealso{
-\link{kootenayTrees} \link{kootenayCHM}
+\link{kootenayTrees} \link{kootenayCHM} \link{kootenayCrowns}
 }
 \keyword{datasets}
 

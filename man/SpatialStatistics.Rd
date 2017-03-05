@@ -17,7 +17,7 @@ Tree crowns delineated using \code{\link{SegmentCrowns}} can also be used.}
 interest. Tree counts and statistics will be returned for each area.}
 
 \item{grid}{RasterLayer (see \link[raster]{raster}) or numeric. An alternative to the \code{areas} argument.
-Using \code{grid} will compute tree counts and statistics with the cells of a spatial grid.
+Using \code{grid} will compute tree counts and statistics within the cells of a spatial grid.
 Grid size and placement can be defined by inputting a \link[raster]{raster} object.
 A single numeric value can also be used, in which case the function will generate a grid with a
 cell size equal to this value.}
@@ -54,7 +54,7 @@ generated. These attributes should be defined within the \code{@data} slot of th
 numeric variables are accepted.
 
 By default, the statistics generated for each attribute will be its mean, median, standard deviation,
-minimum and maximum. However, custom functions can be used instead with the \code{statFuns} argument.
+minimum and maximum. However, custom functions can also be used with the \code{statFuns} argument.
 This should be a named list of functions, wherein each list element is given a name to represent the
 statistic computed by the function.
 

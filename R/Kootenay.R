@@ -7,7 +7,7 @@
 #' \describe{Cell values are equal to canopy height above ground (in meters)}
 #' @source Data acquired from a photogrammetric drone survey performed by Spire Aerobotics
 #' on June 16th, 2016.
-#' @seealso \link{kootenayTrees} \link{kootenayBlocks}
+#' @seealso \link{kootenayTrees} \link{kootenayBlocks} \link{kootenayCrowns}
 "kootenayCHM"
 
 #' Kootenay forest - Dominant trees over 2 m
@@ -20,17 +20,17 @@
 #' @format A \link[sp]{SpatialPointsDataFrame} with the following attributes:
 #' \describe{
 #'   \item{height}{height of the tree's apex, in meters above ground}
-#'   \item{radius}{radius of the moving window (see \code{\link{TreeTopFinder}}) at
+#'   \item{winRadius}{radius of the moving window (see \code{\link{TreeTopFinder}}) at
 #'   the treetop's location}
 #'   }
-#' @seealso \link{kootenayCHM} \link{kootenayBlocks}
+#' @seealso \link{kootenayCHM} \link{kootenayBlocks} \link{kootenayCrowns}
 "kootenayTrees"
 
 #' Kootenay forest - Cut blocks
 #'
 #' Boundaries of cut blocks within a 1.5 hectare section of forest in
 #' the Kootenay mountains, in British Columbia, Canada. Each block contains trees of different
-#' levels of maturity. Overlaps with \link{kootenayTrees} and \link{kootenayCHM}.
+#' levels of maturity. Overlaps with \link{kootenayTrees}, \link{kootenayCrowns} and \link{kootenayCHM}.
 #'
 #' @format A \link[sp]{SpatialPolygonsDataFrame} with the following attributes:
 #' \describe{
@@ -38,5 +38,18 @@
 #'   \item{Shape_Leng}{length of polygon on meters}
 #'   \item{Shape_Area}{area of polygon in square meters}
 #'   }
-#' @seealso \link{kootenayTrees} \link{kootenayCHM}
+#' @seealso \link{kootenayTrees} \link{kootenayCHM} \link{kootenayCrowns}
 "kootenayBlocks"
+
+#' Kootenay forest - Tree crowns
+#'
+#' Outlines of tree crowns corresponding to the \link{kootenayTrees} treetops. Generated using \link{SegmentCrowns}.
+#'
+#' @format A \link[sp]{SpatialPolygonsDataFrame} with the following attributes:
+#' \describe{
+#'   \item{height}{height of the tree's apex, in meters above ground. Inherited from \link{kootenayTrees}.}
+#'   \item{winRadius}{radius of the moving window at the treetop's location. Inherited from \link{kootenayTrees}.}
+#'   \item{crownArea}{area of crown outline in square meters}
+#'   }
+#' @seealso \link{kootenayTrees} \link{kootenayCHM} \link{kootenayBlocks}
+"kootenayCrowns"

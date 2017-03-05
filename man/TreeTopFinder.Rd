@@ -11,17 +11,20 @@ TreeTopFinder(CHM, winFun, minHeight = NULL, maxCells = 2e+06,
 \item{CHM}{Canopy height model. Either in \link[raster]{raster} format, or a path directing to a raster file. A character vector of multiple paths directing to a
 tiled raster dataset can also be used.}
 
-\item{winFun}{function. Should take the value of a given \code{CHM} pixel as its only argument, and return the radius of the corresponding search window.}
+\item{winFun}{function. The function that determines the size of the window at any given location on the
+canopy. It should take the value of a given \code{CHM} pixel as its only argument, and return the desired radius of
+the circular search window when centered on that pixel.}
 
 \item{minHeight}{numeric. The minimum height value for a \code{CHM} pixel to be considered as a potential treetop. All \code{CHM} pixels beneath
 this value will be masked out.}
 
-\item{maxCells}{numeric. If the number of raster cells for the \code{CHM} exceeds this value, the \link[TileManager]{TileScheme} function
-will be applied to break apart the input into tiles to speed up processing.}
+\item{maxCells}{numeric. If the number of raster cells (i.e.: pixels) for the \code{CHM} exceeds this value,
+the \link[TileManager]{TileScheme} function
+will be applied internally to break apart the CHM into tiles to speed up processing.}
 
-\item{maxWinDiameter}{numeric. This parameter prevents \code{TreeTopFinder} from being run with a function that would
-produce very large windows, which will affect performance and is likely a sign of an inappropriate window function. Can be disabled
-by setting to \code{NULL}.}
+\item{maxWinDiameter}{numeric. This parameter sets a cap on the maximum window size. If an improperly calibrated
+function is set for \code{winFun}, it may produce overly large windows that would perform poorly and significantly
+slow processing time. This setting can be disabled by setting to \code{NULL}.}
 
 \item{verbose}{logical. Print progress to console if set to \code{TRUE}.}
 }

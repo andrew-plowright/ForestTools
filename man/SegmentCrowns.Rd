@@ -23,8 +23,9 @@ height of \code{treetops}.}
 }
 \value{
 Depending on the argument set with \code{format}, this function will return a map of outlined
-crowns as either a \link[raster]{raster}, in which distinct crowns are given a unique cell value, or a
-\link[sp]{SpatialPolygonsDataFrame}, in which each crown is represented by a polygon.
+crowns as either a RasterLayer (see \link[raster]{raster}), in which distinct crowns
+are given a unique cell value, or a \link[sp]{SpatialPolygonsDataFrame}, in which each crown
+is represented by a polygon.
 }
 \description{
 Implements the \link[imager]{watershed} function to segment (i.e.: outline) crowns from a canopy height model.
@@ -39,9 +40,9 @@ much longer to process. It is advisable to run this function using a raster outp
 its results and adjust parameters.
 
 Although it is slower, using the 'polygons' output \code{format} provides the added benefit of transferring
-treetop attributes (such as height) to the newly created polygons. The area of each crown will also
+treetop attributes (such as \emph{height}) to the newly created polygons. The area of each crown will also
 automatically be calculated and added to the polygons' data under the \emph{crownArea} field. Furthermore,
-'orphaned' segments (i.e.: outlines without an associated treetop) will be removed when
+"orphaned" segments (i.e.: outlines without an associated treetop) will be removed when
 \code{format} is set to 'polygons'.
 }
 \examples{

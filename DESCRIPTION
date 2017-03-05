@@ -2,7 +2,7 @@ Package: ForestTools
 Type: Package
 Title: Analysing Remotely Sensed Forest Data
 Version: 0.1.1
-Date: 2017-01-16
+Date: 2017-03-05
 Author: Andrew Plowright
 Maintainer: Andrew Plowright <andrew.plowright@alumni.ubc.ca>
 Description: Forest Tools provides functions for analyzing remotely sensed forest data.

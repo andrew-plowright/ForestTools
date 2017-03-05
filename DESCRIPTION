@@ -17,7 +17,6 @@ Imports:
     rgeos,
     rgdal,
     TileManager,
-    maptools,
     APfun,
     methods
 RoxygenNote: 5.0.1

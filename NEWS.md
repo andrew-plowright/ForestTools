@@ -1,3 +1,7 @@
+# ForestTools 0.1.2
+
+Added the 'Quesnel' dataset. Added a new vignette: "Calculating inventory attributes using Forest Tools".
+
 # ForestTools 0.1.1
 
 Modified 'SegmentCrowns' function so that it can produce tree crowns in polygon format. The function will also calculate crown area, and filter out crowns that are not associated with a treetop point location.

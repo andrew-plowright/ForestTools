@@ -42,7 +42,7 @@
 #' @seealso \code{\link{TreeTopFinder}} \code{\link{SpatialStatistics}} \code{\link[imager]{watershed}}
 #' @export
 
-SegmentCrowns <- function(treetops, CHM, minHeight = 0, format = "raster", verbose = TRUE){
+SegmentCrowns <- function(treetops, CHM, minHeight = 0, format = "raster", verbose = FALSE){
 
   if(verbose) cat("Begun 'SegmentCrowns' process at", format(Sys.time(), "%Y-%m-%d, %X"), "\n\n")
 

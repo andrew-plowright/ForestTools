@@ -23,7 +23,7 @@ topHgtFun <- function(x, ...) mean(tail(sort(x), 100))
 
 ## ------------------------------------------------------------------------
 # Use SpatialStatistics to generate gridded statistics
-sptStatRas <- SpatialStatistics(quesnelTrees, variables = "height", grid = 100, statFuns = list(Top100 = topHgtFun))
+sptStatRas <- SpatialStatistics(trees = quesnelTrees, variables = "height", grid = 100, statFuns = list(Top100 = topHgtFun))
 
 # View information about the result
 sptStatRas
@@ -53,7 +53,7 @@ quesnelBlocks[["topHeight"]] <- zoneStat[,"mean"]
 # Plot result
 library(rgeos)
 colRamp <- colorRampPalette(c('lightgoldenrod1', 'tomato2'))(10)
-cols <- colRamp[as.numeric(cut(quesnelBlocks[["topHeight"]],breaks = 10))]
-plot(quesnelBlocks, col = cols, xlab = "", ylab = "", xaxt='n', yaxt = 'n')
+polyCols <- colRamp[as.numeric(cut(quesnelBlocks[["topHeight"]],breaks = 10))]
+plot(quesnelBlocks, col = polyCols, xlab = "", ylab = "", xaxt='n', yaxt = 'n')
 text(gCentroid(quesnelBlocks, byid = TRUE), round(quesnelBlocks[["topHeight"]],2), font = 2)
 

@@ -19,12 +19,12 @@ This short guide will demonstrate how to use the Forest Tools package to generat
 The analysis workflow is as follows:
 
 1. Dominant treetops are detected from a canopy height model.
-2. The average height of the 100 tallest trees is calculated for each 1 ha cell on a continuous grid. This metric will be referred to as _top height_.
-3. The average 1 ha top height is upscaled a second time to a set of polygonal management units (blocks).
+2. The average height of the 100 tallest trees is calculated for each 1 ha cell in a continuous grid. This metric will be referred to as _top height_.
+3. The average top height is upscaled a second time to a set of polygonal management units (blocks).
 
 The process for detecting dominant treetops (step 1) is explained in detail in the accompanying [Canopy analysis](treetopAnalysis.html) vignette. In this document, we will simply use an existing set of treetops.
 
-Begin by attaching the Forest Tools library and sample data. The sample data is derived from a photogrammetric survey of a 125 ha area in the Quesnel Timber Supply Area in British Columbia, Canada.
+Begin by loading the Forest Tools library and sample data. The sample data is derived from a photogrammetric survey of a 125 ha area in the Quesnel Timber Supply Area in British Columbia, Canada.
 
 ```{r, message = FALSE}
 # Attach the 'ForestTools' and 'raster' libraries
@@ -59,17 +59,17 @@ topHgtFun <- function(x, ...) mean(tail(sort(x), 100))
 
 In this example `x` would be a series of tree heights. The `sort` function will arrange them in ascending order (and also remove NA values), and the `tail` function will subset the last 100 values (i.e.: the highest values). Finally, the `mean` function will compute the average.
 
-We will now apply the newly created `topHgtFun` to our `quesnelTrees` dataset using the `SpatialStatistics` function. We set the `grid` argument to 100 to generate a 100 m x 100 m (1 ha) grid. We enter `topHgtFun` as a _named list_: the "Top100" will be the name given to the product of the function.
+We will now apply the newly created `topHgtFun` to our `quesnelTrees` dataset using the `SpatialStatistics` function. We set the `grid` argument to 100 to generate a 100 m x 100 m (1 ha) grid. It is important to enter `topHgtFun` as a _named list_: "Top100" will be part of the name given to the product of the function. If other statistics are required, their corresponding functions can be added to this list.
 
 ```{r}
 # Use SpatialStatistics to generate gridded statistics
-sptStatRas <- SpatialStatistics(quesnelTrees, variables = "height", grid = 100, statFuns = list(Top100 = topHgtFun))
+sptStatRas <- SpatialStatistics(trees = quesnelTrees, variables = "height", grid = 100, statFuns = list(Top100 = topHgtFun))
 
 # View information about the result
 sptStatRas
 ```
 
-We can see that the product of `SpatialStatistics` is a [RasterBrick](https://cran.r-project.org/package=raster/raster.pdf#page=36), i.e.: a multi-layered raster. `SpatialStatistics` automatically generates a tree count in addition to any custom-defined statistics. We can subset a single layer from the RasterBrick using the `[[]]` operator
+The product of `SpatialStatistics` is a [RasterBrick](https://cran.r-project.org/package=raster/raster.pdf#page=36), i.e.: a multi-layered raster. It contains two layers: _TreeCount_ and _heightTop100_, the product of our custom function when applied to the _height_ attribute of the trees in each cell. We can subset a single layer from the RasterBrick using the `[[]]` operator
 
 ```{r, fig.width = 4, fig.height = 2.51}
 # Subset top height raster
@@ -79,9 +79,9 @@ topHgtRas <- sptStatRas[["heightTop100"]]
 plot(topHgtRas, xlab = "", ylab = "", xaxt='n', yaxt = 'n')
 ```
 
-## Get average top height for polygons
+## Compute average cell height for polygonal areas
 
-Once our raster-based statistic has been generated, there are a variety of ways to summarize the raster to a set of polygons. In the following example, the `rasterize` and `zonal` functions from the [raster]( https://cran.r-project.org/package=raster) package are used.
+Once our raster-based statistic has been generated, there are a variety of ways summarizing the raster to a set of polygons. Note that this is different than calculating _top height_ for the polygons directly. In the following example, the `rasterize` and `zonal` functions from the [raster]( https://cran.r-project.org/package=raster) package are used.
 
 ```{r, fig.width = 4, fig.height = 2.51}
 # Rasterize block boundaries
@@ -104,7 +104,7 @@ quesnelBlocks[["topHeight"]] <- zoneStat[,"mean"]
 # Plot result
 library(rgeos)
 colRamp <- colorRampPalette(c('lightgoldenrod1', 'tomato2'))(10)
-cols <- colRamp[as.numeric(cut(quesnelBlocks[["topHeight"]],breaks = 10))]
-plot(quesnelBlocks, col = cols, xlab = "", ylab = "", xaxt='n', yaxt = 'n')
+polyCols <- colRamp[as.numeric(cut(quesnelBlocks[["topHeight"]],breaks = 10))]
+plot(quesnelBlocks, col = polyCols, xlab = "", ylab = "", xaxt='n', yaxt = 'n')
 text(gCentroid(quesnelBlocks, byid = TRUE), round(quesnelBlocks[["topHeight"]],2), font = 2)
 ```

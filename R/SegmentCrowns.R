@@ -5,31 +5,46 @@
 #' See Meyer & Beucher (1990) for details on watershed segmentation.
 #'
 #' This function can return a crown map as either a \link[raster]{raster} or a \link[sp]{SpatialPolygonsDataFrame},
-#' which are defined using the \code{format} argument. For most analytical purposes, it is preferable to have
+#' as defined using the \code{format} argument. For most analytical purposes, it is preferable to have
 #' crown outlines as polygons. However, polygonal crown maps take up significantly more disk space, and take
-#' much longer to process. It is advisable to run this function using a raster output first, in order to check
+#' longer to process. It is advisable to run this function using a raster output first, in order to check
 #' its results and adjust parameters.
 #'
-#' Although it is slower, using the 'polygons' output \code{format} provides the added benefit of transferring
+#' Using the 'polygons' output \code{format} provides the added benefit of transferring
 #' treetop attributes (such as \emph{height}) to the newly created polygons. The area of each crown will also
 #' automatically be calculated and added to the polygons' data under the \emph{crownArea} field. Furthermore,
 #' "orphaned" segments (i.e.: outlines without an associated treetop) will be removed when
 #' \code{format} is set to 'polygons'.
 #'
+#' By default, polygonal crown outlines are produced internally using the the \code{rasterToPolygons} function from
+#' the \link[raster]{raster} package. This function is problematic due to it being 1) very slow and 2) leaking memory
+#' when applied to multiple datasets. An alternative is provided for users who've installed OSGeo4W and Python.
+#' By setting the \code{OSGeoPath} path to the OSGeo4W installation directory (usually 'C:\\OSGeo4W64'), the function will
+#' use the \emph{gdal_polygonize.py} GDAL utility to generate polygonal crown outlines instead.
+#'
 #' @param treetops \link[sp]{SpatialPointsDataFrame}. The point locations of treetops. The function will generally produce a
 #' number of crown segments equal to the number of treetops.
-#' @param CHM Canopy height model in \link[raster]{raster} format.
+#' @param CHM Canopy height model in \link[raster]{raster} format. Should be the same that was used to create
+#' the input for \code{treetops}.
 #' @param minHeight numeric. The minimum height value for a \code{CHM} pixel to be considered as part of a crown segment.
 #' All \code{CHM} pixels beneath this value will be masked out. Note that this value should be lower than the minimum
 #' height of \code{treetops}.
 #' @param format string. Format of the function's ouput. Can be set to either 'raster' or 'polygons'.
+#' @param OSGeoPath character. Optional path to the OSGeo4W installation directory. If both OSGeo4W and Python are installed,
+#' this will enable the function to use a faster algorithm for producing polygonal crown outlines (see Details below).
 #' @param verbose logical. Print processing progress to console.
+#'
 #' @return Depending on the argument set with \code{format}, this function will return a map of outlined
 #' crowns as either a RasterLayer (see \link[raster]{raster}), in which distinct crowns
 #' are given a unique cell value, or a \link[sp]{SpatialPolygonsDataFrame}, in which each crown
 #' is represented by a polygon.
+#'
 #' @references Meyer, F., & Beucher, S. (1990). Morphological segmentation. \emph{Journal of visual communication and
 #' image representation, 1}(1), 21-46.
+#'
+#' @seealso \code{\link{TreeTopFinder}} \code{\link{SpatialStatistics}} \code{\link[imager]{watershed}} \cr \cr
+#' OSGeo4W download page: \url{https://trac.osgeo.org/osgeo4w/}
+#'
 #' @examples
 #' # Use TreeTopFinder to detect treetops in demo canopy height model
 #' ttops <- TreeTopFinder(CHMdemo, winFun = function(x){x * 0.06 + 0.5}, minHeight = 2)
@@ -39,10 +54,10 @@
 #'
 #' # Use SegmentCrowns to outline tree crowns
 #' segs <- SegmentCrowns(ttops, CHMdemo, minCrwnHgt)
-#' @seealso \code{\link{TreeTopFinder}} \code{\link{SpatialStatistics}} \code{\link[imager]{watershed}}
+#'
 #' @export
 
-SegmentCrowns <- function(treetops, CHM, minHeight = 0, format = "raster", verbose = FALSE){
+SegmentCrowns <- function(treetops, CHM, minHeight = 0, format = "raster", OSGeoPath = NULL, verbose = FALSE){
 
   if(verbose) cat("Begun 'SegmentCrowns' process at", format(Sys.time(), "%Y-%m-%d, %X"), "\n\n")
 
@@ -84,14 +99,6 @@ SegmentCrowns <- function(treetops, CHM, minHeight = 0, format = "raster", verbo
     # Create sequence if tree identifiers
     treetops[[treeID]] <- 1:length(treetops)
 
-    # if(is.null(treeID)){
-    #   treeID <- "treeNum"
-    #   notree <- 0
-    #   treetops[[treeID]] <- 1:length(treetops)
-    # }else{
-    #   notree <- max(treetops[[treeID]]) + 1
-    # }
-
   ### APPLY WATERSHED SEGMENTATION
 
       if(verbose) cat("..Masking areas below minimum crown height", "\n")
@@ -128,17 +135,24 @@ SegmentCrowns <- function(treetops, CHM, minHeight = 0, format = "raster", verbo
         if(verbose) cat("..Converting to segments to polygons (this could take a while)", "\n")
 
         # Convert raster to polygons
-        polys <- raster::rasterToPolygons(ws.ras)
-        polys <- rgeos::gUnaryUnion(polys, id = polys[["layer"]])
+        if(is.null(OSGeoPath)){
+
+          # Using 'raster' package...
+          polys <- raster::rasterToPolygons(ws.ras)
+          polys <- rgeos::gUnaryUnion(polys, id = polys[["layer"]])
+          polys <- sp::disaggregate(polys)
+
+        }else{
+
+          # Using OSGeo....
+          polys <- APfun::APpolygonize(ws.ras, OSGeoPath = OSGeoPath)
+        }
 
         if(verbose) cat("..Matching polygons to treetops", "\n")
 
-        # Disaggregate multi-part polygons
-        polys.dag <- sp::disaggregate(polys)
-
         # Perform spatial overlay, transfer data from treetops to polygons, and remove polygons with no associated treetops
-        polys.over <- sp::over(polys.dag, treetops)
-        polys.out <- sp::SpatialPolygonsDataFrame(polys.dag, subset(polys.over, select= which(names(polys.over) != treeID)))
+        polys.over <- sp::over(polys, treetops)
+        polys.out <- sp::SpatialPolygonsDataFrame(polys, subset(polys.over, select = which(names(polys.over) != treeID)))
         polys.out <- polys.out[match(treetops[[treeID]], polys.over[,treeID]),]
 
         if(verbose) cat("..Computing segment areas", "\n")

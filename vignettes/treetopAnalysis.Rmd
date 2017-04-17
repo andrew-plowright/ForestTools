@@ -108,7 +108,7 @@ plot(crowns, col = sample(rainbow(50), length(unique(crowns[])), replace = TRUE)
 
 By default, `SegmentCrowns` returns a raster, where each crown is given a unique cell value. Depending on the intended purpose of the crown map, it may be preferable to store these outlines as polygons. Setting the `format` argument to "polygons" will convert the rasterized crown map to a set of polygons (a [SpatialPolygonsDataFrame](https://cran.r-project.org/package=sp/sp.pdf#page=89)). As an added benefit, these polygons will inherit the attributes of the treetops from which they were generated, such as _height_. Furthermore, an extra attribute, _crownArea_, will be calculated for each polygon.
 
-It should be noted, however, that producing crown outlines as polygons requires significantly more processing time and disk space. It is advised to generate crown maps as rasters first in order to quickly visualize results.
+It should be noted, however, that producing crown outlines as polygons requires significantly more processing time and disk space.
 
 ```{r, fig.width = 4, fig.height = 2.51}
 # Create polygon crown map

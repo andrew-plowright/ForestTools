@@ -3,7 +3,7 @@
 .RData
 .Ruserdata
 data-raw
-testdata-raw
+createTestData
 inst/doc
 builder_ForestTools.R
 oldfunctions

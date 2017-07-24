@@ -37,11 +37,14 @@ TreeTopFinder <- function(CHM, winFun, minHeight = NULL, maxCells = 2000000, max
 
   ### GATE-KEEPER
 
+    # Check that CHM has square cells
+    if(res(CHM)[1] != res(CHM)[2]) stop("Input CHM does not have square cells:\n", "Cell size: ", sprintf("%.16f",res(CHM)[1]), " x ", sprintf("%.16f",res(CHM)[2]))
+  
     # Convert single Raster object or paths to raster files into a list of Raster objects
     CHM <- TileManager:::TileInput(CHM, "CHM")
 
     if(!is.null(minHeight)){
-      if(minHeight <= 0){stop("Minimum canopy height must be set to a positive value.")}
+      if(minHeight <= 0) stop("Minimum canopy height must be set to a positive value.")
     }
 
   ### PRE-PROCESS: CREATE FUNCTION TO RETURN EMPTY SPDF
@@ -100,6 +103,8 @@ TreeTopFinder <- function(CHM, winFun, minHeight = NULL, maxCells = 2000000, max
     # Cycle through input radii
     windows <- lapply(radii, function(radius){
 
+      print(radius)
+      
       # Based on the unit size of the input CHM and a given radius, this function will create a matrix whose non-zero
       # values will form the shape of a circle.
       circle <- raster::focalWeight(CHM[[1]], radius, type = "circle")

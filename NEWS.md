@@ -1,3 +1,7 @@
+# ForestTools 0.1.4
+
+Add a new option for generating polygonal tree crowns with 'SegmentCrowns' using GDAL utilities from OSGeo4W. See documentation for 'SegmentCrowns' as well as new vignette: "Options for creating polygonal crown maps".
+
 # ForestTools 0.1.2
 
 Added the 'Quesnel' dataset. Added a new vignette: "Calculating inventory attributes using Forest Tools".

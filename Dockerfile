@@ -1,4 +1,4 @@
-FROM achubaty/r-spatial-base
+FROM tesera/r-spatial-base:3.3.3
 
 RUN apt-get update
 

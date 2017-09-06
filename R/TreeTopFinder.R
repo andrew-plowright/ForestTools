@@ -37,22 +37,17 @@ TreeTopFinder <- function(CHM, winFun, minHeight = NULL, maxCells = 2000000, max
 
   ### GATE-KEEPER
 
-    # Check that CHM has square cells
-    if(res(CHM)[1] != res(CHM)[2]) stop("Input CHM does not have square cells:\n", "Cell size: ", sprintf("%.16f",res(CHM)[1]), " x ", sprintf("%.16f",res(CHM)[2]))
-  
     # Convert single Raster object or paths to raster files into a list of Raster objects
     CHM <- TileManager:::TileInput(CHM, "CHM")
 
+    # Round out CHM resolution to fifth decimal and check that CHM has square cells
+    # Rounding is necessary since because lack of precision in CHM cell size call cause the
+    # 'focalWeight' function to misbehave
+    roundRes <- round(raster::res(CHM[[1]]), 5)
+    if(roundRes[1] != roundRes[2]) stop("Input CHM does not have square cells")
+
     if(!is.null(minHeight)){
       if(minHeight <= 0) stop("Minimum canopy height must be set to a positive value.")
-    }
-
-  ### PRE-PROCESS: CREATE FUNCTION TO RETURN EMPTY SPDF
-
-    emptyOutput <- function(inCRS){
-      sp::SpatialPointsDataFrame(crds <- matrix(0, nrow = 1, ncol = 2),
-                               data = data.frame(height = 0, winRadius = 0),
-                               proj4string = inCRS)[0,]
     }
 
   ### PRE-PROCESS: COMPUTE RANGE OF SEARCH WINDOWS
@@ -69,11 +64,11 @@ TreeTopFinder <- function(CHM, winFun, minHeight = NULL, maxCells = 2000000, max
     }
 
     # Generate a list of radii
-    radii <- seq(floor(winFun(CHM.min)), ceiling(winFun(CHM.max)), by = raster::res(CHM[[1]])[1])
+    radii <- seq(floor(winFun(CHM.min)), ceiling(winFun(CHM.max)), by = roundRes[1])
     radii <- radii[radii != 0]
 
     # Calculate the dimensions of the largest matrix to be created from the generated list of radii
-    maxDimension <- (max(radii) / raster::res(CHM[[1]])[1]) * 2 + 1
+    maxDimension <- (max(radii) / roundRes[1]) * 2 + 1
 
     # Check if input formula will yield a window size bigger than the maximum set by 'maxWinDiameter'
     if(!is.null(maxWinDiameter)){
@@ -103,11 +98,9 @@ TreeTopFinder <- function(CHM, winFun, minHeight = NULL, maxCells = 2000000, max
     # Cycle through input radii
     windows <- lapply(radii, function(radius){
 
-      print(radius)
-      
       # Based on the unit size of the input CHM and a given radius, this function will create a matrix whose non-zero
       # values will form the shape of a circle.
-      circle <- raster::focalWeight(CHM[[1]], radius, type = "circle")
+      circle <- raster::focalWeight(raster::raster(resolution = roundRes), radius, type = "circle")
 
       # The matrix is then be "padded" to the size of the biggest matrix created from the list of radii
       topBottomPad <- matrix(0, nrow = (maxDimension - ncol(circle)) / 2, ncol = ncol(circle))
@@ -117,7 +110,6 @@ TreeTopFinder <- function(CHM, winFun, minHeight = NULL, maxCells = 2000000, max
       # The matrix values are then transformed into a vector of single dimension
       outVector <- as.vector(paddedCircle != 0)
 
-      # The vector is the returned
       return(outVector)
     })
 
@@ -175,7 +167,7 @@ TreeTopFinder <- function(CHM, winFun, minHeight = NULL, maxCells = 2000000, max
       if(length(localMaxima.cellNumbers) == 0){
 
         # Return a dummy SPDF with no coordinates
-        localMaxima.spdf <- emptyOutput(raster::crs(CHM.tile))
+        localMaxima.spdf <- .emptyOutput(raster::crs(CHM.tile))
 
       # If local maxima WERE found...
       }else{
@@ -222,3 +214,10 @@ TreeTopFinder <- function(CHM, winFun, minHeight = NULL, maxCells = 2000000, max
   ### OUTPUT
     return(localMaxima)
   }
+
+
+.emptyOutput <- function(inCRS){
+  sp::SpatialPointsDataFrame(crds <- matrix(0, nrow = 1, ncol = 2),
+                             data = data.frame(height = 0, winRadius = 0),
+                             proj4string = inCRS)[0,]
+}

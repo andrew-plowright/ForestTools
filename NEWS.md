@@ -1,3 +1,7 @@
+# ForestTools 0.1.5
+
+Fixed a persitent bug in 'TreeTopFinder' whereby CHMs with imprecise cell sizes (i.e.: cell dimensions that aren't accurate after a certain number of decimals), would cause issues with the shape of the focal windows. Internally, CHM cell dimensions are now rounded to the fifth decimal.
+
 # ForestTools 0.1.4
 
 Add a new option for generating polygonal tree crowns with 'SegmentCrowns' using GDAL utilities from OSGeo4W. See documentation for 'SegmentCrowns' as well as new vignette: "Options for creating polygonal crown maps".

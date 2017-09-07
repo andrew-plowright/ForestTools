@@ -18,7 +18,7 @@ the input for \code{treetops}.}
 All \code{CHM} pixels beneath this value will be masked out. Note that this value should be lower than the minimum
 height of \code{treetops}.}
 
-\item{format}{string. Format of the function's ouput. Can be set to either 'raster' or 'polygons'.}
+\item{format}{string. Format of the function's output. Can be set to either 'raster' or 'polygons'.}
 
 \item{OSGeoPath}{character. Optional path to the OSGeo4W installation directory. If both OSGeo4W and Python are installed,
 this will enable the function to use a faster algorithm for producing polygonal crown outlines (see Details below).}

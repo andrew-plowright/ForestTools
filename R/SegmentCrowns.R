@@ -29,7 +29,7 @@
 #' @param minHeight numeric. The minimum height value for a \code{CHM} pixel to be considered as part of a crown segment.
 #' All \code{CHM} pixels beneath this value will be masked out. Note that this value should be lower than the minimum
 #' height of \code{treetops}.
-#' @param format string. Format of the function's ouput. Can be set to either 'raster' or 'polygons'.
+#' @param format string. Format of the function's output. Can be set to either 'raster' or 'polygons'.
 #' @param OSGeoPath character. Optional path to the OSGeo4W installation directory. If both OSGeo4W and Python are installed,
 #' this will enable the function to use a faster algorithm for producing polygonal crown outlines (see Details below).
 #' @param verbose logical. Print processing progress to console.

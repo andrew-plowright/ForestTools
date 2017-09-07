@@ -4,7 +4,7 @@
 #'
 #' Input trees can either be point locations (\link[sp]{SpatialPointsDataFrame})
 #' or crown outlines (\link[sp]{SpatialPolygonsDataFrame}). If crown outlines (or other polygons)
-#' are inputted, they will be partioned between spatial units according to their geographic centroids.
+#' are inputted, they will be partitioned between spatial units according to their geographic centroids.
 #'
 #' In addition to tree counts, statistics for the trees' attributes can also be
 #' generated. These attributes should be defined within the \code{@@data} slot of the \code{input}. Only

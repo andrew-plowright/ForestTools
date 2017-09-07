@@ -22,4 +22,3 @@ levels of maturity. Overlaps with \link{kootenayTrees}, \link{kootenayCrowns} an
 \link{kootenayTrees} \link{kootenayCHM} \link{kootenayCrowns}
 }
 \keyword{datasets}
-

@@ -20,4 +20,3 @@ Outlines of tree crowns corresponding to the \link{kootenayTrees} treetops. Gene
 \link{kootenayTrees} \link{kootenayCHM} \link{kootenayBlocks}
 }
 \keyword{datasets}
-

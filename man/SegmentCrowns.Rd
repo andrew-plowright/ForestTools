@@ -74,4 +74,3 @@ image representation, 1}(1), 21-46.
 \code{\link{TreeTopFinder}} \code{\link{SpatialStatistics}} \code{\link[imager]{watershed}} \cr \cr
 OSGeo4W download page: \url{https://trac.osgeo.org/osgeo4w/}
 }
-

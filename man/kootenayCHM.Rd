@@ -21,4 +21,3 @@ British Columbia, Canada.
 \link{kootenayTrees} \link{kootenayBlocks} \link{kootenayCrowns}
 }
 \keyword{datasets}
-

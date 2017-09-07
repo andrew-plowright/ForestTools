@@ -21,4 +21,3 @@ British Columbia, Canada.
 \link{quesnelTrees} \link{quesnelBlocks}
 }
 \keyword{datasets}
-

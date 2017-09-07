@@ -23,4 +23,3 @@ were detected.
 \link{kootenayCHM} \link{kootenayBlocks} \link{kootenayCrowns}
 }
 \keyword{datasets}
-

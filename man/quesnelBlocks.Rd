@@ -22,4 +22,3 @@ levels of maturity. Overlaps with \link{quesnelTrees} and \link{quesnelCHM}.
 \link{quesnelTrees} \link{quesnelCHM}
 }
 \keyword{datasets}
-

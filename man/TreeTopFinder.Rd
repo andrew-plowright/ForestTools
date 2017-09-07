@@ -53,4 +53,3 @@ Popescu, S. C., & Wynne, R. H. (2004). Seeing the trees in the forest. \emph{Pho
 \seealso{
 \code{\link{SegmentCrowns}} \code{\link{SpatialStatistics}}
 }
-

@@ -12,4 +12,3 @@ canopy height models, and can detect treetops and outline their respective crown
 summarize tree counts and attributes within particular areas of interest or within continous spatial
 grids.
 }
-

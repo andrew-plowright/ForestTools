@@ -97,4 +97,3 @@ plot(gridStats$heightMax)
 \seealso{
 \code{\link{TreeTopFinder}} \code{\link{SegmentCrowns}}
 }
-

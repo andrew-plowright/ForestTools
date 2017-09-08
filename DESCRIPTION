@@ -15,7 +15,6 @@ Imports:
     sp,
     raster,
     rgeos,
-    rgdal,
     TileManager (>= 0.2.0),
     APfun (>= 0.1.1),
     methods

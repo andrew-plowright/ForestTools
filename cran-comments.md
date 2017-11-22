@@ -11,3 +11,6 @@
 
 There are no reverse dependencies.
 
+## NOTES
+
+Fixed errors reported on https://cran.r-project.org/web/checks/check_results_ForestTools.html

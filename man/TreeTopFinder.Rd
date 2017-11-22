@@ -13,7 +13,7 @@ tiled raster dataset can also be used.}
 
 \item{winFun}{function. The function that determines the size of the window at any given location on the
 canopy. It should take the value of a given \code{CHM} pixel as its only argument, and return the desired radius of
-the circular search window when centered on that pixel.}
+the circular search window when centered on that pixel. Size of the window is in map units.}
 
 \item{minHeight}{numeric. The minimum height value for a \code{CHM} pixel to be considered as a potential treetop. All \code{CHM} pixels beneath
 this value will be masked out.}

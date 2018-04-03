@@ -2,13 +2,13 @@
 % Please edit documentation in R/SegmentCrowns.R
 \name{SegmentCrowns}
 \alias{SegmentCrowns}
-\title{SegmentCrowns}
+\title{Marker-Controlled Watershed Segmentation}
 \usage{
 SegmentCrowns(treetops, CHM, minHeight = 0, format = "raster",
   OSGeoPath = NULL, verbose = FALSE)
 }
 \arguments{
-\item{treetops}{\link[sp]{SpatialPointsDataFrame}. The point locations of treetops. The function will generally produce a
+\item{treetops}{\link[sp:SpatialPoints]{SpatialPointsDataFrame}. The point locations of treetops. The function will generally produce a
 number of crown segments equal to the number of treetops.}
 
 \item{CHM}{Canopy height model in \link[raster]{raster} format. Should be the same that was used to create
@@ -28,16 +28,16 @@ this will enable the function to use a faster algorithm for producing polygonal 
 \value{
 Depending on the argument set with \code{format}, this function will return a map of outlined
 crowns as either a RasterLayer (see \link[raster]{raster}), in which distinct crowns
-are given a unique cell value, or a \link[sp]{SpatialPolygonsDataFrame}, in which each crown
+are given a unique cell value, or a \link[sp:SpatialPolygons]{SpatialPolygonsDataFrame}, in which each crown
 is represented by a polygon.
 }
 \description{
 Implements the \link[imager]{watershed} function to segment (i.e.: outline) crowns from a canopy height model.
-Segmentation is guided by the point locations of treetops, typically detected using the \link{TreeTopFinder} function.
+Segmentation is guided by the point locations of treetops, typically detected using the \link{vwf} function.
 See Meyer & Beucher (1990) for details on watershed segmentation.
 }
 \details{
-This function can return a crown map as either a \link[raster]{raster} or a \link[sp]{SpatialPolygonsDataFrame},
+This function can return a crown map as either a \link[raster]{raster} or a \link[sp:SpatialPolygons]{SpatialPolygonsDataFrame},
 as defined using the \code{format} argument. For most analytical purposes, it is preferable to have
 crown outlines as polygons. However, polygonal crown maps take up significantly more disk space, and take
 longer to process. It is advisable to run this function using a raster output first, in order to check
@@ -56,8 +56,8 @@ By setting the \code{OSGeoPath} path to the OSGeo4W installation directory (usua
 use the \emph{gdal_polygonize.py} GDAL utility to generate polygonal crown outlines instead.
 }
 \examples{
-# Use TreeTopFinder to detect treetops in demo canopy height model
-ttops <- TreeTopFinder(CHMdemo, winFun = function(x){x * 0.06 + 0.5}, minHeight = 2)
+# Use variable window filter to detect treetops in demo canopy height model
+ttops <- vwf(CHMdemo, winFun = function(x){x * 0.06 + 0.5}, minHeight = 2)
 
 # Set minimum tree crown height (should be LOWER than minimum treetop height)
 minCrwnHgt <- 1
@@ -71,6 +71,6 @@ Meyer, F., & Beucher, S. (1990). Morphological segmentation. \emph{Journal of vi
 image representation, 1}(1), 21-46.
 }
 \seealso{
-\code{\link{TreeTopFinder}} \code{\link{SpatialStatistics}} \code{\link[imager]{watershed}} \cr \cr
+\code{\link{vwf}} \code{\link{SpatialStatistics}} \code{\link[imager]{watershed}} \cr \cr
 OSGeo4W download page: \url{https://trac.osgeo.org/osgeo4w/}
 }

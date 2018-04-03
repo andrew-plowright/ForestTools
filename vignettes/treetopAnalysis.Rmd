@@ -59,17 +59,17 @@ plot(kootenayCHM, xlab = "", ylab = "", xaxt='n', yaxt = 'n')
 
 ## Detecting treetops
 
-Dominant treetops can be detected using `TreeTopFinder`. This function implements the _variable window filter_ algorithm developped by Popescu and Wynne (2004). In short, a moving window scans the CHM, and if a given cell is found to be the highest within the window, it is tagged as a treetop. The size of the window itself changes depending on the height of the cell on which it is centered. This is to compensate for varying crown sizes, with tall trees having wide crowns and vice versa.
+Dominant treetops can be detected using `vwf`. This function implements the _variable window filter_ algorithm developped by Popescu and Wynne (2004). In short, a moving window scans the CHM, and if a given cell is found to be the highest within the window, it is tagged as a treetop. The size of the window itself changes depending on the height of the cell on which it is centered. This is to compensate for varying crown sizes, with tall trees having wide crowns and vice versa.
 
 Therefore, the first step is to define the **function that will define the dynamic window size**. Essentially, this function should take a **CHM cell value** (i.e.: the height of the canopy above ground at that location) and return the **radius of the search window**. Here, we will define a simple linear equation, but any function with a single input and output will work.
 
 ```{r}
 lin <- function(x){x * 0.05 + 0.6}
 ```
-We do not wish for the `TreeTopFinder` to tag low-lying underbrush or other spurious treetops, and so we also set a minimum height of 2 m using the `minHeight` argument. Any cell with a lower value will not be tagged as a treetop.
+We do not wish for the `vwf` to tag low-lying underbrush or other spurious treetops, and so we also set a minimum height of 2 m using the `minHeight` argument. Any cell with a lower value will not be tagged as a treetop.
 
 ```{r}
-ttops <- TreeTopFinder(CHM = kootenayCHM, winFun = lin, minHeight = 2)
+ttops <- vwf(CHM = kootenayCHM, winFun = lin, minHeight = 2)
 ```
 
 We can now plot these treetops on top of the CHM.
@@ -83,7 +83,7 @@ plot(ttops, col = "blue", pch = 20, cex = 0.5, add = TRUE)
 
 ```
 
-The `ttops` object created by `TreeTopFinder` in this example contains the spatial coordinates of each detected treetop, as well as two default attributes: _height_ and _winRadius_. These correspond to the tree's height above ground and the radius of the moving window where the tree was located. Note that _winRadius_ **is not necessarily equivalent to the tree's crown radius**.
+The `ttops` object created by `vwf` in this example contains the spatial coordinates of each detected treetop, as well as two default attributes: _height_ and _winRadius_. These correspond to the tree's height above ground and the radius of the moving window where the tree was located. Note that _winRadius_ **is not necessarily equivalent to the tree's crown radius**.
 
 ```{r}
 # Get the mean treetop height
@@ -96,7 +96,7 @@ Canopy height models often represent continuous, dense forests, where tree crown
 
 The `SegmentCrowns` function implements the `watershed` algorithm from the [imager](https://cran.r-project.org/package=imager/imager.pdf) library. Watershed algorithms are frequently used in topograhical analysis to outline drainage basins. Given the morphological similarity between an inverted canopy and a terrain model, this same process can be used to outline tree crowns. However, a potential problem is the issue of _oversegmentation_, whereby branches, bumps and other spurious treetops are given their own segments. This source of error can be mitigated by using a variant of the algorithm known as _marker-controlled segmentation_ (Beucher & Meyer, 1993), whereby the watershed algorithm is constrained by a set of markers--in this case, treetops.
 
-The `SegmentCrowns` function also takes a `minHeight` argument, although this value should be lower than that which was assigned to `TreeTopFinder`. For the latter, `minHeight` defines the lowest expected treetop, whereas for the former it should correspond to the height above ground of the fringes of the lowest trees. 
+The `SegmentCrowns` function also takes a `minHeight` argument, although this value should be lower than that which was assigned to `vwf`. For the latter, `minHeight` defines the lowest expected treetop, whereas for the former it should correspond to the height above ground of the fringes of the lowest trees. 
 
 ```{r, fig.width = 4, fig.height = 2.51}
 # Create crown map

@@ -13,14 +13,14 @@
 #' Quesnel forest - Dominant trees over 2 m
 #'
 #' Dominant trees from a 125 hectare section of forest in the Quesnel Timber Supply Area, in
-#' British Columbia, Canada. Trees were detected by applying the \code{\link{TreeTopFinder}}
+#' British Columbia, Canada. Trees were detected by applying the \code{\link{vwf}}
 #' function to the \link{quesnelCHM} raster dataset. Only trees over 2 m above ground
 #' were detected.
 #'
-#' @format A \link[sp]{SpatialPointsDataFrame} with the following attributes:
+#' @format A \link[sp:SpatialPoints]{SpatialPointsDataFrame} with the following attributes:
 #' \describe{
 #'   \item{height}{height of the tree's apex, in meters above ground}
-#'   \item{winRadius}{radius of the moving window (see \code{\link{TreeTopFinder}}) at
+#'   \item{winRadius}{radius of the moving window (see \code{\link{vwf}}) at
 #'   the treetop's location}
 #'   }
 #' @seealso \link{quesnelCHM} \link{quesnelBlocks}
@@ -32,7 +32,7 @@
 #' in British Columbia, Canada. Each block contains trees of different
 #' levels of maturity. Overlaps with \link{quesnelTrees} and \link{quesnelCHM}.
 #'
-#' @format A \link[sp]{SpatialPolygonsDataFrame} with the following attributes:
+#' @format A \link[sp:SpatialPolygons]{SpatialPolygonsDataFrame} with the following attributes:
 #' \describe{
 #'   \item{BlockID}{numerical identifier for each block}
 #'   \item{Shape_Leng}{length of polygon on meters}

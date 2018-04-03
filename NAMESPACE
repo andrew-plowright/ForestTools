@@ -2,6 +2,6 @@
 
 export(SegmentCrowns)
 export(SpatialStatistics)
-export(TreeTopFinder)
+export(vwf)
 importFrom(stats,median)
 importFrom(stats,sd)

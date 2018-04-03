@@ -1,10 +1,10 @@
-#' SegmentCrowns
+#' Marker-Controlled Watershed Segmentation
 #'
 #' Implements the \link[imager]{watershed} function to segment (i.e.: outline) crowns from a canopy height model.
-#' Segmentation is guided by the point locations of treetops, typically detected using the \link{TreeTopFinder} function.
+#' Segmentation is guided by the point locations of treetops, typically detected using the \link{vwf} function.
 #' See Meyer & Beucher (1990) for details on watershed segmentation.
 #'
-#' This function can return a crown map as either a \link[raster]{raster} or a \link[sp]{SpatialPolygonsDataFrame},
+#' This function can return a crown map as either a \link[raster]{raster} or a \link[sp:SpatialPolygons]{SpatialPolygonsDataFrame},
 #' as defined using the \code{format} argument. For most analytical purposes, it is preferable to have
 #' crown outlines as polygons. However, polygonal crown maps take up significantly more disk space, and take
 #' longer to process. It is advisable to run this function using a raster output first, in order to check
@@ -22,7 +22,7 @@
 #' By setting the \code{OSGeoPath} path to the OSGeo4W installation directory (usually 'C:\\OSGeo4W64'), the function will
 #' use the \emph{gdal_polygonize.py} GDAL utility to generate polygonal crown outlines instead.
 #'
-#' @param treetops \link[sp]{SpatialPointsDataFrame}. The point locations of treetops. The function will generally produce a
+#' @param treetops \link[sp:SpatialPoints]{SpatialPointsDataFrame}. The point locations of treetops. The function will generally produce a
 #' number of crown segments equal to the number of treetops.
 #' @param CHM Canopy height model in \link[raster]{raster} format. Should be the same that was used to create
 #' the input for \code{treetops}.
@@ -36,18 +36,18 @@
 #'
 #' @return Depending on the argument set with \code{format}, this function will return a map of outlined
 #' crowns as either a RasterLayer (see \link[raster]{raster}), in which distinct crowns
-#' are given a unique cell value, or a \link[sp]{SpatialPolygonsDataFrame}, in which each crown
+#' are given a unique cell value, or a \link[sp:SpatialPolygons]{SpatialPolygonsDataFrame}, in which each crown
 #' is represented by a polygon.
 #'
 #' @references Meyer, F., & Beucher, S. (1990). Morphological segmentation. \emph{Journal of visual communication and
 #' image representation, 1}(1), 21-46.
 #'
-#' @seealso \code{\link{TreeTopFinder}} \code{\link{SpatialStatistics}} \code{\link[imager]{watershed}} \cr \cr
+#' @seealso \code{\link{vwf}} \code{\link{SpatialStatistics}} \code{\link[imager]{watershed}} \cr \cr
 #' OSGeo4W download page: \url{https://trac.osgeo.org/osgeo4w/}
 #'
 #' @examples
-#' # Use TreeTopFinder to detect treetops in demo canopy height model
-#' ttops <- TreeTopFinder(CHMdemo, winFun = function(x){x * 0.06 + 0.5}, minHeight = 2)
+#' # Use variable window filter to detect treetops in demo canopy height model
+#' ttops <- vwf(CHMdemo, winFun = function(x){x * 0.06 + 0.5}, minHeight = 2)
 #'
 #' # Set minimum tree crown height (should be LOWER than minimum treetop height)
 #' minCrwnHgt <- 1
@@ -63,41 +63,36 @@ SegmentCrowns <- function(treetops, CHM, minHeight = 0, format = "raster", OSGeo
 
   ### GATE-KEEPER
 
-    # if(!is.null(treeID)){
-    #   if(!treeID %in% names(treetops)) stop("Field for 'treeID': \"", treeID, "\", not found")
-    #   if(class(treetops[[treeID]]) != "numeric") stop("Field for 'treeID' must be numeric")
-    #   if(any(duplicated(treetops[[treeID]]))) stop("Duplicated IDs detected in the \"", treeID, "\", field")
-    # }
-
     # Ensure that 'format' is set to either 'raster' or 'polygons'.
     if(!toupper(format) %in% c("RASTER", "POLYGONS", "POLYGON", "POLY")){stop("'format' must be set to either 'raster' or 'polygons'")}
 
     if(verbose) cat("..Checking inputs", "\n")
 
     # Get maximum height and ensure that 'minHeight' does not exceed it
-    CHM.max <- suppressWarnings(max(raster::getValues(CHM), na.rm = TRUE))
+    CHM.max <- suppressWarnings(raster::cellStats(CHM, "max"))
     if(is.infinite(CHM.max)){stop("Input CHM does not contain any usable values.")}
     if(minHeight > CHM.max){stop("'minHeight' is set higher than the highest cell value in \'CHM\'")}
 
     # Remove treetops that are not within the CHM's input extent, or whose height is lower than 'minHeight'
     raster::crs(CHM) <- raster::crs(treetops)
-    treetopsVals <- raster::extract(CHM, treetops)
-    treetops <- treetops[!is.na(treetopsVals) & treetopsVals >= minHeight,]
+    treetopsHgts <- raster::extract(CHM, treetops)
+    treetops <- treetops[!is.na(treetopsHgts) & treetopsHgts >= minHeight,]
     if(length(treetops) == 0){stop("No usable treetops. Treetops are either outside of CHM's extent, or are located elow the 'minHeight' value")}
 
   ### GENERATE UNIQUE TREE IDENTIFIER
 
-    # If a field named 'treeNum' already exists, append a number to it so the original 'treeNum' won't be overwritten
-    if("treeNum" %in% names(treetops)){
-      i <- 1
-      while(paste0("treeNum", i) %in% names(treetops)) i <- i + 1
-      treeID <- paste0("treeNum", i)
+    # If treetops do not already have a 'treeID', add one
+    if(!"treeID" %in% names(treetops)){
+      warning("No 'treeID' found for input treetops. New 'treeID' identifiers will be added to segments")
+
+      treetops[["treeID"]] <- 1:length(treetops)
+
+    # Otherwise, check for duplicate 'treeID'
     }else{
-      treeID <- "treeNum"
+      if(any(treetops[["treeID"]] == 0)) stop("'treeID' cannot be equal to 0")
+      if(any(duplicated(treetops[["treeID"]]))) warning("Duplicate 'treeID' identifiers detected")
     }
 
-    # Create sequence if tree identifiers
-    treetops[[treeID]] <- 1:length(treetops)
 
   ### APPLY WATERSHED SEGMENTATION
 
@@ -112,7 +107,7 @@ SegmentCrowns <- function(treetops, CHM, minHeight = 0, format = "raster", OSGeo
       if(verbose) cat("..Seeding treetop locations", "\n")
 
       # Convert treetops to a raster
-      ttops.ras <- raster::rasterize(treetops, CHM, "treeNum", background = 0)
+      ttops.ras <- raster::rasterize(treetops, CHM, "treeID", background = 0)
 
       # Convert data to 'img' files
       CHM.img <- imager::as.cimg(raster::as.matrix(CHM))
@@ -124,7 +119,7 @@ SegmentCrowns <- function(treetops, CHM, minHeight = 0, format = "raster", OSGeo
       ws.img <- imager::watershed(ttops.img, CHM.img)
 
       # Convert watershed back to raster
-      ws.ras <- raster::raster(vals = ws.img[,,1,1], nrows = nrow(CHM), ncols =  ncol(CHM),
+      ws.ras <- raster::raster(vals = ws.img[,,1,1], nrows = nrow(CHM), ncols = ncol(CHM),
                        ext = raster::extent(CHM), crs = raster::crs(CHM))
       ws.ras[CHM.mask] <- NA
 
@@ -152,8 +147,8 @@ SegmentCrowns <- function(treetops, CHM, minHeight = 0, format = "raster", OSGeo
 
         # Perform spatial overlay, transfer data from treetops to polygons, and remove polygons with no associated treetops
         polys.over <- sp::over(polys, treetops)
-        polys.out <- sp::SpatialPolygonsDataFrame(polys, subset(polys.over, select = which(names(polys.over) != treeID)))
-        polys.out <- polys.out[match(treetops[[treeID]], polys.over[,treeID]),]
+        polys.out  <- sp::SpatialPolygonsDataFrame(polys, subset(polys.over, select = which(names(polys.over) != "treeID")))
+        polys.out  <- polys.out[match(treetops[["treeID"]], polys.over[,"treeID"]),]
 
         if(verbose) cat("..Computing segment areas", "\n")
 

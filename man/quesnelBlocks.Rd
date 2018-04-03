@@ -4,7 +4,7 @@
 \name{quesnelBlocks}
 \alias{quesnelBlocks}
 \title{Quesnel forest - Cut blocks}
-\format{A \link[sp]{SpatialPolygonsDataFrame} with the following attributes:
+\format{A \link[sp:SpatialPolygons]{SpatialPolygonsDataFrame} with the following attributes:
 \describe{
   \item{BlockID}{numerical identifier for each block}
   \item{Shape_Leng}{length of polygon on meters}

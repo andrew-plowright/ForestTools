@@ -2,8 +2,8 @@
 #'
 #' Summarization tool for calculating tree counts and statistics within various spatial units.
 #'
-#' Input trees can either be point locations (\link[sp]{SpatialPointsDataFrame})
-#' or crown outlines (\link[sp]{SpatialPolygonsDataFrame}). If crown outlines (or other polygons)
+#' Input trees can either be point locations (\link[sp:SpatialPoints]{SpatialPointsDataFrame})
+#' or crown outlines (\link[sp:SpatialPolygons]{SpatialPolygonsDataFrame}). If crown outlines (or other polygons)
 #' are inputted, they will be partitioned between spatial units according to their geographic centroids.
 #'
 #' In addition to tree counts, statistics for the trees' attributes can also be
@@ -25,11 +25,11 @@
 #'   \item Return a single numeric value.
 #' }
 #'
-#' @param trees \link[sp]{SpatialPointsDataFrame} or \link[sp]{SpatialPolygonsDataFrame}. The locations of a
-#' set of trees, typically detected from a canopy height model using \code{\link{TreeTopFinder}}.
+#' @param trees \link[sp:SpatialPoints]{SpatialPointsDataFrame} or \link[sp:SpatialPolygons]{SpatialPolygonsDataFrame}. The locations of a
+#' set of trees, typically detected from a canopy height model using \code{\link{vwf}}.
 #' Tree attributes, such as height or crown size, should be stored within this object's \code{@@data} slot.
 #' Tree crowns delineated using \code{\link{SegmentCrowns}} can also be used.
-#' @param areas \link[sp]{SpatialPolygonsDataFrame}. An optional set of polygons corresponding to areas of
+#' @param areas \link[sp:SpatialPolygons]{SpatialPolygonsDataFrame}. An optional set of polygons corresponding to areas of
 #' interest. Tree counts and statistics will be returned for each area.
 #' @param grid RasterLayer (see \link[raster]{raster}) or numeric. An alternative to the \code{areas} argument.
 #' Using \code{grid} will compute tree counts and statistics within the cells of a spatial grid.
@@ -47,7 +47,7 @@
 #' @return Tree count and, if any \code{variables} are supplied, tree attribute statistics. If no
 #' \code{areas} or \code{grid} is supplied, the tree count and statistics are computed for the entire
 #' \code{trees} dataset, and returned as a 'data.frame' object. If \code{areas} are defined, an
-#' identical \link[sp]{SpatialPolygonsDataFrame} will be returned, with all computed statistics appended
+#' identical \link[sp:SpatialPolygons]{SpatialPolygonsDataFrame} will be returned, with all computed statistics appended
 #' to the object's \code{@@data} slot. If a \code{grid} is defined, tree count will be returned as a RasterLayer,
 #' with cell values equal to the number of trees in each cell. If a \code{grid} and \code{variables} are defined,
 #' a RasterBrick (see \link[raster]{brick}) will be returned instead, with tree count and attribute statistics
@@ -78,7 +78,7 @@
 #' plot(gridStats$TreeCount)
 #' plot(gridStats$heightMax)
 #'
-#' @seealso \code{\link{TreeTopFinder}} \code{\link{SegmentCrowns}}
+#' @seealso \code{\link{vwf}} \code{\link{SegmentCrowns}}
 #' @importFrom stats median sd
 #' @export
 

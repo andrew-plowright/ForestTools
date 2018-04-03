@@ -4,10 +4,10 @@
 \name{quesnelTrees}
 \alias{quesnelTrees}
 \title{Quesnel forest - Dominant trees over 2 m}
-\format{A \link[sp]{SpatialPointsDataFrame} with the following attributes:
+\format{A \link[sp:SpatialPoints]{SpatialPointsDataFrame} with the following attributes:
 \describe{
   \item{height}{height of the tree's apex, in meters above ground}
-  \item{winRadius}{radius of the moving window (see \code{\link{TreeTopFinder}}) at
+  \item{winRadius}{radius of the moving window (see \code{\link{vwf}}) at
   the treetop's location}
   }}
 \usage{
@@ -15,7 +15,7 @@ quesnelTrees
 }
 \description{
 Dominant trees from a 125 hectare section of forest in the Quesnel Timber Supply Area, in
-British Columbia, Canada. Trees were detected by applying the \code{\link{TreeTopFinder}}
+British Columbia, Canada. Trees were detected by applying the \code{\link{vwf}}
 function to the \link{quesnelCHM} raster dataset. Only trees over 2 m above ground
 were detected.
 }

@@ -13,14 +13,14 @@
 #' Kootenay forest - Dominant trees over 2 m
 #'
 #' Dominant trees from a 1.5 hectare section of forest in the Kootenay mountains, in
-#' British Columbia, Canada. Trees were detected by applying the \code{\link{TreeTopFinder}}
+#' British Columbia, Canada. Trees were detected by applying the \code{\link{vwf}}
 #' function to the \link{kootenayCHM} raster dataset. Only trees over 2 m above ground
 #' were detected.
 #'
-#' @format A \link[sp]{SpatialPointsDataFrame} with the following attributes:
+#' @format A \link[sp:SpatialPoints]{SpatialPointsDataFrame} with the following attributes:
 #' \describe{
 #'   \item{height}{height of the tree's apex, in meters above ground}
-#'   \item{winRadius}{radius of the moving window (see \code{\link{TreeTopFinder}}) at
+#'   \item{winRadius}{radius of the moving window (see \code{\link{vwf}}) at
 #'   the treetop's location}
 #'   }
 #' @seealso \link{kootenayCHM} \link{kootenayBlocks} \link{kootenayCrowns}
@@ -32,7 +32,7 @@
 #' the Kootenay mountains, in British Columbia, Canada. Each block contains trees of different
 #' levels of maturity. Overlaps with \link{kootenayTrees}, \link{kootenayCrowns} and \link{kootenayCHM}.
 #'
-#' @format A \link[sp]{SpatialPolygonsDataFrame} with the following attributes:
+#' @format A \link[sp:SpatialPolygons]{SpatialPolygonsDataFrame} with the following attributes:
 #' \describe{
 #'   \item{BlockID}{numerical identifier for each block}
 #'   \item{Shape_Leng}{length of polygon on meters}
@@ -45,7 +45,7 @@
 #'
 #' Outlines of tree crowns corresponding to the \link{kootenayTrees} treetops. Generated using \link{SegmentCrowns}.
 #'
-#' @format A \link[sp]{SpatialPolygonsDataFrame} with the following attributes:
+#' @format A \link[sp:SpatialPolygons]{SpatialPolygonsDataFrame} with the following attributes:
 #' \describe{
 #'   \item{height}{height of the tree's apex, in meters above ground. Inherited from \link{kootenayTrees}.}
 #'   \item{winRadius}{radius of the moving window at the treetop's location. Inherited from \link{kootenayTrees}.}

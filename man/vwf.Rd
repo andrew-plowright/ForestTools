@@ -4,7 +4,7 @@
 \alias{vwf}
 \title{Variable Window Filter}
 \usage{
-vwf(CHM, winFun, minHeight = NULL, maxWinDiameter = 120,
+vwf(CHM, winFun, minHeight = NULL, maxWinDiameter = 99,
   minWinNeib = "queen", verbose = FALSE)
 }
 \arguments{
@@ -56,5 +56,5 @@ ttops <- vwf(CHMdemo, winFunction, minHgt)
 Popescu, S. C., & Wynne, R. H. (2004). Seeing the trees in the forest. \emph{Photogrammetric Engineering & Remote Sensing, 70}(5), 589-604.
 }
 \seealso{
-\code{\link{SegmentCrowns}} \code{\link{SpatialStatistics}}
+\code{\link{mcws}} \code{\link{sp_summarise}}
 }

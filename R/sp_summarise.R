@@ -1,4 +1,4 @@
-#' Spatial statistics
+#' Spatial Summarization
 #'
 #' Summarization tool for calculating tree counts and statistics within various spatial units.
 #'
@@ -28,7 +28,7 @@
 #' @param trees \link[sp:SpatialPoints]{SpatialPointsDataFrame} or \link[sp:SpatialPolygons]{SpatialPolygonsDataFrame}. The locations of a
 #' set of trees, typically detected from a canopy height model using \code{\link{vwf}}.
 #' Tree attributes, such as height or crown size, should be stored within this object's \code{@@data} slot.
-#' Tree crowns delineated using \code{\link{SegmentCrowns}} can also be used.
+#' Tree crowns delineated using \code{\link{mcws}} can also be used.
 #' @param areas \link[sp:SpatialPolygons]{SpatialPolygonsDataFrame}. An optional set of polygons corresponding to areas of
 #' interest. Tree counts and statistics will be returned for each area.
 #' @param grid RasterLayer (see \link[raster]{raster}) or numeric. An alternative to the \code{areas} argument.
@@ -60,31 +60,31 @@
 #' data("kootenayTrees", "kootenayBlocks", "kootenayCrowns")
 #'
 #' # Get total tree count
-#' SpatialStatistics(kootenayTrees)
+#' sp_summarise(kootenayTrees)
 #'
 #' # Get total tree count, tree height and crown area statistics
-#' SpatialStatistics(kootenayCrowns, variables = c("height", "crownArea"))
+#' sp_summarise(kootenayCrowns, variables = c("height", "crownArea"))
 #'
 #' # Get tree count, height statistics for specific areas of interest
-#' areaStats <- SpatialStatistics(kootenayTrees, areas = kootenayBlocks, variables = "height")
+#' areaStats <- sp_summarise(kootenayTrees, areas = kootenayBlocks, variables = "height")
 #'
 #' # Plot according to tree count
 #' plot(areaStats, col = heat.colors(3)[order(areaStats$TreeCount)])
 #'
 #' # Get tree count and height statistics for a 20 x 20 m spatial grid
-#' gridStats <- SpatialStatistics(kootenayTrees, grid = 20, variables = "height")
+#' gridStats <- sp_summarise(kootenayTrees, grid = 20, variables = "height")
 #'
 #' # Plot gridded tree count and statistics
 #' plot(gridStats$TreeCount)
 #' plot(gridStats$heightMax)
 #'
-#' @seealso \code{\link{vwf}} \code{\link{SegmentCrowns}}
+#' @seealso \code{\link{vwf}} \code{\link{mcws}}
 #' @importFrom stats median sd
 #' @export
 
-SpatialStatistics <- function(trees, areas = NULL, grid = NULL, variables = NULL, statFuns = NULL){
+sp_summarise <- function(trees, areas = NULL, grid = NULL, variables = NULL, statFuns = NULL){
 
-  ### GATEKEEPER
+  ### CHECK INPUTS
 
     if(!class(trees) %in% c("SpatialPointsDataFrame", "SpatialPolygonsDataFrame")) stop("Invalid input: \'trees\' must be a SpatialPointsDataFrame or SpatialPolygonsDataFrame")
     if(!is.null(areas) && !class(areas) %in% c("SpatialPolygonsDataFrame")) stop("Invalid input: \'areas\' must be a SpatialPolygonsDataframe object")

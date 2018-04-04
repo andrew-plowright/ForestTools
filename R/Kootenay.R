@@ -43,7 +43,7 @@
 
 #' Kootenay forest - Tree crowns
 #'
-#' Outlines of tree crowns corresponding to the \link{kootenayTrees} treetops. Generated using \link{SegmentCrowns}.
+#' Outlines of tree crowns corresponding to the \link{kootenayTrees} treetops. Generated using \link{mcws}.
 #'
 #' @format A \link[sp:SpatialPolygons]{SpatialPolygonsDataFrame} with the following attributes:
 #' \describe{

@@ -1,6 +1,6 @@
 library(ForestTools)
 
-context("Tests for SpatialStatistics")
+context("Tests for 'sp_summarise'")
 
 ### LOAD TEST DATA
 
@@ -18,40 +18,40 @@ context("Tests for SpatialStatistics")
 
 ### TESTS WITH INVALID INPUTS
 
-  test_that("SpatialStatistics: Error message with invalid inputs", {
+  test_that("sp_summarise: Error message with invalid inputs", {
 
     # Invalid input for 'trees'
-    expect_error(SpatialStatistics("this is an error", variables = c("height", "winRadius")),
+    expect_error(sp_summarise("this is an error", variables = c("height", "winRadius")),
                  "Invalid input: 'trees' must be a SpatialPointsDataFrame or SpatialPolygonsDataFrame")
 
     # Invalid input for 'areas'
-    expect_error(SpatialStatistics(kootenayTrees, areas = "this is an error"),
+    expect_error(sp_summarise(kootenayTrees, areas = "this is an error"),
                  "Invalid input: 'areas' must be a SpatialPolygonsDataframe object")
 
     # Invalid input for 'variables': variable doesn't exist
-    expect_error(SpatialStatistics(kootenayTrees, variables = c("height", "this is an error")),
+    expect_error(sp_summarise(kootenayTrees, variables = c("height", "this is an error")),
                  "Invalid input: 'trees' does not contain variables: 'this is an error'")
 
     # Invalid input for 'variables': variable is non-numeric
     kootenayTrees[["charVar"]] <- rep(letters, length.out = length(kootenayTrees))
-    expect_error(SpatialStatistics(kootenayTrees, variables = c("height", "charVar")),
+    expect_error(sp_summarise(kootenayTrees, variables = c("height", "charVar")),
                  "Invalid input: variables 'charVar' is/are non-numeric")
 
     # Invalid input for 'grid'
-    expect_error(SpatialStatistics(kootenayTrees, grid = "this is an error"), "Invalid input")
+    expect_error(sp_summarise(kootenayTrees, grid = "this is an error"), "Invalid input")
 
     # Both 'grid' and 'areas' are simultaneously defined
-    expect_error(SpatialStatistics(kootenayTrees, areas = kootenayBlocks, grid = 10),
+    expect_error(sp_summarise(kootenayTrees, areas = kootenayBlocks, grid = 10),
                  "Cannot compute output for both")
   })
 
 
 ### TESTS WITH NO GRIDS OR AREAS
 
-  test_that("SpatialStatistics: Expected results using no areas or grids", {
+  test_that("sp_summarise: Expected results using no areas or grids", {
 
-      sum.basic.pts <- SpatialStatistics(kootenayTrees, variables = c("height", "winRadius"))
-      sum.basic.poly <- SpatialStatistics(kootenayCrowns, variables = c("height", "crownArea"))
+      sum.basic.pts <- sp_summarise(kootenayTrees, variables = c("height", "winRadius"))
+      sum.basic.poly <- sp_summarise(kootenayCrowns, variables = c("height", "crownArea"))
 
       # Statistics are equal to those calculated outside of the function
       expect_equal(sum.basic.pts["TreeCount",], length(kootenayTrees))
@@ -66,17 +66,17 @@ context("Tests for SpatialStatistics")
 
 ### TESTS WITH AREAS
 
-  test_that("SpatialStatistics: Expected results using overlapping areas", {
+  test_that("sp_summarise: Expected results using overlapping areas", {
 
     # With trees
-    sum.areaoverlap.pts <- SpatialStatistics(kootenayTrees, variables = "height", areas = areas.overlap)
+    sum.areaoverlap.pts <- sp_summarise(kootenayTrees, variables = "height", areas = areas.overlap)
 
     expect_equal(sum.areaoverlap.pts@data[1, "TreeCount",], 362)
     expect_equal(sum.areaoverlap.pts@data[1, "heightMax",], 12.60671, tolerance = 0.000001)
     expect_equal(sum.areaoverlap.pts@data[2, "TreeCount",], 199)
 
     # With crowns
-    sum.areaoverlap.crowns <- SpatialStatistics(kootenayCrowns, variables = c("crownArea", "height"), areas = areas.overlap)
+    sum.areaoverlap.crowns <- sp_summarise(kootenayCrowns, variables = c("crownArea", "height"), areas = areas.overlap)
 
     expect_equal(sum.areaoverlap.crowns@data[1, "TreeCount",], 362)
     expect_equal(sum.areaoverlap.crowns@data[1, "crownAreaMean",], 6.801105, tolerance = 0.000001)
@@ -87,29 +87,29 @@ context("Tests for SpatialStatistics")
 
   })
 
-  test_that("SpatialStatistics: Expect that area with no treetops returns all NA values", {
+  test_that("sp_summarise: Expect that area with no treetops returns all NA values", {
 
-    sum.areapartial.pts <- SpatialStatistics(kootenayTrees, variables = "height", areas = areas.partial)
+    sum.areapartial.pts <- sp_summarise(kootenayTrees, variables = "height", areas = areas.partial)
 
     expect_true(all(is.na(sum.areapartial.pts@data[3, -1])))
 
-    sum.areapartial.crowns <- SpatialStatistics(kootenayCrowns, variables = "height", areas = areas.partial)
+    sum.areapartial.crowns <- sp_summarise(kootenayCrowns, variables = "height", areas = areas.partial)
 
     expect_true(all(is.na(sum.areapartial.crowns@data[3, -1])))
 
   })
 
-  test_that("SpatialStatistics: Expect a warning if no areas contain treetops", {
+  test_that("sp_summarise: Expect a warning if no areas contain treetops", {
 
     expect_warning(
-      sum.areaoutside.pts <- SpatialStatistics(kootenayTrees, variables = "height", areas = areas.outside),
+      sum.areaoutside.pts <- sp_summarise(kootenayTrees, variables = "height", areas = areas.outside),
                    "No trees located within given areas")
 
     expect_true(all(is.na(sum.areaoutside.pts@data[, -1])))
 
 
     expect_warning(
-      sum.areaoutside.crowns <- SpatialStatistics(kootenayCrowns, variables = "height", areas = areas.outside),
+      sum.areaoutside.crowns <- sp_summarise(kootenayCrowns, variables = "height", areas = areas.outside),
       "No trees located within given areas")
 
     expect_true(all(is.na(sum.areaoutside.crowns@data[, -1])))
@@ -127,9 +127,9 @@ context("Tests for SpatialStatistics")
     pts[!is.na(sp::over(rgeos::gCentroid(pts, byid = TRUE), cellExt)),]
   }
 
-  test_that("SpatialStatistics: Expected results using small grid", {
+  test_that("sp_summarise: Expected results using small grid", {
 
-    sum.sgrid.pts <- SpatialStatistics(kootenayTrees, grid = grid.small, variables = c("height", "winRadius"))
+    sum.sgrid.pts <- sp_summarise(kootenayTrees, grid = grid.small, variables = c("height", "winRadius"))
 
     # Extract trees overlapping cells with multiple trees
     trees.cell23 <- ptsInCell(kootenayTrees, sum.sgrid.pts, 23)
@@ -150,9 +150,9 @@ context("Tests for SpatialStatistics")
 
   })
 
-  test_that("SpatialStatistics: Expected results using med grid", {
+  test_that("sp_summarise: Expected results using med grid", {
 
-    sum.mgrid <- SpatialStatistics(kootenayTrees, grid = grid.med, variables = c("height", "winRadius"))
+    sum.mgrid <- sp_summarise(kootenayTrees, grid = grid.med, variables = c("height", "winRadius"))
 
     # Extract trees overlapping cells with multiple trees
     trees.cell13 <- ptsInCell(kootenayTrees, sum.mgrid, 13)
@@ -172,18 +172,18 @@ context("Tests for SpatialStatistics")
     expect_equal(min(sum.mgrid[["heightMin"]][], na.rm = TRUE), min(kootenayTrees[["height"]]))
   })
 
-  test_that("SpatialStatistics: Expected results using a grid defined by numerical interval", {
+  test_that("sp_summarise: Expected results using a grid defined by numerical interval", {
 
-    sum.intgrid <- SpatialStatistics(kootenayTrees, grid = 100, variables = c("height", "winRadius"))
+    sum.intgrid <- sp_summarise(kootenayTrees, grid = 100, variables = c("height", "winRadius"))
 
     expect_equal(as.numeric(sum.intgrid[["TreeCount"]][2,2]), 27)
 
   })
 
-  test_that("SpatialStatistics: Warning message if input grid does not overlap with trees", {
+  test_that("sp_summarise: Warning message if input grid does not overlap with trees", {
 
     expect_warning(
-      sum.gridoutside <- SpatialStatistics(kootenayTrees, grid = grid.outside, variables = c("height", "winRadius")),
+      sum.gridoutside <- sp_summarise(kootenayTrees, grid = grid.outside, variables = c("height", "winRadius")),
       "No trees located within given grid")
 
     expect_true(all(is.na(sum.gridoutside[])))
@@ -191,7 +191,7 @@ context("Tests for SpatialStatistics")
 
 ### TEST WITH CUSTOM METRICS
 
-  test_that("SpatialStatistics: Custom functions meeting conditions work properly",{
+  test_that("sp_summarise: Custom functions meeting conditions work properly",{
 
     # Create custom functions
     cust.mean <- function(x, ...) sum(x) / length(x)
@@ -200,25 +200,25 @@ context("Tests for SpatialStatistics")
     cust.statFuns <- list(mean = mean, custMean = cust.mean, custQunt = cust.qunt)
 
     # Using grid, all values from the 'mean' and 'custom mean' functions should be the same
-    sum.custfun.gridmed <- SpatialStatistics(kootenayTrees, variables = c("height", "winRadius"), grid = grid.med, statFuns = cust.statFuns)
+    sum.custfun.gridmed <- sp_summarise(kootenayTrees, variables = c("height", "winRadius"), grid = grid.med, statFuns = cust.statFuns)
     expect_true(all.equal(raster::getValues(sum.custfun.gridmed[["heightmean"]]),
                           raster::getValues(sum.custfun.gridmed[["heightcustMean"]])))
 
     # Using area, all values from the 'mean' and 'custom mean' functions should be the same
-    sum.custfun.areaspartial <- SpatialStatistics(kootenayTrees, variables = c("height", "winRadius"), areas = areas.partial, statFuns = cust.statFuns)
+    sum.custfun.areaspartial <- sp_summarise(kootenayTrees, variables = c("height", "winRadius"), areas = areas.partial, statFuns = cust.statFuns)
     expect_true(all.equal(sum.custfun.areaspartial[["heightmean"]],
                           sum.custfun.areaspartial[["heightcustMean"]]))
 
     # Get a warning if grid is outside of area
     expect_warning(
-      sum.custfun.gridout <- SpatialStatistics(kootenayTrees, variables = c("height", "winRadius"), grid = grid.outside, statFuns = cust.statFuns),
+      sum.custfun.gridout <- sp_summarise(kootenayTrees, variables = c("height", "winRadius"), grid = grid.outside, statFuns = cust.statFuns),
       "No trees located within given grid")
     expect_warning(
-      sum.custfun.areasout <- SpatialStatistics(kootenayTrees, variables = c("height", "winRadius"), areas = areas.outside, statFuns = cust.statFuns),
+      sum.custfun.areasout <- sp_summarise(kootenayTrees, variables = c("height", "winRadius"), areas = areas.outside, statFuns = cust.statFuns),
       "No trees located within given areas")
   })
 
-  test_that("SpatialStatistics: Custom functions meeting conditions work properly",{
+  test_that("sp_summarise: Custom functions meeting conditions work properly",{
 
     fail1 <- list(fail1 = function(x,y, ...) x + y)
     fail2 <- list(fail2 = function(x) sum(x) / length(x))
@@ -227,22 +227,22 @@ context("Tests for SpatialStatistics")
     fail5 <- list(fail5 = function(x, ...) as.character(x))
 
     # Fail 1: Function's input is (x, y, ...) instead of just (x, ...)
-    expect_error(SpatialStatistics(kootenayTrees, statFuns = fail1, variables = c("height", "winRadius"), grid = grid.med),
+    expect_error(sp_summarise(kootenayTrees, statFuns = fail1, variables = c("height", "winRadius"), grid = grid.med),
                  "The 'fail1' function's arguments should be: function")
 
     # Fail 2: Function's input is (x) instead of just (x, ...)
-    expect_error(SpatialStatistics(kootenayTrees, statFuns = fail2, variables = c("height", "winRadius"), grid = grid.med),
+    expect_error(sp_summarise(kootenayTrees, statFuns = fail2, variables = c("height", "winRadius"), grid = grid.med),
                  "The 'fail2' function's arguments should be: function")
 
     # Fail 3: Function returns more than a single value
-    expect_error(SpatialStatistics(kootenayTrees, statFuns = fail3, variables = c("height", "winRadius"), grid = grid.med),
+    expect_error(sp_summarise(kootenayTrees, statFuns = fail3, variables = c("height", "winRadius"), grid = grid.med),
                 "The 'fail3' function cannot be used.\nReasons:\n1. Returned more than a single value")
 
     # Fail 4: List of functions should be named
-    expect_error(SpatialStatistics(kootenayTrees, statFuns = fail4, variables = c("height", "winRadius"), grid = grid.med),
+    expect_error(sp_summarise(kootenayTrees, statFuns = fail4, variables = c("height", "winRadius"), grid = grid.med),
                 "List of functions for 'statFuns' must be named")
 
     # Fail 5: Function returns a character
-    expect_error(SpatialStatistics(kootenayTrees, statFuns = fail5, variables = c("height", "winRadius"), grid = grid.med),
+    expect_error(sp_summarise(kootenayTrees, statFuns = fail5, variables = c("height", "winRadius"), grid = grid.med),
                  "The 'fail5' function cannot be used.\nReasons:\n1. Returned value was neither logical or numeric")
   })

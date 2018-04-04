@@ -1,6 +1,6 @@
 library(ForestTools)
 
-context("Tests for SegmentCrowns")
+context("Tests for 'mcws'")
 
 ### LOAD TEST DATA
 
@@ -14,30 +14,30 @@ load("orphantrees.Rda")
 
   test_that("SegmentCrown: expected results using standard parameters", {
 
-    segs.std <- SegmentCrowns(testTrees, testCHM, minHeight = 1, verbose = FALSE)
+    segs.std <- mcws(testTrees, testCHM, minHeight = 1, verbose = FALSE)
 
     expect_equal(length(unique(segs.std[])), 1116)
   })
 
-  test_that("SegmentCrowns: returns an error if 'minHeight' is too high",{
+  test_that("mcws: returns an error if 'minHeight' is too high",{
 
-    expect_error(SegmentCrowns(testTrees, testCHM, minHeight = 30, verbose = FALSE),
+    expect_error(mcws(testTrees, testCHM, minHeight = 30, verbose = FALSE),
                  "\'minHeight\' is set higher than the highest cell value in \'CHM\'")
   })
 
-  test_that("SegmentCrowns: returns an error if 'CHM' is empty",{
+  test_that("mcws: returns an error if 'CHM' is empty",{
 
-    expect_error(SegmentCrowns(testTrees, emptyCHM, verbose = FALSE),
+    expect_error(mcws(testTrees, emptyCHM, verbose = FALSE),
                  "Input CHM does not contain any usable values.")
   })
 
-  test_that("SegmentCrowns: removes trees outside of CHM area and those that over NA values",{
+  test_that("mcws: removes trees outside of CHM area and those that over NA values",{
 
     # Perform segmentation on 'orphan trees' test dataset
-    segs.poly <- SegmentCrowns(orphantrees, orphanCHM, format = "polygons", verbose = FALSE)
-    segs.ras <- SegmentCrowns(orphantrees, orphanCHM, verbose = FALSE)
-    segs.poly.min2 <- SegmentCrowns(orphantrees, orphanCHM, minHeight = 2, format = "polygons", verbose = FALSE)
-    segs.ras.min2 <- SegmentCrowns(orphantrees, orphanCHM, minHeight = 2, verbose = FALSE)
+    segs.poly      <- mcws(orphantrees, orphanCHM, format = "polygons", verbose = FALSE)
+    segs.ras       <- mcws(orphantrees, orphanCHM, verbose = FALSE)
+    segs.poly.min2 <- mcws(orphantrees, orphanCHM, minHeight = 2, format = "polygons", verbose = FALSE)
+    segs.ras.min2  <- mcws(orphantrees, orphanCHM, minHeight = 2, verbose = FALSE)
 
     # Count number of trees inside of area, that are
     treesOutside <- raster::crop(orphantrees, orphanCHM)

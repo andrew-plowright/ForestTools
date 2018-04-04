@@ -42,7 +42,7 @@
 #' @references Meyer, F., & Beucher, S. (1990). Morphological segmentation. \emph{Journal of visual communication and
 #' image representation, 1}(1), 21-46.
 #'
-#' @seealso \code{\link{vwf}} \code{\link{SpatialStatistics}} \code{\link[imager]{watershed}} \cr \cr
+#' @seealso \code{\link{vwf}} \code{\link{sp_summarise}} \code{\link[imager]{watershed}} \cr \cr
 #' OSGeo4W download page: \url{https://trac.osgeo.org/osgeo4w/}
 #'
 #' @examples
@@ -52,14 +52,14 @@
 #' # Set minimum tree crown height (should be LOWER than minimum treetop height)
 #' minCrwnHgt <- 1
 #'
-#' # Use SegmentCrowns to outline tree crowns
-#' segs <- SegmentCrowns(ttops, CHMdemo, minCrwnHgt)
+#' # Use 'mcws' to outline tree crowns
+#' segs <- mcws(ttops, CHMdemo, minCrwnHgt)
 #'
 #' @export
 
-SegmentCrowns <- function(treetops, CHM, minHeight = 0, format = "raster", OSGeoPath = NULL, verbose = FALSE){
+mcws <- function(treetops, CHM, minHeight = 0, format = "raster", OSGeoPath = NULL, verbose = FALSE){
 
-  if(verbose) cat("Begun 'SegmentCrowns' process at", format(Sys.time(), "%Y-%m-%d, %X"), "\n\n")
+  if(verbose) cat("Begun 'mcws' process at", format(Sys.time(), "%Y-%m-%d, %X"), "\n\n")
 
   ### GATE-KEEPER
 

@@ -92,27 +92,27 @@ mean(ttops$height)
 
 ## Outlining tree crowns
 
-Canopy height models often represent continuous, dense forests, where tree crowns abut against eachother. Outlining discrete crown shapes from this type of forest is often refered to as _canopy segmentation_, where each crown outline is represented by a _segment_. Once a set of treetops have been detected from a canopy height model, the `SegmentCrowns` function can be used for this purpose.
+Canopy height models often represent continuous, dense forests, where tree crowns abut against eachother. Outlining discrete crown shapes from this type of forest is often refered to as _canopy segmentation_, where each crown outline is represented by a _segment_. Once a set of treetops have been detected from a canopy height model, the `mcws` function can be used for this purpose.
 
-The `SegmentCrowns` function implements the `watershed` algorithm from the [imager](https://cran.r-project.org/package=imager/imager.pdf) library. Watershed algorithms are frequently used in topograhical analysis to outline drainage basins. Given the morphological similarity between an inverted canopy and a terrain model, this same process can be used to outline tree crowns. However, a potential problem is the issue of _oversegmentation_, whereby branches, bumps and other spurious treetops are given their own segments. This source of error can be mitigated by using a variant of the algorithm known as _marker-controlled segmentation_ (Beucher & Meyer, 1993), whereby the watershed algorithm is constrained by a set of markers--in this case, treetops.
+The `mcws` function implements the `watershed` algorithm from the [imager](https://cran.r-project.org/package=imager/imager.pdf) library. Watershed algorithms are frequently used in topograhical analysis to outline drainage basins. Given the morphological similarity between an inverted canopy and a terrain model, this same process can be used to outline tree crowns. However, a potential problem is the issue of _oversegmentation_, whereby branches, bumps and other spurious treetops are given their own segments. This source of error can be mitigated by using a variant of the algorithm known as _marker-controlled segmentation_ (Beucher & Meyer, 1993), whereby the watershed algorithm is constrained by a set of markers--in this case, treetops.
 
-The `SegmentCrowns` function also takes a `minHeight` argument, although this value should be lower than that which was assigned to `vwf`. For the latter, `minHeight` defines the lowest expected treetop, whereas for the former it should correspond to the height above ground of the fringes of the lowest trees. 
+The `mcws` function also takes a `minHeight` argument, although this value should be lower than that which was assigned to `vwf`. For the latter, `minHeight` defines the lowest expected treetop, whereas for the former it should correspond to the height above ground of the fringes of the lowest trees. 
 
 ```{r, fig.width = 4, fig.height = 2.51}
 # Create crown map
-crowns <- SegmentCrowns(treetops = ttops, CHM = kootenayCHM, minHeight = 1.5, verbose = FALSE)
+crowns <- mcws(treetops = ttops, CHM = kootenayCHM, minHeight = 1.5, verbose = FALSE)
 
 # Plot crowns
 plot(crowns, col = sample(rainbow(50), length(unique(crowns[])), replace = TRUE), legend = FALSE, xlab = "", ylab = "", xaxt='n', yaxt = 'n')
 ```
 
-By default, `SegmentCrowns` returns a raster, where each crown is given a unique cell value. Depending on the intended purpose of the crown map, it may be preferable to store these outlines as polygons. Setting the `format` argument to "polygons" will convert the rasterized crown map to a set of polygons (a [SpatialPolygonsDataFrame](https://cran.r-project.org/package=sp/sp.pdf#page=89)). As an added benefit, these polygons will inherit the attributes of the treetops from which they were generated, such as _height_. Furthermore, an extra attribute, _crownArea_, will be calculated for each polygon.
+By default, `mcws` returns a raster, where each crown is given a unique cell value. Depending on the intended purpose of the crown map, it may be preferable to store these outlines as polygons. Setting the `format` argument to "polygons" will convert the rasterized crown map to a set of polygons (a [SpatialPolygonsDataFrame](https://cran.r-project.org/package=sp/sp.pdf#page=89)). As an added benefit, these polygons will inherit the attributes of the treetops from which they were generated, such as _height_. Furthermore, an extra attribute, _crownArea_, will be calculated for each polygon.
 
 It should be noted, however, that producing crown outlines as polygons requires significantly more processing time and disk space.
 
 ```{r, fig.width = 4, fig.height = 2.51}
 # Create polygon crown map
-crownsPoly <- SegmentCrowns(treetops = ttops, CHM = kootenayCHM, format = "polygons", minHeight = 1.5, verbose = FALSE)
+crownsPoly <- mcws(treetops = ttops, CHM = kootenayCHM, format = "polygons", minHeight = 1.5, verbose = FALSE)
 
 # Plot CHM
 plot(kootenayCHM, xlab = "", ylab = "", xaxt='n', yaxt = 'n')
@@ -135,17 +135,17 @@ mean(crownsPoly$crownDiameter)
 
 Managed forests are often divided into discrete spatial units. In British Columbia, for instance, these can range from cut blocks measuring a few hectares to [timber supply areas](https://www.for.gov.bc.ca/ftp/HTH/external/!publish/web/timber-tenures/tfl-regions-tsas-districts-map-350-dpi-april-10-2014.pdf) spanning several hundred square kilometers. The forest composition within these spatial units can be characterized through summarized statistics of tree attributes. For instance, a timber license holder may want a rough estimate of the number of dominant trees within a woodlot, while the standard deviation of tree height is of interest to anyone mapping heterogeneous old growth forest.
 
-The `SpatialStatistics` function can be used to count trees within a set of spatial units, as well as compute statistics of the trees' attributes. These spatial units can be in the form of spatial polygons, or can be generated in the form of a raster grid.
+The `sp_summarise` function can be used to count trees within a set of spatial units, as well as compute statistics of the trees' attributes. These spatial units can be in the form of spatial polygons, or can be generated in the form of a raster grid.
 
-When no specific area is defined, `SpatialStatistics` will simply return the count of all inputted trees.
+When no specific area is defined, `sp_summarise` will simply return the count of all inputted trees.
 ```{r}
-SpatialStatistics(ttops)
+sp_summarise(ttops)
 ```
 
-Tree crowns can also be used as input. By defining the `variables` argument, `SpatialStatistics` will generate summarized statistics of the trees' attributes. By default, the mean, median, standard deviation, minimum and maximum are computed, but [custom functions](#customFunctions) can also be used.
+Tree crowns can also be used as input. By defining the `variables` argument, `sp_summarise` will generate summarized statistics of the trees' attributes. By default, the mean, median, standard deviation, minimum and maximum are computed, but [custom functions](#customFunctions) can also be used.
 
 ```{r}
-SpatialStatistics(crownsPoly, variables = c("crownArea", "height"))
+sp_summarise(crownsPoly, variables = c("crownArea", "height"))
 ```
 
 ### Statistics by polygon
@@ -156,7 +156,7 @@ The Forest Tools package includes the boundaries of three cutting blocks that ca
 data("kootenayBlocks")
 
 # Compute tree count and height statistics for cut blocks
-blockStats <- SpatialStatistics(ttops, areas = kootenayBlocks, variables = "height")
+blockStats <- sp_summarise(ttops, areas = kootenayBlocks, variables = "height")
 
 # Plot CHM
 plot(kootenayCHM, xlab = "", ylab = "", xaxt='n', yaxt = 'n')
@@ -174,22 +174,22 @@ blockStats@data
 
 ### Statistics by grid
 
-Instead of defining polygonal areas, the `SpatialStatistics` function can also generate counts and stastics in raster format. In this case, the `grid` argument should be used instead of `areas`.
+Instead of defining polygonal areas, the `sp_summarise` function can also generate counts and stastics in raster format. In this case, the `grid` argument should be used instead of `areas`.
 If you have an existing raster with the extent, cell size and alignment that you would like to use, it can be input as the `grid` argument. Otherwise, simply entering a numeric value will generate a raster with that cell size.
 
 ```{r, fig.width = 4, fig.height = 2.51}
 # Compute tree count within a 10 m x 10 m cell grid
-gridCount <- SpatialStatistics(ttops, grid = 10)
+gridCount <- sp_summarise(ttops, grid = 10)
 
 # Plot grid
 plot(gridCount, col = heat.colors(255), xlab = "", ylab = "", xaxt='n', yaxt = 'n')
 ```
 
-If, in addition to tree count, tree attribute statistics are computed, the object returned by `SpatialStatistics` will be a [RasterBrick](https://cran.r-project.org/package=raster/raster.pdf#page=36), i.e.: a multi-layered raster.
+If, in addition to tree count, tree attribute statistics are computed, the object returned by `sp_summarise` will be a [RasterBrick](https://cran.r-project.org/package=raster/raster.pdf#page=36), i.e.: a multi-layered raster.
 
 ```{r}
 # Compute tree height statistics within a 10 m x 10 m cell grid
-gridStats <- SpatialStatistics(trees = ttops, grid = 10, variables = "height")
+gridStats <- sp_summarise(trees = ttops, grid = 10, variables = "height")
 
 # View layer names
 names(gridStats)
@@ -204,7 +204,7 @@ plot(gridStats[["heightMean"]], col = heat.colors(255), xlab = "", ylab = "", xa
 
 ### Using custom functions {#customFunctions}
 
-By default, the statistics generated by `SpatialStatistics` for each attribute will be its mean, median, standard deviation, minimum and maximum. However, by using the `statFuns` argument, custom functions can be used instead. 
+By default, the statistics generated by `sp_summarise` for each attribute will be its mean, median, standard deviation, minimum and maximum. However, by using the `statFuns` argument, custom functions can be used instead. 
 
 Any custom function should observe the following conditions:
 
@@ -219,7 +219,7 @@ For instance, the following function will calculate the 98th quantile of a numer
 quant98 <- function(x, ...) quantile(x, c(.98), na.rm = TRUE)
 ```
 
-To have this function applied using `SpatialStatistics`, it must be put into a named list. Naming the functions in the list is needed for labelling the function's outputs.
+To have this function applied using `sp_summarise`, it must be put into a named list. Naming the functions in the list is needed for labelling the function's outputs.
 
 ```{r}
 # Create list of functions
@@ -227,7 +227,7 @@ custFuns <- list(quant98, max)
 names(custFuns) <- c("98thQuantile", "Max")
 
 # Generate statistics for crown areas and tree heights
-SpatialStatistics(crownsPoly, variables = c("crownArea", "height"), statFuns = custFuns)
+sp_summarise(crownsPoly, variables = c("crownArea", "height"), statFuns = custFuns)
 
 ```
 

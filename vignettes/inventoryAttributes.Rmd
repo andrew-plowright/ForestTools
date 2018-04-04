@@ -48,7 +48,7 @@ plot(quesnelBlocks, add = TRUE, border =  "darkmagenta", lwd = 2)
 
 ## Compute top height for 1 hectare grid
 
-Given the large number of treetops in the `quesnelTrees` dataset, visualizing it in its entirety is difficult. Instead, it is more practical to view a rasterized representation of the trees' attributes. This can be done using the `SpatialStatistics` function.
+Given the large number of treetops in the `quesnelTrees` dataset, visualizing it in its entirety is difficult. Instead, it is more practical to view a rasterized representation of the trees' attributes. This can be done using the `sp_summarise` function.
 
 The first step is to define a function for computing the statistic that we're interested in. In this case, we want the average height of the tallest 100 trees. It is important, however, that our function accept a number of trees lower than 100 without returning an error---in this case, it should simply return the average height of all trees in the area. We should also consider the possibility that some trees will have NA (non-available) height values.
 
@@ -59,17 +59,17 @@ topHgtFun <- function(x, ...) mean(tail(sort(x), 100))
 
 In this example `x` would be a series of tree heights. The `sort` function will arrange them in ascending order (and also remove NA values), and the `tail` function will subset the last 100 values (i.e.: the highest values). Finally, the `mean` function will compute the average.
 
-We will now apply the newly created `topHgtFun` to our `quesnelTrees` dataset using the `SpatialStatistics` function. We set the `grid` argument to 100 to generate a 100 m x 100 m (1 ha) grid. It is important to enter `topHgtFun` as a _named list_: "Top100" will be part of the name given to the product of the function. If other statistics are required, their corresponding functions can be added to this list.
+We will now apply the newly created `topHgtFun` to our `quesnelTrees` dataset using the `sp_summarise` function. We set the `grid` argument to 100 to generate a 100 m x 100 m (1 ha) grid. It is important to enter `topHgtFun` as a _named list_: "Top100" will be part of the name given to the product of the function. If other statistics are required, their corresponding functions can be added to this list.
 
 ```{r}
-# Use SpatialStatistics to generate gridded statistics
-sptStatRas <- SpatialStatistics(trees = quesnelTrees, variables = "height", grid = 100, statFuns = list(Top100 = topHgtFun))
+# Use sp_summarise to generate gridded statistics
+sptStatRas <- sp_summarise(trees = quesnelTrees, variables = "height", grid = 100, statFuns = list(Top100 = topHgtFun))
 
 # View information about the result
 sptStatRas
 ```
 
-The product of `SpatialStatistics` is a [RasterBrick](https://cran.r-project.org/package=raster/raster.pdf#page=36), i.e.: a multi-layered raster. It contains two layers: _TreeCount_ and _heightTop100_, the product of our custom function when applied to the _height_ attribute of the trees in each cell. We can subset a single layer from the RasterBrick using the `[[]]` operator
+The product of `sp_summarise` is a [RasterBrick](https://cran.r-project.org/package=raster/raster.pdf#page=36), i.e.: a multi-layered raster. It contains two layers: _TreeCount_ and _heightTop100_, the product of our custom function when applied to the _height_ attribute of the trees in each cell. We can subset a single layer from the RasterBrick using the `[[]]` operator
 
 ```{r, fig.width = 4, fig.height = 2.51}
 # Subset top height raster

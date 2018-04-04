@@ -37,11 +37,11 @@
 #' # Detect treetops in demo canopy height model
 #' ttops <- vwf(CHMdemo, winFunction, minHgt)
 #'
-#' @seealso \code{\link{SegmentCrowns}} \code{\link{SpatialStatistics}}
+#' @seealso \code{\link{mcws}} \code{\link{sp_summarise}}
 #'
 #' @export
 
-vwf <- function(CHM, winFun, minHeight = NULL, maxWinDiameter = 120, minWinNeib = "queen", verbose = FALSE){
+vwf <- function(CHM, winFun, minHeight = NULL, maxWinDiameter = 99, minWinNeib = "queen", verbose = FALSE){
 
   ### CHECK INPUTS
 
@@ -50,11 +50,19 @@ vwf <- function(CHM, winFun, minHeight = NULL, maxWinDiameter = 120, minWinNeib 
     # Check for valid inputs for 'minWinNeib'
     if(!minWinNeib %in% c("queen", "rook")) stop("Invalid input for 'minWinNeib'. Set to 'queen' or 'rook'")
 
+    # Check for unprojected rasters
+    CHM.crs <- as.character(raster::crs(CHM))
+    CHM.prj <- regmatches(CHM.crs, regexpr("(?<=proj=).*?(?=\\s)", CHM.crs, perl = TRUE))
+    if(length(CHM.prj) > 0 && CHM.prj %in% c(c("latlong", "latlon", "longlat", "lonlat"))){
+      warning("'CHM' map units are in degrees. Ensure that 'winFun' outputs values in this unit.")
+    }
+
     # Round out CHM resolution to fifth decimal and check that CHM has square cells.
     # Rounding is necessary since a lack of precision in CHM cell size call cause the
     # 'focalWeight' function to misbehave
     roundRes <- round(raster::res(CHM), 5)
-    if(roundRes[1] != roundRes[2]) stop("Input CHM does not have square cells")
+    if(roundRes[1] != roundRes[2]) stop("Input 'CHM' does not have square cells")
+    if(roundRes[1] == 0)           stop("The map units of the 'CHM' are too small")
 
     # Ensure that 'minHeight' argument is given a positive value
     if(!is.null(minHeight) && minHeight <= 0) stop("Minimum canopy height must be set to a positive value.")
@@ -64,7 +72,9 @@ vwf <- function(CHM, winFun, minHeight = NULL, maxWinDiameter = 120, minWinNeib 
     names(CHM.rng) <- c("min", "max")
 
     # Check if CHM has usable values
-    if(is.infinite(CHM.rng["max"]) | is.infinite(CHM.rng["min"])){stop("Input CHM does not contain any usable values. Check input data.")}
+    if(is.infinite(CHM.rng["max"]) | is.infinite(CHM.rng["min"])){stop("Input 'CHM' does not contain any usable values. Check input data.")}
+
+
 
 
   ### APPLY MINIMUM CANOPY HEIGHT ----
@@ -94,7 +104,7 @@ vwf <- function(CHM, winFun, minHeight = NULL, maxWinDiameter = 120, minWinNeib 
     if(length(radii) == 0){
       warning("The maximum window radius computed with 'winFun' is smaller than the CHM's resolution",
               "\nA 3x3 cell search window will be uniformly applied",
-              "\nUse a higher resolution CHM or adjust 'winFun' to produce wider dynamic windows")
+              "\nUse a higher resolution 'CHM' or adjust 'winFun' to produce wider dynamic windows")
       radii <- roundRes[1]
     }
 

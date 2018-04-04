@@ -8,6 +8,7 @@ load("testTrees.Rda")
 load("testCHM.Rda")
 load("emptyCHM.Rda")
 load("lowResCHM.Rda")
+load("latlongCHM.Rda")
 
 ### PERFORM TESTS
 
@@ -58,14 +59,25 @@ load("lowResCHM.Rda")
 
   test_that("vwf: returns an error if 'CHM' is empty",{
 
-    err <-  "Input CHM does not contain any usable values."
+    err <-  "Input 'CHM' does not contain any usable values."
 
     expect_error(vwf(emptyCHM, function(x){x * 0.05 + 0.8}), err)
   })
 
-  test_that("vwf: warns if window size is too low for a given CHM",{
+  test_that("vwf: warning if window size is too low for a given CHM",{
 
     warn <-  "The maximum window radius computed with 'winFun' is smaller than"
 
     expect_warning(vwf(lowResCHM, function(x){x * 0.03 + 0.2}), warn)
   })
+
+  test_that("vwf: error if window size is too low for a given CHM",{
+
+    err  <- "The map units of the 'CHM' are too small"
+    warn <- "'CHM' map units are in degrees"
+
+    expect_warning(expect_error(vwf(latlongCHM, function(x){x * 0.03 + 0.2}), err), warn)
+  })
+
+
+

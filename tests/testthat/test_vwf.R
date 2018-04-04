@@ -1,6 +1,6 @@
 library(ForestTools)
 
-context("Tests for vwf")
+context("Tests for 'vwf'")
 
 ### LOAD TEST DATA
 

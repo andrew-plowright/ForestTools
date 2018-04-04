@@ -14,7 +14,7 @@ knitr::opts_knit$set(global.par = TRUE)
 
 ## Issues with _mcws_
 
-Although the `mcws` function computes crown maps as a raster, many users find that having crowns as polygons is more useful for analytical purposes. Therefore, a `format` argument was added which, when set to `format = "polygons"`, makes the function convert the raster map to a set of polygons. As an added benefit, the function also carries over the attributes of the `treetops` argument into the newly created polygons, i.e.: if an input treetop has a _height_ field associated with it, its corresponding crown polygon will also have that same value. The `SegmentCrown` function also computes the crowns' horizontal area, which is stored in the output's _crownArea_ field.
+Although the `mcws` function computes crown maps as a raster, many users find that having crowns as polygons is more useful for analytical purposes. Therefore, a `format` argument was added which, when set to `format = "polygons"`, makes the function convert the raster map to a set of polygons. As an added benefit, the function also carries over the attributes of the `treetops` argument into the newly created polygons, i.e.: if an input treetop has a _height_ field associated with it, its corresponding crown polygon will also have that same value. The `mcws` function also computes the crowns' horizontal area, which is stored in the output's _crownArea_ field.
 
 However, the underlying function used to convert rasters to polygons is `rasterToPolygons`, from the [raster](https://cran.r-project.org/package=raster) package. This function is problematic due to its slow processing speed and its tendency to leak memory when applied to multiple datasets.
 

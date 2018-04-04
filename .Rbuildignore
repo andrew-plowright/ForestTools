@@ -8,4 +8,5 @@
 ^cran-comments\.md$
 ^oldfunctions$
 ^createTestData$
-^Dockerfile
+^Dockerfile$
+^TO_DO$

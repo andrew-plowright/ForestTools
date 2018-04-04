@@ -1,22 +1,21 @@
 Package: ForestTools
 Type: Package
 Title: Analyzing Remotely Sensed Forest Data
-Version: 0.1.5
-Date: 2017-09-07
+Version: 0.2.0
+Date: 2018-04-02
 Author: Andrew Plowright
 Maintainer: Andrew Plowright <andrew.plowright@alumni.ubc.ca>
 Description: Provides tools for analyzing remotely sensed forest data, including functions for detecting treetops from canopy models, outlining tree crowns and generating spatial statistics.
-Depends: R (>= 3.3.2)
+Depends: R (>= 3.4)
 License: GPL (>= 3)
 Encoding: UTF-8
 LazyData: true
 Imports:
     imager,
     sp,
+    APfun,
     raster,
     rgeos,
-    TileManager (>= 0.2.0),
-    APfun (>= 0.1.1),
     methods
 RoxygenNote: 6.0.1
 Suggests: testthat,

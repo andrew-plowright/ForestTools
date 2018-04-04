@@ -12,7 +12,7 @@ load("orphantrees.Rda")
 
 ### PERFORM TESTS
 
-  test_that("SegmentCrown: expected results using standard parameters", {
+  test_that("mcws: expected results using standard parameters", {
 
     segs.std <- mcws(testTrees, testCHM, minHeight = 1, verbose = FALSE)
 

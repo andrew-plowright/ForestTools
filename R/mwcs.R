@@ -145,10 +145,11 @@ mcws <- function(treetops, CHM, minHeight = 0, format = "raster", OSGeoPath = NU
 
         if(verbose) cat("..Matching polygons to treetops", "\n")
 
-        # Perform spatial overlay, transfer data from treetops to polygons, and remove polygons with no associated treetops
-        polys.over <- sp::over(polys, treetops)
-        polys.out  <- sp::SpatialPolygonsDataFrame(polys, subset(polys.over, select = which(names(polys.over) != "treeID")))
-        polys.out  <- polys.out[match(treetops[["treeID"]], polys.over[,"treeID"]),]
+        # Perform spatial overlay, transfer data from treetops to polygons
+        polys.out  <- sp::SpatialPolygonsDataFrame(polys, sp::over(polys, treetops))
+
+        # Remove polygons with no associated treetops
+        polys.out  <- polys.out[!is.na(polys.out[["treeID"]]),]
 
         if(verbose) cat("..Computing segment areas", "\n")
 

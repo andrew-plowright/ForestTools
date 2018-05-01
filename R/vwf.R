@@ -97,7 +97,10 @@ vwf <- function(CHM, winFun, minHeight = NULL, maxWinDiameter = 99, minWinNeib =
     if(verbose) cat("Creating windows", "\n")
 
     # Generate a list of radii
-    radii <- seq(floor(winFun(CHM.rng["min"])), ceiling(winFun(CHM.rng["max"])), by = roundRes[1])
+    seqFloor   <- floor(  winFun(CHM.rng["min"]))
+    if(is.infinite(seqFloor)) seqFloor <- 0 # Watch out for parabola!
+    seqCeiling <- ceiling(winFun(CHM.rng["max"]))
+    radii <- seq(seqFloor, seqCeiling, by = roundRes[1])
 
     # Remove radii that are smaller than the CHM's resolution
     radii <- radii[radii >= roundRes[1]]

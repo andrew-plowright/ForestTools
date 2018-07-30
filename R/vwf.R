@@ -184,6 +184,8 @@ vwf <- function(CHM, winFun, minHeight = NULL, maxWinDiameter = 99, minWinNeib =
     lm.pts[["winRadius"]] <- winFun(lm.pts[["height"]])
     lm.pts[["treeID"]]    <- 1:length(lm.pts)
 
+    lm.pts[["layer"]] <- NULL
+
   ### RETURN OUTPUT ----
 
     return(lm.pts)

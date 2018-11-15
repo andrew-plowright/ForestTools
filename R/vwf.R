@@ -112,8 +112,9 @@ vwf <- function(CHM, winFun, minHeight = NULL, maxWinDiameter = 99, minWinNeib =
     }
 
     # Calculate the dimensions of the largest matrix to be created from the generated list of radii
-    maxDimension <- (max(radii) / roundRes[1]) * 2 + 1
-
+    maxDimension <- ceiling((max(radii) / roundRes[1]) * 2 + 1)
+    if (maxDimension %% 2 == 0) {maxDimension <- maxDimension + 1}
+  
     # Check if input formula will yield a window size bigger than the maximum set by 'maxWinDiameter'
     if(!is.null(maxWinDiameter) && maxDimension > maxWinDiameter){
 

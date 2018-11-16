@@ -4,5 +4,4 @@
 #'
 #' @format A RasterLayer
 #' \describe{Cell values are equal to canopy height above ground (in meters)}
-
 "CHMdemo"

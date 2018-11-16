@@ -75,8 +75,6 @@ vwf <- function(CHM, winFun, minHeight = NULL, maxWinDiameter = 99, minWinNeib =
     if(is.infinite(CHM.rng["max"]) | is.infinite(CHM.rng["min"])){stop("Input 'CHM' does not contain any usable values. Check input data.")}
 
 
-
-
   ### APPLY MINIMUM CANOPY HEIGHT ----
 
     if(!is.null(minHeight)){
@@ -92,38 +90,49 @@ vwf <- function(CHM, winFun, minHeight = NULL, maxWinDiameter = 99, minWinNeib =
       }
     }
 
+
   ### CREATE WINDOWS ----
+
+    # Here, the variably sized windows used for detecting trees are "pre-generated". First, a series of 'winRadii'
+    # is generated, representing all the sizes the windows can take based on the range of potential values returned
+    # by 'winFun'. These radii are then converted to binary matrices, where values of 1 represent the circular shape
+    # of each window. These matrices are then converted to vectors and
 
     if(verbose) cat("Creating windows", "\n")
 
     # Generate a list of radii
-    seqFloor   <- floor(  winFun(CHM.rng["min"]))
+    seqFloor   <- APfun::AProunder(winFun(CHM.rng["min"]), interval = roundRes[1], direction = "down")
+    seqCeiling <- APfun::AProunder(winFun(CHM.rng["max"]), interval = roundRes[1], direction = "up")
     if(is.infinite(seqFloor)) seqFloor <- 0 # Watch out for parabola!
-    seqCeiling <- ceiling(winFun(CHM.rng["max"]))
-    radii <- seq(seqFloor, seqCeiling, by = roundRes[1])
+    winRadii <- seq(seqFloor, seqCeiling, by = roundRes[1])
 
     # Remove radii that are smaller than the CHM's resolution
-    radii <- radii[radii >= roundRes[1]]
-    if(length(radii) == 0){
+    winRadii <- winRadii[winRadii >= roundRes[1]]
+    if(length(winRadii) == 0){
       warning("The maximum window radius computed with 'winFun' is smaller than the CHM's resolution",
               "\nA 3x3 cell search window will be uniformly applied",
               "\nUse a higher resolution 'CHM' or adjust 'winFun' to produce wider dynamic windows")
-      radii <- roundRes[1]
+      winRadii <- roundRes[1]
     }
 
     # Calculate the dimensions of the largest matrix to be created from the generated list of radii
-    maxDimension <- ceiling((max(radii) / roundRes[1]) * 2 + 1)
-    if (maxDimension %% 2 == 0) {maxDimension <- maxDimension + 1}
-  
-    # Check if input formula will yield a window size bigger than the maximum set by 'maxWinDiameter'
-    if(!is.null(maxWinDiameter) && maxDimension > maxWinDiameter){
 
-        stop("Input function for 'winFun' yields a window diameter of ",  maxDimension, " cells, which is wider than the maximum allowable value in \'maxWinDiameter\'.",
+    # NOTE: 'winDiameter' should be an uneven integer. This was causing a problem until Michael Koontz
+    # pointed out the issue on 2018/11/15. Having the sequence of 'winRadii' created using AProunder should
+    # solve this issue but just a failsafe, 'ceiling' is used to force the number into an integer and
+    # an explicit check for even numbers was added
+    winDiameter <- ceiling((max(winRadii) / roundRes[1]) * 2)
+    if (winDiameter %% 2 == 0) winDiameter <- winDiameter + 1
+
+    # Check if input formula will yield a window size bigger than the maximum set by 'maxWinDiameter'
+    if(!is.null(maxWinDiameter) && winDiameter > maxWinDiameter){
+
+        stop("Input function for 'winFun' yields a window diameter of ",  winDiameter, " cells, which is wider than the maximum allowable value in \'maxWinDiameter\'.",
              "\nChange the 'winFun' function or set 'maxWinDiameter' to a higher value (or to NULL).")
     }
 
     # Convert radii into windows
-    windows <- lapply(radii, function(radius){
+    windows <- lapply(winRadii, function(radius){
 
       # Based on the unit size of the input CHM and a given radius, this function will create a matrix whose non-zero
       # values will form the shape of a circular window
@@ -133,7 +142,7 @@ vwf <- function(CHM, winFun, minHeight = NULL, maxWinDiameter = 99, minWinNeib =
       if(nrow(win.mat) == 3 && minWinNeib == "queen") win.mat[] <- 1
 
       # Pad the window to the size of the biggest matrix created from the list of radii
-      win.pad <- raster::extend(raster::raster(win.mat), (maxDimension - ncol(win.mat)) /2, value = 0)
+      win.pad <- raster::extend(raster::raster(win.mat), (winDiameter - ncol(win.mat)) /2, value = 0)
 
       # The matrix values are then transformed into a vector
       win.vec <- as.vector(win.pad != 0)
@@ -141,7 +150,8 @@ vwf <- function(CHM, winFun, minHeight = NULL, maxWinDiameter = 99, minWinNeib =
       return(win.vec)
 
     })
-    names(windows) <- radii
+    names(windows) <- winRadii
+
 
   ### CREATE VWF FUNCTION ----
 
@@ -173,23 +183,23 @@ vwf <- function(CHM, winFun, minHeight = NULL, maxWinDiameter = 99, minWinNeib =
   ### APPLY VWF FUNCTION ----
 
     # Apply local maxima-finding function to raster
-    lm.pts <- raster::rasterToPoints(
-      raster::focal(CHM,
-                    w = matrix(1, maxDimension, maxDimension),
-                    fun = .vwMax,
-                    pad = TRUE, padValue = NA),
-      fun = function(x) x == 1,
-      spatial = TRUE)
+    localMax <- raster::rasterToPoints(
 
-    lm.pts[["height"]]    <- raster::extract(CHM, lm.pts)
-    lm.pts[["winRadius"]] <- winFun(lm.pts[["height"]])
-    lm.pts[["treeID"]]    <- 1:length(lm.pts)
+      raster::focal(CHM, matrix(1, winDiameter, winDiameter), .vwMax,
+        pad = TRUE, padValue = NA),
 
-    lm.pts[["layer"]] <- NULL
+      fun = function(x) x == 1, spatial = TRUE)
+
+    # Add attributes
+    localMax[["height"]]    <- raster::extract(CHM, localMax)
+    localMax[["winRadius"]] <- winFun(localMax[["height"]])
+    localMax[["treeID"]]    <- 1:length(localMax)
+    localMax[["layer"]] <- NULL
+
 
   ### RETURN OUTPUT ----
 
-    return(lm.pts)
+    return(localMax)
 
   }
 

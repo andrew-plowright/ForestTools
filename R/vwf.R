@@ -68,7 +68,11 @@ vwf <- function(CHM, winFun, minHeight = NULL, maxWinDiameter = 99, minWinNeib =
     if(!is.null(minHeight) && minHeight <= 0) stop("Minimum canopy height must be set to a positive value.")
 
     # Get range of CHM values
-    CHM.rng <- suppressWarnings(raster::cellStats(CHM, range))
+    CHM.rng <- if(CHM@data@haveminmax){
+      c(CHM@data@min, CHM@data@max)
+    }else{
+      suppressWarnings(raster::cellStats(CHM, "range"))
+    }
     names(CHM.rng) <- c("min", "max")
 
     # Check if CHM has usable values

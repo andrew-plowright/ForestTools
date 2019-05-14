@@ -20,6 +20,6 @@ function to the \link{kootenayCHM} raster dataset. Only trees over 2 m above gro
 were detected.
 }
 \seealso{
-\link{kootenayCHM} \link{kootenayBlocks} \link{kootenayCrowns}
+\link{kootenayCHM} \link{kootenayBlocks} \link{kootenayCrowns} \link{kootenayOrtho}
 }
 \keyword{datasets}

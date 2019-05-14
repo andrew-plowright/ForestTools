@@ -17,6 +17,6 @@ kootenayCrowns
 Outlines of tree crowns corresponding to the \link{kootenayTrees} treetops. Generated using \link{mcws}.
 }
 \seealso{
-\link{kootenayTrees} \link{kootenayCHM} \link{kootenayBlocks}
+\link{kootenayTrees} \link{kootenayCHM} \link{kootenayBlocks} \link{kootenayOrtho}
 }
 \keyword{datasets}

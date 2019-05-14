@@ -7,7 +7,7 @@
 #' \describe{Cell values are equal to canopy height above ground (in meters)}
 #' @source Data acquired from a photogrammetric drone survey performed by Spire Aerobotics
 #' on June 16th, 2016.
-#' @seealso \link{kootenayTrees} \link{kootenayBlocks} \link{kootenayCrowns}
+#' @seealso \link{kootenayTrees} \link{kootenayBlocks} \link{kootenayCrowns} \link{kootenayOrtho}
 "kootenayCHM"
 
 #' Kootenay forest - Dominant trees over 2 m
@@ -23,14 +23,14 @@
 #'   \item{winRadius}{radius of the moving window (see \code{\link{vwf}}) at
 #'   the treetop's location}
 #'   }
-#' @seealso \link{kootenayCHM} \link{kootenayBlocks} \link{kootenayCrowns}
+#' @seealso \link{kootenayCHM} \link{kootenayBlocks} \link{kootenayCrowns} \link{kootenayOrtho}
 "kootenayTrees"
 
 #' Kootenay forest - Cut blocks
 #'
 #' Boundaries of cut blocks within a 1.5 hectare section of forest in
 #' the Kootenay mountains, in British Columbia, Canada. Each block contains trees of different
-#' levels of maturity. Overlaps with \link{kootenayTrees}, \link{kootenayCrowns} and \link{kootenayCHM}.
+#' levels of maturity. Overlaps with \link{kootenayTrees}, \link{kootenayCrowns}, \link{kootenayOrtho} and \link{kootenayCHM}.
 #'
 #' @format A \link[sp:SpatialPolygons]{SpatialPolygonsDataFrame} with the following attributes:
 #' \describe{
@@ -38,7 +38,7 @@
 #'   \item{Shape_Leng}{length of polygon on meters}
 #'   \item{Shape_Area}{area of polygon in square meters}
 #'   }
-#' @seealso \link{kootenayTrees} \link{kootenayCHM} \link{kootenayCrowns}
+#' @seealso \link{kootenayTrees} \link{kootenayCHM} \link{kootenayCrowns} \link{kootenayOrtho}
 "kootenayBlocks"
 
 #' Kootenay forest - Tree crowns
@@ -51,5 +51,19 @@
 #'   \item{winRadius}{radius of the moving window at the treetop's location. Inherited from \link{kootenayTrees}.}
 #'   \item{crownArea}{area of crown outline in square meters}
 #'   }
-#' @seealso \link{kootenayTrees} \link{kootenayCHM} \link{kootenayBlocks}
+#' @seealso \link{kootenayTrees} \link{kootenayCHM} \link{kootenayBlocks} \link{kootenayOrtho}
 "kootenayCrowns"
+
+
+
+#' Kootenay forest - Orthomosaic
+#'
+#' An orthomosaic of a 1.5 hectare section of forest in the Kootenay mountains, in
+#' British Columbia, Canada.
+#'
+#' @format A RasterLayer
+#' \describe{Cell values are equal to canopy height above ground (in meters)}
+#' @source Data acquired from a photogrammetric drone survey performed by Spire Aerobotics
+#' on June 16th, 2016.
+#' @seealso \link{kootenayTrees} \link{kootenayBlocks} \link{kootenayCrowns} \link{kootenayCHM}
+"kootenayOrtho"

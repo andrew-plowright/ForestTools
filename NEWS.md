@@ -1,3 +1,14 @@
+## ForestTools 0.2.1
+
+Added:
+
+* `kootenayOrtho`, an orthographic image of the area covered by `kootenayCHM`, `kootenayTrees` and `kootenayCrowns`
+
+
+New function:
+
+* `glcm`, for computing textural metrics of a segmented canopy. Thanks to Jean-Romain Roussel for providing code for this function.
+
 ## ForestTools 0.2.0
 
 **BACKWARD INCOMPABILITY WARNING**

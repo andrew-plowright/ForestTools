@@ -2,15 +2,15 @@ library(ForestTools)
 
 context("Tests for 'mcws'")
 
-### LOAD TEST DATA
+### LOAD TEST DATA ----
 
-load("testTrees.Rda")
-load("testCHM.Rda")
-load("emptyCHM.Rda")
-load("orphanCHM.Rda")
-load("orphantrees.Rda")
+  load("testTrees.Rda")
+  load("testCHM.Rda")
+  load("emptyCHM.Rda")
+  load("orphanCHM.Rda")
+  load("orphantrees.Rda")
 
-### PERFORM TESTS
+### PERFORM TESTS ----
 
   test_that("mcws: expected results using standard parameters", {
 

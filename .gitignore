@@ -1,9 +1,10 @@
+scratch.R
 .Rproj.user
 .Rhistory
 .RData
 .Ruserdata
 data-raw
-createTestData
+tests/createTestData
 inst/doc
 builder_ForestTools.R
 oldfunctions

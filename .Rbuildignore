@@ -1,3 +1,5 @@
+^scratch\.R$
+^tests/createTestData$
 ^.*\.Rproj$
 ^\.Rproj\.user$
 ^data-raw$
@@ -7,6 +9,5 @@
 ^README-.*\.png$
 ^cran-comments\.md$
 ^oldfunctions$
-^createTestData$
 ^Dockerfile$
 ^TO_DO$

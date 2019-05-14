@@ -2,15 +2,15 @@ library(ForestTools)
 
 context("Tests for 'vwf'")
 
-### LOAD TEST DATA
+### LOAD TEST DATA ----
 
-load("testTrees.Rda")
-load("testCHM.Rda")
-load("emptyCHM.Rda")
-load("lowResCHM.Rda")
-load("latlongCHM.Rda")
+  load("testTrees.Rda")
+  load("testCHM.Rda")
+  load("emptyCHM.Rda")
+  load("lowResCHM.Rda")
+  load("latlongCHM.Rda")
 
-### PERFORM TESTS
+### PERFORM TESTS ----
 
   test_that("vwf: expected results using standard parameters", {
 
@@ -21,27 +21,6 @@ load("latlongCHM.Rda")
     expect_equal( min(trees.std[["height"]]), 1.503213, tolerance = 0.0000001)
     expect_equal( max(trees.std[["height"]]), 26.89251, tolerance = 0.0000001)
   })
-
-  # test_that("vwf: expected results using forced tiling", {
-  #
-  #   trees.tiled <- vwf(testCHM, function(x){x * 0.05 + 0.8}, minHeight = 1.5, maxCells = 10000)
-  #
-  #   expect_equal(length(trees.tiled), 1115)
-  #   expect_equal(mean(trees.tiled[["height"]]), 5.857549, tolerance = 0.0000001)
-  #   expect_equal( min(trees.tiled[["height"]]), 1.503213, tolerance = 0.0000001)
-  #   expect_equal( max(trees.tiled[["height"]]), 26.89251, tolerance = 0.0000001)
-  # })
-
-
-  # test_that("vwf: expected results using pre-tiled CHM", {
-  #
-  #   trees.tiled <- vwf(testCHM.tiles, function(x){x * 0.05 + 0.8}, minHeight = 1.5, maxCells = 10000)
-  #
-  #   expect_equal(length(trees.tiled), 1115)
-  #   expect_equal(mean(trees.tiled[["height"]]), 5.857549, tolerance = 0.0000001)
-  #   expect_equal( min(trees.tiled[["height"]]), 1.503213, tolerance = 0.0000001)
-  #   expect_equal( max(trees.tiled[["height"]]), 26.89251, tolerance = 0.0000001)
-  # })
 
   test_that("vwf: returns an error if the input function produces windows that are too large", {
 
@@ -63,16 +42,6 @@ load("latlongCHM.Rda")
 
     expect_error(vwf(emptyCHM, function(x){x * 0.05 + 0.8}), err)
   })
-
-  # NOTE: This warning doesn't seem to be produced anymore ever since I made a change
-  # to how the 'winRadii' sequence is computed
-  #
-  # test_that("vwf: warning if window size is too low for a given CHM",{
-  #
-  #   warn <-  "The maximum window radius computed with 'winFun' is smaller than"
-  #
-  #   expect_warning(vwf(lowResCHM, function(x){x * 0.03 + 0.2}), warn)
-  # })
 
   test_that("vwf: error if window size is too low for a given CHM",{
 

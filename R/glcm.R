@@ -20,7 +20,7 @@
 #'
 #' @export
 
-glcm <- function(segs, image, n_grey = 4){
+glcm <- function(segs, image, n_grey = 32){
 
   if(raster::nlayers(image) > 1) stop("'image' should have a single band")
 
@@ -29,7 +29,7 @@ glcm <- function(segs, image, n_grey = 4){
   }
 
   if(raster::cellStats(image, "min") < 0){
-    warning("Cannot compute GLCM metrics for segments containing negative values")
+    stop("Cannot compute GLCM metrics for segments containing negative values")
   }
 
   # Get image extent, resolution and dimensions
@@ -44,10 +44,10 @@ glcm <- function(segs, image, n_grey = 4){
   H = split(M, G)
 
   # Compute GLCM texture metrics for each segment
-  segGLCM = do.call(rbind, lapply(H, function(x)
-  {
-    coords    = x[,1:2]
-    data      = x[,3, drop = FALSE]
+  segGLCM = do.call(plyr::rbind.fill, lapply(H, function(h){
+
+    coords    = h[,1:2]
+    data      = h[,3, drop = FALSE]
     offset    = c(min(coords$x), min(coords$y))
     cellsize  = r
     celldim   = (c(max(coords$x), max(coords$y)) - c(min(coords$x), min(coords$y)))/cellsize + 1
@@ -55,10 +55,16 @@ glcm <- function(segs, image, n_grey = 4){
     sp        = sp::SpatialPixelsDataFrame(coords, data, grid = topology)
     m         = as.matrix(sp)
 
-    if(any(dim(m) > 2))
-      tryCatch({ radiomics::calc_features(radiomics::glcm(m, n_grey = n_grey))}, error = function(e) return(NA))
-    else
-      NA
+    if(any(dim(m) > 2)){
+
+      suppressMessages(radiomics::calc_features(radiomics::glcm(m, n_grey = n_grey)))
+
+      # tryCatch({
+      #   suppressMessages(radiomics::calc_features(radiomics::glcm(m, n_grey = n_grey)))
+      #   },error   = function(e) NULL)
+
+    }else NA
+
   }))
 
   # Add segment IDs

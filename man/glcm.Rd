@@ -4,7 +4,7 @@
 \alias{glcm}
 \title{Grey level covariance matrix}
 \usage{
-glcm(segs, image, n_grey = 4)
+glcm(segs, image, n_grey = 32)
 }
 \arguments{
 \item{segs}{RasterLayer. A segmented raster. Cell values should be equal to segment numbers}

@@ -32,10 +32,8 @@ glcm <- function(segs, image, n_grey = 32){
     stop("Cannot compute GLCM metrics for segments containing negative values")
   }
 
-  # Get image extent, resolution and dimensions
-  e = raster::extent(image)
+  # Get image resolution
   r = raster::res(image)
-  d = dim(image)
 
   # Convert image to data.frame and split according to segment values
   M = raster::as.data.frame(image, xy = TRUE)
@@ -43,32 +41,51 @@ glcm <- function(segs, image, n_grey = 32){
   data.table::setDT(M)
   H = split(M, G)
 
+  # Create vector for storing error messages
+  err <- c()
+
   # Compute GLCM texture metrics for each segment
   segGLCM = do.call(plyr::rbind.fill, lapply(H, function(h){
 
+    # Create topology for segment
     coords    = h[,1:2]
-    data      = h[,3, drop = FALSE]
     offset    = c(min(coords$x), min(coords$y))
-    cellsize  = r
-    celldim   = (c(max(coords$x), max(coords$y)) - c(min(coords$x), min(coords$y)))/cellsize + 1
-    topology  = sp::GridTopology(offset, cellsize, celldim)
-    sp        = sp::SpatialPixelsDataFrame(coords, data, grid = topology)
-    m         = as.matrix(sp)
+    segdim    = (c(max(coords$x), max(coords$y)) - c(min(coords$x), min(coords$y)))/r + 1
+    topology  = sp::GridTopology(offset, r, segdim)
 
-    if(any(dim(m) > 2)){
+    # Segment as matrix
+    seg = as.matrix(sp::SpatialPixelsDataFrame(coords, h[,3, drop = FALSE], grid = topology))
 
-      suppressMessages(radiomics::calc_features(radiomics::glcm(m, n_grey = n_grey)))
+    # Try calculating GLCM metrics
+    tryCatch({
 
-      # tryCatch({
-      #   suppressMessages(radiomics::calc_features(radiomics::glcm(m, n_grey = n_grey)))
-      #   },error   = function(e) NULL)
+      suppressMessages(radiomics::calc_features(radiomics::glcm(seg, n_grey = n_grey)))
 
-    }else NA
+    # If calculating GLCM failed, return empty data.frame and save error message
+    }, error = function(e){
+
+      err <<- c(err, e$message)
+      data.frame(NA)
+
+    })
 
   }))
 
+  # Remove column created by empty segments
+  segGLCM$NA. <- NULL
+
+  # Report reasons for GLCM failure
+  if(length(err) > 0){
+
+    errTable <- table(err)
+
+    warning(paste(c("Generating GLCM metrics failed for", length(err), "segments:\n",
+                    paste("  ", errTable, "segment(s):", names(errTable), "\n")), collapse = " "))
+  }
+
   # Add segment IDs
-  cbind(treeID = as.integer(as.character(levels(factor(G)))), segGLCM)
+  treeID <- as.integer(as.character(levels(factor(G))))
+  cbind(treeID, segGLCM)
 
 }
 

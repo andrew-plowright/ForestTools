@@ -10,7 +10,7 @@ Forest Tools: Tools for analysing remotely sensed forest data
 **Authors:** Andrew Plowright<br/>
 **License:** GPL 3
 
-[![Build Status](https://travis-ci.org/AndyPL22/ForestTools.svg?branch=master)](https://travis-ci.org/andrew-plowright/ForestTools)
+[![Build Status](https://travis-ci.org/andrew-plowright/ForestTools.svg?branch=master)](https://travis-ci.org/andrew-plowright/ForestTools)
 
 ```{r, echo = FALSE}
 knitr::opts_chunk$set(

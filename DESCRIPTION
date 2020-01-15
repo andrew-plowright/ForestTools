@@ -17,10 +17,13 @@ Imports:
     rgeos,
     methods,
     radiomics,
-    data.table,
     plyr,
+    progress,
+    foreach,
+    doSNOW,
+    parallel,
     APfun
-RoxygenNote: 6.1.1
+RoxygenNote: 7.0.2
 Suggests: testthat,
     knitr,
     rmarkdown

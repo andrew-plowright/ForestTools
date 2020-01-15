@@ -20,7 +20,7 @@
 #'
 #' @export
 
-glcm <- function(segs, image, n_grey = 32){
+glcm <- function(segs, image, n_grey = 32, clusters = 1, showprog = FALSE){
 
   if(raster::nlayers(image) > 1) stop("'image' should have a single band")
 
@@ -38,14 +38,13 @@ glcm <- function(segs, image, n_grey = 32){
   # Convert image to data.frame and split according to segment values
   M = raster::as.data.frame(image, xy = TRUE)
   G = segs[]
-  data.table::setDT(M)
   H = split(M, G)
 
   # Create vector for storing error messages
   err <- c()
 
-  # Compute GLCM texture metrics for each segment
-  segGLCM = do.call(plyr::rbind.fill, lapply(H, function(h){
+  # Create worker function
+  worker <- function(h){
 
     # Create topology for segment
     coords    = h[,1:2]
@@ -61,15 +60,52 @@ glcm <- function(segs, image, n_grey = 32){
 
       suppressMessages(radiomics::calc_features(radiomics::glcm(seg, n_grey = n_grey)))
 
-    # If calculating GLCM failed, return empty data.frame and save error message
+      # If calculating GLCM failed, return empty data.frame and save error message
     }, error = function(e){
 
       err <<- c(err, e$message)
       data.frame(NA)
 
     })
+  }
 
-  }))
+
+  # Progress bar
+  paropts <- if(showprog){
+
+    pb <- progress::progress_bar$new(
+      format = "Progress [:bar] Tile :current/:total. ETA: :eta",
+      total = length(H),
+      width = 80,
+      show_after = 0)
+    pb$tick(0)
+
+    list(progress = function(n) pb$tick())
+  }
+
+  # Create 'foreach' statement
+  fe <- foreach::foreach(h = H, .options.snow = paropts)
+
+  # Apply worker function (serial)
+  segGLCM <- do.call(plyr::rbind.fill, if(clusters == 1){
+
+    fe %do% {
+
+      result <- worker(h)
+      if(showprog) pb$tick()
+      return(result)
+    }
+
+  # Apply worker function (parallel)
+  }else{
+
+    cl <- parallel::makeCluster(clusters)
+    doSNOW::registerDoSNOW(cl)
+    on.exit(parallel::stopCluster(cl))
+
+    fe %dopar% worker(h)
+
+  })
 
   # Remove column created by empty segments
   segGLCM$NA. <- NULL

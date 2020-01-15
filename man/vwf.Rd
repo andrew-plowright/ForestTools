@@ -4,8 +4,14 @@
 \alias{vwf}
 \title{Variable Window Filter}
 \usage{
-vwf(CHM, winFun, minHeight = NULL, maxWinDiameter = 99,
-  minWinNeib = "queen", verbose = FALSE)
+vwf(
+  CHM,
+  winFun,
+  minHeight = NULL,
+  maxWinDiameter = 99,
+  minWinNeib = "queen",
+  verbose = FALSE
+)
 }
 \arguments{
 \item{CHM}{Canopy height model. Either in \link[raster]{raster} format, or a path directing to a raster file. A character vector of multiple paths directing to a

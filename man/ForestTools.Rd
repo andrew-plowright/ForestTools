@@ -3,7 +3,6 @@
 \docType{package}
 \name{ForestTools}
 \alias{ForestTools}
-\alias{ForestTools-package}
 \title{Forest Tools: A package for analyzing geospatial forest data}
 \description{
 Forest Tools provides functions for analyzing remotely sensed forest data.

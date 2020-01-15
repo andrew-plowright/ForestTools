@@ -74,7 +74,7 @@ glcm <- function(segs, image, n_grey = 32, clusters = 1, showprog = FALSE){
   paropts <- if(showprog){
 
     pb <- progress::progress_bar$new(
-      format = "Progress [:bar] Tile :current/:total. ETA: :eta",
+      format = "Progress [:bar] Tree :current/:total. ETA: :eta",
       total = length(H),
       width = 80,
       show_after = 0)

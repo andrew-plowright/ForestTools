@@ -4,8 +4,14 @@
 \alias{mcws}
 \title{Marker-Controlled Watershed Segmentation}
 \usage{
-mcws(treetops, CHM, minHeight = 0, format = "raster",
-  OSGeoPath = NULL, verbose = FALSE)
+mcws(
+  treetops,
+  CHM,
+  minHeight = 0,
+  format = "raster",
+  OSGeoPath = NULL,
+  verbose = FALSE
+)
 }
 \arguments{
 \item{treetops}{\link[sp:SpatialPoints]{SpatialPointsDataFrame}. The point locations of treetops. The function will generally produce a

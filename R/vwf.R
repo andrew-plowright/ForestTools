@@ -186,6 +186,8 @@ vwf <- function(CHM, winFun, minHeight = NULL, maxWinDiameter = 99, minWinNeib =
 
   ### APPLY VWF FUNCTION ----
 
+    if(verbose) cat("Detecting local maxima", "\n")
+
     # Apply local maxima-finding function to raster
     localMax <- raster::rasterToPoints(
 

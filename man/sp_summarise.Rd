@@ -4,8 +4,13 @@
 \alias{sp_summarise}
 \title{Spatial Summarization}
 \usage{
-sp_summarise(trees, areas = NULL, grid = NULL, variables = NULL,
-  statFuns = NULL)
+sp_summarise(
+  trees,
+  areas = NULL,
+  grid = NULL,
+  variables = NULL,
+  statFuns = NULL
+)
 }
 \arguments{
 \item{trees}{\link[sp:SpatialPoints]{SpatialPointsDataFrame} or \link[sp:SpatialPolygons]{SpatialPolygonsDataFrame}. The locations of a

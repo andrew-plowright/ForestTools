@@ -4,8 +4,10 @@
 \name{kootenayOrtho}
 \alias{kootenayOrtho}
 \title{Kootenay forest - Orthomosaic}
-\format{A RasterLayer
-\describe{Cell values are equal to canopy height above ground (in meters)}}
+\format{
+A RasterLayer
+\describe{Cell values are equal to canopy height above ground (in meters)}
+}
 \source{
 Data acquired from a photogrammetric drone survey performed by Spire Aerobotics
 on June 16th, 2016.

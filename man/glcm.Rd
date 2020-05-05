@@ -12,6 +12,10 @@ glcm(segs, image, n_grey = 32, clusters = 1, showprog = FALSE)
 \item{image}{RasterLayer. A single-band raster layer from which texture is measured}
 
 \item{n_grey}{integer. Number of grey levels the image should be quantized into}
+
+\item{clusters}{integer. Number of clusters to use during parallel processing}
+
+\item{showprog}{logical. Display progress in terminal}
 }
 \value{
 data.frame

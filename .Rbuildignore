@@ -10,3 +10,6 @@
 ^cran-comments\.md$
 ^oldfunctions$
 ^Dockerfile$
+^doc$
+^Meta$
+^CRAN-RELEASE$

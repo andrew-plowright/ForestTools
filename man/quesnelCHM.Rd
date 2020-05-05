@@ -4,8 +4,10 @@
 \name{quesnelCHM}
 \alias{quesnelCHM}
 \title{Quesnel forest - Canopy height model}
-\format{A RasterLayer
-\describe{Cell values are equal to canopy height above ground (in meters)}}
+\format{
+A RasterLayer
+\describe{Cell values are equal to canopy height above ground (in meters)}
+}
 \source{
 Data acquired from a photogrammetric drone survey performed by Spire Aerobotics
 on September 15th, 2016.

@@ -4,7 +4,7 @@ output: github_document
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-Forest Tools: Tools for analysing remotely sensed forest data
+Forest Tools: Tools for analyzing remotely sensed forest data
 ---------------
 
 **Authors:** Andrew Plowright<br/>

@@ -10,9 +10,9 @@ New function:
 
 ## ForestTools 0.2.0
 
-**BACKWARD INCOMPABILITY WARNING**
+**BACKWARD INCOMPATIBILITY WARNING**
 
-Although this can cause backward compability issues, I felt it was necessary to rename the following functions:
+Although this can cause backward compatibility issues, I felt it was necessary to rename the following functions:
 
 * `TreetopFinder` -> `vwf` (stands for _Variable Window Filter_)
 
@@ -30,12 +30,12 @@ Reasons for the changes are:
 In addition, I've made the following changes to `vwf` (formerly `TreetopFinder`):
 
 * Extended the default value of the `maxWinDiameter` argument to 99. Note that this value sets the maximum width in _cells_ of the widest allowable window diameter. As explained in the documentation, this argument is to prevent the function from gobbling up too much memory, and can be disabled by setting to NULL.
-* In addition to controlling the _maximum_ window diameter, the user can now tweak the behaviour of the _minimum_ diameter as well. Essentially, the smallest window will always be a 3x3 cell window, regardless of the computed window radius. The neighborhood of this smallest window can be set to either [a rook or a queen case contiguity](https://i.stack.imgur.com/CWIHi.jpg) using the `minWinNeib` argument.
+* In addition to controlling the _maximum_ window diameter, the user can now tweak the behavior of the _minimum_ diameter as well. Essentially, the smallest window will always be a 3x3 cell window, regardless of the computed window radius. The neighborhood of this smallest window can be set to either [a rook or a queen case contiguity](https://i.stack.imgur.com/CWIHi.jpg) using the `minWinNeib` argument.
 * I've removed the function's compability with the `TileManager` package. Although I had put considerable effort into adding this feature initially, I've realized that A) no one was using it, B) it is preferable for the user to manage tiles him or herself instead of having them managed "under the hood" by the `vwf` function. Let me know if you thought this feature was useful and perhaps I can write a vignette suggesting preferable ways to manage a tiled CHM.
 
 ## ForestTools 0.1.5
 
-* Fixed a persitent bug in 'TreeTopFinder' whereby CHMs with imprecise cell sizes (i.e.: cell dimensions that aren't accurate after a certain number of decimals), would cause issues with the shape of the focal windows. Internally, CHM cell dimensions are now rounded to the fifth decimal.
+* Fixed a persistent bug in 'TreeTopFinder' whereby CHMs with imprecise cell sizes (i.e.: cell dimensions that aren't accurate after a certain number of decimals), would cause issues with the shape of the focal windows. Internally, CHM cell dimensions are now rounded to the fifth decimal.
 
 ## ForestTools 0.1.4
 

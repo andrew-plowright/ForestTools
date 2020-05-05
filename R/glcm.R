@@ -6,6 +6,8 @@
 #' @param segs RasterLayer. A segmented raster. Cell values should be equal to segment numbers
 #' @param image RasterLayer. A single-band raster layer from which texture is measured
 #' @param n_grey integer. Number of grey levels the image should be quantized into
+#' @param clusters integer. Number of clusters to use during parallel processing
+#' @param showprog logical. Display progress in terminal
 #'
 #' @return data.frame
 #'
@@ -84,14 +86,14 @@ glcm <- function(segs, image, n_grey = 32, clusters = 1, showprog = FALSE){
   }
 
   # Create 'foreach' statement
-  fe <- foreach::foreach(h = H, .options.snow = paropts)
+  fe <- foreach::foreach(H = H, .options.snow = paropts)
 
   # Apply worker function (serial)
   segGLCM <- do.call(plyr::rbind.fill, if(clusters == 1){
 
     fe %do% {
 
-      result <- worker(h)
+      result <- worker(H)
       if(showprog) pb$tick()
       return(result)
     }
@@ -103,7 +105,7 @@ glcm <- function(segs, image, n_grey = 32, clusters = 1, showprog = FALSE){
     doSNOW::registerDoSNOW(cl)
     on.exit(parallel::stopCluster(cl))
 
-    fe %dopar% worker(h)
+    fe %dopar% worker(H)
 
   })
 

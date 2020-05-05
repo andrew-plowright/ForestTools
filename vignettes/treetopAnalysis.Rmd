@@ -236,7 +236,7 @@ sp_summarise(crownsPoly, variables = c("crownArea", "height"), statFuns = custFu
 ### The _raster_ and _sp_ libraries
 The Forest Tools package is built on the [raster](https://cran.r-project.org/package=raster) and [sp](https://cran.r-project.org/package=sp) libraries, which are automatically installed when `ForestTools` is downloaded. These libraries define a variety of classes and functions for working with raster and vector datasets in R.
 
-It is recommended that any user performing geospatial analyses in R be familiar with both of these libraries. Relatively easy and straightforward guides for  [raster](https://cran.r-project.org/package=raster/vignettes/Raster.pdf) and [sp](https://cran.r-project.org/package=sp/vignettes/intro_sp.pdf) have been written by their respective authors.
+It is recommended that any user performing geospatial analyses in R be familiar with both of these libraries.
 
 ### Geospatial classes used by Forest Tools
 

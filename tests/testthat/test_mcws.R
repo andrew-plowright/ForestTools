@@ -8,7 +8,7 @@ context("Tests for 'mcws'")
   load("testCHM.Rda")
   load("emptyCHM.Rda")
   load("orphanCHM.Rda")
-  load("orphantrees.Rda")
+  load("orphanTrees.Rda")
 
 ### PERFORM TESTS ----
 
@@ -34,13 +34,13 @@ context("Tests for 'mcws'")
   test_that("mcws: removes trees outside of CHM area and those that over NA values",{
 
     # Perform segmentation on 'orphan trees' test dataset
-    segs.poly      <- mcws(orphantrees, orphanCHM, format = "polygons", verbose = FALSE)
-    segs.ras       <- mcws(orphantrees, orphanCHM, verbose = FALSE)
-    segs.poly.min2 <- mcws(orphantrees, orphanCHM, minHeight = 2, format = "polygons", verbose = FALSE)
-    segs.ras.min2  <- mcws(orphantrees, orphanCHM, minHeight = 2, verbose = FALSE)
+    segs.poly      <- mcws(orphanTrees, orphanCHM, format = "polygons", verbose = FALSE)
+    segs.ras       <- mcws(orphanTrees, orphanCHM, verbose = FALSE)
+    segs.poly.min2 <- mcws(orphanTrees, orphanCHM, minHeight = 2, format = "polygons", verbose = FALSE)
+    segs.ras.min2  <- mcws(orphanTrees, orphanCHM, minHeight = 2, verbose = FALSE)
 
     # Count number of trees inside of area, that are
-    treesOutside <- raster::crop(orphantrees, orphanCHM)
+    treesOutside <- raster::crop(orphanTrees, orphanCHM)
     treesVals <- raster::extract(orphanCHM, treesOutside)
     treesNoNA <- treesOutside[!is.na(treesVals),]
     treesMin2 <- treesOutside[!is.na(treesVals) & treesVals >= 2,]

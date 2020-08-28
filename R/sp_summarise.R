@@ -221,8 +221,11 @@ sp_summarise <- function(trees, areas = NULL, grid = NULL, variables = NULL, sta
       ras.ext.ymin <- APfun::AProunder(trees.ext@ymin, interval = grid, direction = "down", snap = ras.ext.ymax)
       ras.ext <- raster::extent(ras.ext.xmin, ras.ext.xmax, ras.ext.ymin, ras.ext.ymax)
 
+      # Get output CRS (suppress warnings from rgdal 1.5)
+      prj4 <- suppressWarnings(sp::proj4string(trees))
+
       # Create gridded raster
-      grid <- raster::raster(ras.ext, res = c(grid, grid), vals = 0, crs = sp::proj4string(trees))
+      grid <- raster::raster(ras.ext, res = c(grid, grid), vals = 0, crs = prj4)
     }
 
   ### PROCESS: Grid is a raster

@@ -11,9 +11,13 @@ context("Tests for 'sp_summarise'")
   load("areas-outside.Rda")
   load("areas-partial.Rda")
 
-  grid.small <- raster::raster(raster::extent(kootenayTrees), res = c(2,2), vals = 0, crs = sp::proj4string(kootenayTrees))
-  grid.med <- raster::raster(raster::extent(kootenayTrees), res = c(10,10), vals = 0, crs = sp::proj4string(kootenayTrees))
-  grid.outside <- raster::raster(raster::extent(5000, 6000, 10000, 11000), res = c(100,100), vals = 0, crs = sp::proj4string(kootenayTrees))
+  # Note that 'proj4string' will now emit a warning using rgdal 1.5
+  prj4 <- suppressWarnings(sp::proj4string(kootenayTrees))
+
+  # Create grids
+  grid.small   <- raster::raster(raster::extent(kootenayTrees),            res = c(2,2),     vals = 0, crs = prj4)
+  grid.med     <- raster::raster(raster::extent(kootenayTrees),            res = c(10,10),   vals = 0, crs = prj4)
+  grid.outside <- raster::raster(raster::extent(5000, 6000, 10000, 11000), res = c(100,100), vals = 0, crs = prj4)
 
 
 ### TESTS WITH INVALID INPUTS
@@ -50,7 +54,7 @@ context("Tests for 'sp_summarise'")
 
   test_that("sp_summarise: Expected results using no areas or grids", {
 
-      sum.basic.pts <- sp_summarise(kootenayTrees, variables = c("height", "winRadius"))
+      sum.basic.pts  <- sp_summarise(kootenayTrees,  variables = c("height", "winRadius"))
       sum.basic.poly <- sp_summarise(kootenayCrowns, variables = c("height", "crownArea"))
 
       # Statistics are equal to those calculated outside of the function
@@ -123,7 +127,7 @@ context("Tests for 'sp_summarise'")
     cellCoord <- raster::xyFromCell(ras, cellNum)
     rasRes <- raster::res(ras)
     cellExt <- as(raster::extent(c(cellCoord - rasRes/2, cellCoord + rasRes/2)[c(1,3,2,4)]), "SpatialPolygons")
-    sp::proj4string(cellExt) <- sp::proj4string(pts)
+    sp::proj4string(cellExt) <- suppressWarnings(sp::proj4string(pts))
     pts[!is.na(sp::over(rgeos::gCentroid(pts, byid = TRUE), cellExt)),]
   }
 
@@ -132,17 +136,17 @@ context("Tests for 'sp_summarise'")
     sum.sgrid.pts <- sp_summarise(kootenayTrees, grid = grid.small, variables = c("height", "winRadius"))
 
     # Extract trees overlapping cells with multiple trees
-    trees.cell23 <- ptsInCell(kootenayTrees, sum.sgrid.pts, 23)
-    trees.cell491 <- ptsInCell(kootenayTrees, sum.sgrid.pts, 491)
+    trees.cell23   <- ptsInCell(kootenayTrees, sum.sgrid.pts,   23)
+    trees.cell491  <- ptsInCell(kootenayTrees, sum.sgrid.pts,  491)
     trees.cell2157 <- ptsInCell(kootenayTrees, sum.sgrid.pts, 2157)
 
     # Check tree count
-    expect_equal(length(trees.cell23), 2)
-    expect_equal(length(trees.cell491), 2)
+    expect_equal(length(trees.cell23),   2)
+    expect_equal(length(trees.cell491),  2)
     expect_equal(length(trees.cell2157), 2)
 
     # Check statistics
-    expect_equal(as.numeric(sum.sgrid.pts[["heightMean"]][23]),  mean(trees.cell23[["height"]]), tolerance = 0.001)
+    expect_equal(as.numeric(sum.sgrid.pts[["heightMean"   ]][23]),  mean(trees.cell23[["height"]]),    tolerance = 0.001)
     expect_equal(as.numeric(sum.sgrid.pts[["winRadiusMean"]][23]),  mean(trees.cell23[["winRadius"]]), tolerance = 0.001)
 
     expect_equal(max(sum.sgrid.pts[["heightMax"]][], na.rm = TRUE), max(kootenayTrees[["height"]]))
@@ -155,8 +159,8 @@ context("Tests for 'sp_summarise'")
     sum.mgrid <- sp_summarise(kootenayTrees, grid = grid.med, variables = c("height", "winRadius"))
 
     # Extract trees overlapping cells with multiple trees
-    trees.cell13 <- ptsInCell(kootenayTrees, sum.mgrid, 13)
-    trees.cell42 <- ptsInCell(kootenayTrees, sum.mgrid, 42)
+    trees.cell13  <- ptsInCell(kootenayTrees, sum.mgrid,  13)
+    trees.cell42  <- ptsInCell(kootenayTrees, sum.mgrid,  42)
     trees.cell126 <- ptsInCell(kootenayTrees, sum.mgrid, 126)
 
     # Check tree count
@@ -246,3 +250,4 @@ context("Tests for 'sp_summarise'")
     expect_error(sp_summarise(kootenayTrees, statFuns = fail5, variables = c("height", "winRadius"), grid = grid.med),
                  "The 'fail5' function cannot be used.\nReasons:\n1. Returned value was neither logical or numeric")
   })
+

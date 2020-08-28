@@ -4,7 +4,7 @@ author: "Andrew Plowright"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Polygonal crown maps}
+  %\VignetteIndexEntry{Options for creating polygonal crown maps}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

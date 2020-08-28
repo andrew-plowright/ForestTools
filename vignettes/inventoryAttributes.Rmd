@@ -4,7 +4,7 @@ author: "Andrew Plowright"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Inventory attributes}
+  %\VignetteIndexEntry{Calculating inventory attributes using Forest Tools}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

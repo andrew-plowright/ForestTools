@@ -2,7 +2,6 @@
 
 language: R
 sudo: required
-dist: trusty
 
 apt_packages:
   - gdal-bin

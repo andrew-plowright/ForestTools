@@ -62,6 +62,7 @@ By setting the \code{OSGeoPath} path to the OSGeo4W installation directory (usua
 use the \emph{gdal_polygonize.py} GDAL utility to generate polygonal crown outlines instead.
 }
 \examples{
+\dontrun{
 # Use variable window filter to detect treetops in demo canopy height model
 ttops <- vwf(CHMdemo, winFun = function(x){x * 0.06 + 0.5}, minHeight = 2)
 
@@ -70,6 +71,7 @@ minCrwnHgt <- 1
 
 # Use 'mcws' to outline tree crowns
 segs <- mcws(ttops, CHMdemo, minCrwnHgt)
+}
 
 }
 \references{

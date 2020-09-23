@@ -46,6 +46,7 @@
 #' OSGeo4W download page: \url{https://trac.osgeo.org/osgeo4w/}
 #'
 #' @examples
+#' \dontrun{
 #' # Use variable window filter to detect treetops in demo canopy height model
 #' ttops <- vwf(CHMdemo, winFun = function(x){x * 0.06 + 0.5}, minHeight = 2)
 #'
@@ -54,6 +55,7 @@
 #'
 #' # Use 'mcws' to outline tree crowns
 #' segs <- mcws(ttops, CHMdemo, minCrwnHgt)
+#' }
 #'
 #' @export
 

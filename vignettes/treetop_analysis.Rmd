@@ -10,6 +10,7 @@ vignette: >
 ---
 ```{r global_options, include=FALSE, dpi =  300}
 knitr::opts_knit$set(global.par = TRUE)
+options(rmarkdown.html_vignette.check_title = FALSE)
 ```
 
 ## Introduction

@@ -121,10 +121,20 @@ glcm <- function(segs, image, n_grey = 32, clusters = 1, showprog = FALSE){
                     paste("  ", errTable, "segment(s):", names(errTable), "\n")), collapse = " "))
   }
 
-  # Add segment IDs
-  treeID <- as.integer(as.character(levels(factor(G))))
-  cbind(treeID, segGLCM)
+  # Add blank columns if no segments were created
+  if(ncol(segGLCM) == 0){
 
+    segGLCM <- radiomics::calc_features(radiomics::glcm(matrix(runif(9), nrow=3, ncol=3), n_grey = 3))[-1,]
+    treeID = integer()
+
+  }else{
+
+    # Add segment IDs
+    treeID <- as.integer(as.character(levels(factor(G))))
+
+  }
+
+  cbind(treeID, segGLCM)
 }
 
 

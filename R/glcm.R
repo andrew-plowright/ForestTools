@@ -42,6 +42,13 @@ glcm <- function(segs, image, n_grey = 32, clusters = 1, showprog = FALSE){
   G = segs[]
   H = split(M, G)
 
+  # Create an empty data.frame
+  emptyDF <- radiomics::calc_features(radiomics::glcm(matrix(runif(9), nrow=3, ncol=3), n_grey = 3))
+  emptyDF[] <- NA
+
+  # Return empty data.frame if there are no segments
+  if(length(H) == 0) return(cbind(treeID = integer(), emptyDF[-1,]))
+
   # Create vector for storing error messages
   err <- c()
 
@@ -66,11 +73,10 @@ glcm <- function(segs, image, n_grey = 32, clusters = 1, showprog = FALSE){
     }, error = function(e){
 
       err <<- c(err, e$message)
-      data.frame(NA)
+      emptyDF
 
     })
   }
-
 
   # Progress bar
   paropts <- if(showprog){
@@ -121,19 +127,11 @@ glcm <- function(segs, image, n_grey = 32, clusters = 1, showprog = FALSE){
                     paste("  ", errTable, "segment(s):", names(errTable), "\n")), collapse = " "))
   }
 
-  # Add blank columns if no segments were created
-  if(ncol(segGLCM) == 0){
 
-    segGLCM <- radiomics::calc_features(radiomics::glcm(matrix(runif(9), nrow=3, ncol=3), n_grey = 3))[-1,]
-    treeID = integer()
+  # Add segment IDs
+  treeID <- as.integer(as.character(levels(factor(G))))
 
-  }else{
-
-    # Add segment IDs
-    treeID <- as.integer(as.character(levels(factor(G))))
-
-  }
-
+  # Return result
   cbind(treeID, segGLCM)
 }
 

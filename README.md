@@ -9,9 +9,10 @@
 Status](https://travis-ci.org/andrew-plowright/ForestTools.svg?branch=master)](https://travis-ci.org/andrew-plowright/ForestTools)
 
 The Forest Tools R package offers functions to analyze remotely sensed
-forest data. Currently, tools to detect dominant treetops and outline
-tree crowns have been implemented, both of which are applied to a
+forest data. Currently, tools to detect dominant treetops (`vwf`) and outline
+tree crowns (`mcws`) have been implemented, both of which are applied to a
 rasterized **canopy height model (CHM)**, which is generally derived
 from LiDAR or photogrammetric point clouds. A function to summarize the
 height and count of treetops within user-defined geographical areas is
-also available.
+also available (`sp_summarise`).
+

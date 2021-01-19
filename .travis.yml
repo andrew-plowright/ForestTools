@@ -6,10 +6,12 @@ apt_packages:
   - gdal-bin
   - libgdal1-dev
   - libproj-dev
+  - libcurl4-gnutls-dev
 
 r_packages:
   - rgdal
   - testthat
   - devtools
   - raster
+  - usethis
 

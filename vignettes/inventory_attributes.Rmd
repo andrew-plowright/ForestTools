@@ -13,6 +13,10 @@ knitr::opts_knit$set(global.par = TRUE)
 options(rmarkdown.html_vignette.check_title = FALSE)
 ```
 
+```{r setup, include=FALSE}
+library(ForestTools)
+```
+
 ## Introduction
 
 This short guide will demonstrate how to use the Forest Tools package to generate raster-based spatial statistics from a set of dominant treetops and then summarize the raster to a set of polygonal management units.

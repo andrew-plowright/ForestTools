@@ -13,6 +13,10 @@ knitr::opts_knit$set(global.par = TRUE)
 options(rmarkdown.html_vignette.check_title = FALSE)
 ```
 
+```{r setup, include=FALSE}
+library(ForestTools)
+```
+
 ## Introduction
 
 The Forest Tools R package offers functions to analyze remotely sensed forest data. Currently, tools to detect dominant treetops and outline tree crowns have been implemented, both of which are applied to a rasterized **canopy height model (CHM)**, which is generally derived from LiDAR or photogrammetric point clouds. A function to summarize the height and count of trees within user-defined geographical areas is also available.

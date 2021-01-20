@@ -2,16 +2,11 @@
 
 language: R
 
-apt_packages:
-  - gdal-bin
-  - libgdal1-dev
-  - libproj-dev
-  - libcurl4-gnutls-dev
-
-r_packages:
-  - rgdal
-  - testthat
-  - devtools
-  - raster
-  - usethis
-
+addons:
+  apt:
+    packages:
+      - gdal-bin
+      - libgdal1-dev
+      - libproj-dev
+      - libcurl4-gnutls-dev
+      - libv8-dev

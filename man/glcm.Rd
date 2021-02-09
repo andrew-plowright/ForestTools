@@ -4,7 +4,7 @@
 \alias{glcm}
 \title{Grey level covariance matrix}
 \usage{
-glcm(segs, image, n_grey = 32, clusters = 1, showprog = FALSE)
+glcm(segs, image, n_grey = 32, clusters = 1, showprog = FALSE, roundCoords = 4)
 }
 \arguments{
 \item{segs}{RasterLayer. A segmented raster. Cell values should be equal to segment numbers}
@@ -16,6 +16,9 @@ glcm(segs, image, n_grey = 32, clusters = 1, showprog = FALSE)
 \item{clusters}{integer. Number of clusters to use during parallel processing}
 
 \item{showprog}{logical. Display progress in terminal}
+
+\item{roundCoords}{integer. Errors in coordinate precision can trigger errors in this function. Internally, the coordinates
+are rounded to this decimal place. Default value of 4 decimals.}
 }
 \value{
 data.frame

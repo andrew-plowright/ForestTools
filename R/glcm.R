@@ -8,6 +8,8 @@
 #' @param n_grey integer. Number of grey levels the image should be quantized into
 #' @param clusters integer. Number of clusters to use during parallel processing
 #' @param showprog logical. Display progress in terminal
+#' @param roundCoords integer. Errors in coordinate precision can trigger errors in this function. Internally, the coordinates
+#' are rounded to this decimal place. Default value of 4 decimals.
 #'
 #' @return data.frame
 #'
@@ -22,7 +24,7 @@
 #'
 #' @export
 
-glcm <- function(segs, image, n_grey = 32, clusters = 1, showprog = FALSE){
+glcm <- function(segs, image, n_grey = 32, clusters = 1, showprog = FALSE, roundCoords = 4){
 
   if(raster::nlayers(image) > 1) stop("'image' should have a single band")
 
@@ -35,7 +37,7 @@ glcm <- function(segs, image, n_grey = 32, clusters = 1, showprog = FALSE){
   }
 
   # Get image resolution
-  r = raster::res(image)
+  r = round(raster::res(image), roundCoords)
 
   # Convert image to data.frame and split according to segment values
   M = raster::as.data.frame(image, xy = TRUE)
@@ -56,7 +58,7 @@ glcm <- function(segs, image, n_grey = 32, clusters = 1, showprog = FALSE){
   worker <- function(h){
 
     # Create topology for segment
-    coords    = h[,1:2]
+    coords    = round(h[,1:2], roundCoords)
     offset    = c(min(coords$x), min(coords$y))
     segdim    = (c(max(coords$x), max(coords$y)) - c(min(coords$x), min(coords$y)))/r + 1
     topology  = sp::GridTopology(offset, r, segdim)

@@ -23,6 +23,10 @@
 #' }
 #'
 #' @export
+#'
+#' @importFrom foreach %do%
+#' @importFrom foreach %dopar%
+
 
 glcm <- function(segs, image, n_grey = 32, clusters = 1, showprog = FALSE, roundCoords = 4){
 
@@ -60,7 +64,7 @@ glcm <- function(segs, image, n_grey = 32, clusters = 1, showprog = FALSE, round
     # Create topology for segment
     coords    = round(h[,1:2], roundCoords)
     offset    = c(min(coords$x), min(coords$y))
-    segdim    = (c(max(coords$x), max(coords$y)) - c(min(coords$x), min(coords$y)))/r + 1
+    segdim    = round((c(max(coords$x), max(coords$y)) - c(min(coords$x), min(coords$y)))/r + 1, roundCoords)
     topology  = sp::GridTopology(offset, r, segdim)
 
     # Segment as matrix

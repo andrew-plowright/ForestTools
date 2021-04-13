@@ -49,7 +49,7 @@ crown outlines as polygons. However, polygonal crown maps take up significantly 
 longer to process. It is advisable to run this function using a raster output first, in order to check
 its results and adjust parameters.
 
-Using the 'polygons' output \code{format} provides the added benefit of transferring
+Using the polygons provides the added benefit of transferring
 treetop attributes (such as \emph{height}) to the newly created polygons. The area of each crown will also
 automatically be calculated and added to the polygons' data under the \emph{crownArea} field. Furthermore,
 "orphaned" segments (i.e.: outlines without an associated treetop) will be removed when

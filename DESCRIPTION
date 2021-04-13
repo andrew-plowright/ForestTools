@@ -25,7 +25,9 @@ Imports:
     rgeos,
     sp
 Suggests:
-    knitr
+    testthat,
+    knitr,
+    rmarkdown
 RoxygenNote: 7.1.1
 URL: https://github.com/andrew-plowright/ForestTools
 BugReports: https://github.com/andrew-plowright/ForestTools/issues

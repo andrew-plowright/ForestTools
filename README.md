@@ -8,22 +8,20 @@
 [![Build
 Status](https://travis-ci.org/andrew-plowright/ForestTools.svg?branch=master)](https://travis-ci.org/andrew-plowright/ForestTools)
 
-The Forest Tools R package offers functions to analyze remotely sensed
-forest data.
+The Forest Tools R package offers functions to analyze remotely sensed forest data.
 
 ## Detect and segment trees
 
-Individual trees can be detected and delineated using the combination of a
-**variable window filter** algorithm (`vwf`) and **marker-controlled segmentation**
-(`mcws`), both of which are applied to a rasterized **canopy height model (CHM)**.
+Individual trees can be detected and delineated using the combination of the
+**variable window filter**  (`vwf`) and **marker-controlled segmentation**
+(`mcws`) algorithms, both of which are applied to a rasterized **canopy height model (CHM)**.
 CHMs are typically derived from aerial LiDAR or photogrammetric point clouds.
 
 ## Compute textural metrics
 
-Currently, tools to detect dominant treetops (`vwf`) and outline
-tree crowns (`mcws`) have been implemented, both of which are applied to a
-rasterized **canopy height model (CHM)**, which is generally derived
-from LiDAR or photogrammetric point clouds. A function to summarize the
-height and count of treetops within user-defined geographical areas is
-also available (`sp_summarise`).
+Grey-Level Co-Occurrence Matrices (GLCMs) and their associated statistics can be computed for individual trees using a single-band
+image and a segment raster (produced using `mcws`). The underlying code for these statistics was initially developed in the [radiomics](https://github.com/cran/radiomics) library by Joel Carlson, but it is no longer maintained so the code is used here with permission from the original author.
 
+## Summarize forest information
+
+A summary of the height and count of treetops within user-defined geographical areas can be created using `sp_summarise`.

@@ -121,5 +121,5 @@ GLCM Features
 }}
 
 \references{
-\url{http://journals.plos.org/plosone/article?id=10.1371/journal.pone.0102107#s5}
+\url{https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0102107}
 }

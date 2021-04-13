@@ -1,12 +1,11 @@
-
 #' Grey level covariance matrix
 #'
 #' Generate textural metrics for a segmented raster using grey level covariance matrices (GLCM).
-#' Implements the \code{glcm} function from the \link[radiomics:glcm]{radiomics} package.
 #'
 #' @param segs RasterLayer. A segmented raster. Cell values should be equal to segment numbers
 #' @param image RasterLayer. A single-band raster layer from which texture is measured
 #' @param n_grey integer. Number of grey levels the image should be quantized into
+#' @param angle integer. Angle at which GLCM will be calculated. Valid inputs are 0, 45, 90, or 135
 #' @param clusters integer. Number of clusters to use during parallel processing
 #' @param showprog logical. Display progress in terminal
 #' @param roundCoords integer. Errors in coordinate precision can trigger errors in this function. Internally, the coordinates
@@ -28,8 +27,7 @@
 #' @importFrom foreach %do%
 #' @importFrom foreach %dopar%
 
-
-glcm <- function(segs, image, n_grey = 32, clusters = 1, showprog = FALSE, roundCoords = 4){
+glcm <- function(segs, image, n_grey = 32, angle = 0, clusters = 1, showprog = FALSE, roundCoords = 4){
 
   if(raster::nlayers(image) > 1) stop("'image' should have a single band")
 
@@ -86,7 +84,7 @@ glcm <- function(segs, image, n_grey = 32, clusters = 1, showprog = FALSE, round
     # Otherwise, compute stats
     }else{
 
-      .GLCMstats(.calcGLCM(seg, n_grey = n_grey))
+      .GLCMstats(.calcGLCM(seg, n_grey = n_grey, angle = angle))
 
     }
   }
@@ -147,6 +145,7 @@ glcm <- function(segs, image, n_grey = 32, clusters = 1, showprog = FALSE, round
   cbind(treeID, segGLCM)
 }
 
+
 #' Calculate GLCM
 #'
 #' Some notes about this internal function:
@@ -156,12 +155,15 @@ glcm <- function(segs, image, n_grey = 32, clusters = 1, showprog = FALSE, round
 #' 4. Shouldn't be an empty matrix (i.e.: nrow = 0, ncol = 0)
 #' 5. 'n_grey' shouldn't be larger than the number of unique values
 #'
-#' Remaining questions: What to do if there's only one value?
+#' @param data matrix. Input image
+#' @param n_grey integer. Number of grey levels used to discretize image
+#' @param angle integer. Angle at which GLCM will be calculated. Valid inputs are 0, 45, 90, or 135
+#' @param d numeric. Distance for calculating GLCM
+#' @param normalize boolean. Normalize output if TRUE
 
+.calcGLCM <- function(data, n_grey, angle, d = 1, normalize = TRUE){
 
-.calcGLCM <- function(data, n_grey, angle = 0, d = 1, normalize = TRUE){
-
-  data <- .discretizeImage(data, n_grey=n_grey)
+  data <- .discretizeImage(data, n_grey = n_grey)
 
   unique_vals <- sort(unique(c(data)))
 
@@ -243,6 +245,8 @@ glcm <- function(segs, image, n_grey = 32, clusters = 1, showprog = FALSE, round
 }
 
 #' Calculate stats for GLCM
+#'
+#' @param data matrix. GLCM computed using '.calcGLCM'
 
 .GLCMstats <- function(data){
 
@@ -276,9 +280,12 @@ glcm <- function(segs, image, n_grey = 32, clusters = 1, showprog = FALSE, round
 
   }else{
 
-    discretized <- cut(data, breaks=seq(min(data, na.rm=TRUE), max(data, na.rm=TRUE), length.out=(n_grey + 1)),
-                       labels = seq(1, n_grey, 1),
-                       include.lowest=TRUE, right=FALSE)
+    discretized <- cut(
+      data,
+      breaks = seq(min(data, na.rm = TRUE), max(data, na.rm = TRUE), length.out=(n_grey + 1)),
+      labels = seq(1, n_grey, 1),
+      include.lowest = TRUE,
+      right  = FALSE)
 
     return(matrix(as.numeric(discretized), nrow=nrow(data)))
 

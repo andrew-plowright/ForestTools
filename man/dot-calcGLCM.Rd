@@ -4,7 +4,18 @@
 \alias{.calcGLCM}
 \title{Calculate GLCM}
 \usage{
-.calcGLCM(data, n_grey, angle = 0, d = 1, normalize = TRUE)
+.calcGLCM(data, n_grey, angle, d = 1, normalize = TRUE)
+}
+\arguments{
+\item{data}{matrix. Input image}
+
+\item{n_grey}{integer. Number of grey levels used to discretize image}
+
+\item{angle}{integer. Angle at which GLCM will be calculated. Valid inputs are 0, 45, 90, or 135}
+
+\item{d}{numeric. Distance for calculating GLCM}
+
+\item{normalize}{boolean. Normalize output if TRUE}
 }
 \description{
 Some notes about this internal function:
@@ -13,7 +24,4 @@ Some notes about this internal function:
 3. Shouldn't receive all NA values
 4. Shouldn't be an empty matrix (i.e.: nrow = 0, ncol = 0)
 5. 'n_grey' shouldn't be larger than the number of unique values
-}
-\details{
-Remaining questions: What to do if there's only one value?
 }

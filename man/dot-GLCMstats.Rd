@@ -6,6 +6,9 @@
 \usage{
 .GLCMstats(data)
 }
+\arguments{
+\item{data}{matrix. GLCM computed using '.calcGLCM'}
+}
 \description{
 Calculate stats for GLCM
 }

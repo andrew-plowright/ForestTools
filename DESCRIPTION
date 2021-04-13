@@ -24,10 +24,9 @@ Imports:
     Rcpp,
     rgeos,
     sp
+Suggests:
+    knitr
 RoxygenNote: 7.1.1
-Suggests: testthat,
-    knitr,
-    rmarkdown
 URL: https://github.com/andrew-plowright/ForestTools
 BugReports: https://github.com/andrew-plowright/ForestTools/issues
 VignetteBuilder: knitr

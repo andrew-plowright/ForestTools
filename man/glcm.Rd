@@ -4,7 +4,15 @@
 \alias{glcm}
 \title{Grey level covariance matrix}
 \usage{
-glcm(segs, image, n_grey = 32, clusters = 1, showprog = FALSE, roundCoords = 4)
+glcm(
+  segs,
+  image,
+  n_grey = 32,
+  angle = 0,
+  clusters = 1,
+  showprog = FALSE,
+  roundCoords = 4
+)
 }
 \arguments{
 \item{segs}{RasterLayer. A segmented raster. Cell values should be equal to segment numbers}
@@ -12,6 +20,8 @@ glcm(segs, image, n_grey = 32, clusters = 1, showprog = FALSE, roundCoords = 4)
 \item{image}{RasterLayer. A single-band raster layer from which texture is measured}
 
 \item{n_grey}{integer. Number of grey levels the image should be quantized into}
+
+\item{angle}{integer. Angle at which GLCM will be calculated. Valid inputs are 0, 45, 90, or 135}
 
 \item{clusters}{integer. Number of clusters to use during parallel processing}
 
@@ -25,7 +35,6 @@ data.frame
 }
 \description{
 Generate textural metrics for a segmented raster using grey level covariance matrices (GLCM).
-Implements the \code{glcm} function from the \link[radiomics:glcm]{radiomics} package.
 }
 \examples{
 \dontrun{

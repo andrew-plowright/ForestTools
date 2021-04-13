@@ -1,7 +1,7 @@
 #' GLCM Features
 #'
 #' @param glcm A matrix of class "glcm" produced by \code{glcm}.
-#' @references \url{http://journals.plos.org/plosone/article?id=10.1371/journal.pone.0102107#s5}
+#' @references \url{https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0102107}
 #' @name glcm_features
 NULL
 #> NULL

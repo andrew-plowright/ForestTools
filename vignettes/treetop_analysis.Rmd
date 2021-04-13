@@ -64,7 +64,7 @@ plot(kootenayCHM, xlab = "", ylab = "", xaxt='n', yaxt = 'n')
 
 ## Detecting treetops
 
-Dominant treetops can be detected using `vwf`. This function implements the _variable window filter_ algorithm developped by Popescu and Wynne (2004). In short, a moving window scans the CHM, and if a given cell is found to be the highest within the window, it is tagged as a treetop. The size of the window itself changes depending on the height of the cell on which it is centered. This is to compensate for varying crown sizes, with tall trees having wide crowns and vice versa.
+Dominant treetops can be detected using `vwf`. This function implements the _variable window filter_ algorithm developed by Popescu and Wynne (2004). In short, a moving window scans the CHM, and if a given cell is found to be the highest within the window, it is tagged as a treetop. The size of the window itself changes depending on the height of the cell on which it is centered. This is to compensate for varying crown sizes, with tall trees having wide crowns and vice versa.
 
 Therefore, the first step is to define the **function that will define the dynamic window size**. Essentially, this function should take a **CHM cell value** (i.e.: the height of the canopy above ground at that location) and return the **radius of the search window**. Here, we will define a simple linear equation, but any function with a single input and output will work.
 
@@ -97,9 +97,9 @@ mean(ttops$height)
 
 ## Outlining tree crowns
 
-Canopy height models often represent continuous, dense forests, where tree crowns abut against eachother. Outlining discrete crown shapes from this type of forest is often refered to as _canopy segmentation_, where each crown outline is represented by a _segment_. Once a set of treetops have been detected from a canopy height model, the `mcws` function can be used for this purpose.
+Canopy height models often represent continuous, dense forests, where tree crowns abut against each other. Outlining discrete crown shapes from this type of forest is often referred to as _canopy segmentation_, where each crown outline is represented by a _segment_. Once a set of treetops have been detected from a canopy height model, the `mcws` function can be used for this purpose.
 
-The `mcws` function implements the `watershed` algorithm from the [imager](https://cran.r-project.org/package=imager/imager.pdf) library. Watershed algorithms are frequently used in topograhical analysis to outline drainage basins. Given the morphological similarity between an inverted canopy and a terrain model, this same process can be used to outline tree crowns. However, a potential problem is the issue of _oversegmentation_, whereby branches, bumps and other spurious treetops are given their own segments. This source of error can be mitigated by using a variant of the algorithm known as _marker-controlled segmentation_ (Beucher & Meyer, 1993), whereby the watershed algorithm is constrained by a set of markers--in this case, treetops.
+The `mcws` function implements the `watershed` algorithm from the [imager](https://cran.r-project.org/package=imager/imager.pdf) library. Watershed algorithms are frequently used in topographical analysis to outline drainage basins. Given the morphological similarity between an inverted canopy and a terrain model, this same process can be used to outline tree crowns. However, a potential problem is the issue of _oversegmentation_, whereby branches, bumps and other spurious treetops are given their own segments. This source of error can be mitigated by using a variant of the algorithm known as _marker-controlled segmentation_ (Beucher & Meyer, 1993), whereby the watershed algorithm is constrained by a set of markers--in this case, treetops.
 
 The `mcws` function also takes a `minHeight` argument, although this value should be lower than that which was assigned to `vwf`. For the latter, `minHeight` defines the lowest expected treetop, whereas for the former it should correspond to the height above ground of the fringes of the lowest trees. 
 
@@ -224,7 +224,7 @@ For instance, the following function will calculate the 98th quantile of a numer
 quant98 <- function(x, ...) quantile(x, c(.98), na.rm = TRUE)
 ```
 
-To have this function applied using `sp_summarise`, it must be put into a named list. Naming the functions in the list is needed for labelling the function's outputs.
+To have this function applied using `sp_summarise`, it must be put into a named list. Naming the functions in the list is needed for labeling the function's outputs.
 
 ```{r}
 # Create list of functions

@@ -31,7 +31,7 @@ John Baumgartner and Francisco Rodriguez-Sanchez [developed a script](https://jo
 
 ## Installation
 
-First, ensure that the `APfun` library (on which the `ForestTools` is dependant) is up-to-date (it should be **version 0.1.1** at a minimum).
+First, ensure that the `APfun` library (on which the `ForestTools` is dependent) is up-to-date (it should be **version 0.1.1** at a minimum).
 
 ```{r, eval = FALSE}
 update.packages()

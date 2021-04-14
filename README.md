@@ -41,7 +41,7 @@ This library implements techniques developed in the following studies:
 
 ### Research
 
-The following is a non-exhaustive list of research papers that use the `ForestTools` library. Several of these studies discuss topics such as algorithm parameterization. 
+The following is a non-exhaustive list of research papers that use the ForestTools library. Several of these studies discuss topics such as algorithm parameterization, and may be informative for users of this library.
 
 * [Potential for Individual Tree Monitoring in Ponderosa Pine-Dominated Forests Using Unmanned Aerial System Structure from Motion Point Clouds](https://cdnsciencepub.com/doi/abs/10.1139/cjfr-2020-0433) by Creasy, M. B., Tinkham, W. T., Hoffman, C. M., & Vogeler, J. C. (2021)
 
@@ -75,7 +75,7 @@ The following is a non-exhaustive list of research papers that use the `ForestTo
 
 * [Quantifying canopy tree loss and gap recovery in tropical forests under low-intensity logging using VHR satellite imagery and airborne LiDAR](https://www.mdpi.com/2072-4292/11/7/817) by Dalagnol, R., Phillips, O. L., Gloor, E., Galvão, L. S., Wagner, F. H., Locks, C. J., & Aragão, L. E. (2019)
 
-* [Forest inventory sensitivity to UAS-based image processing algorithms](http://afrjournal.org/index.php/afr/article/view/1282) by Maturbongs, B., Wing, M. G., Strimbu, B., & Burnett, J. (2019)
+* [Forest inventory sensitivity to UAS-based image processing algorithms](https://afrjournal.org/index.php/afr/article/download/1282/818) by Maturbongs, B., Wing, M. G., Strimbu, B., & Burnett, J. (2019)
 
 * [Remote sensing pipeline for tree segmentation and classification in a mixed softwood and hardwood system](https://peerj.com/articles/5837/) by McMahon, C. A. (2019)
 
@@ -87,4 +87,4 @@ The following is a non-exhaustive list of research papers that use the `ForestTo
 
 * [Bayesian and classical machine learning methods: a comparison for tree species classification with LiDAR waveform signatures](https://www.mdpi.com/2072-4292/10/1/39) by Zhou, T., Popescu, S. C., Lawing, A. M., Eriksson, M., Strimbu, B. M., & Bürkner, P. C. (2018)
 
-* [Underproductive agriculture aids connectivity in tropical forests](https://www.sciencedirect.com/science/article/abs/pii/S0378112717308101) by Evans, L. J., Goossens, B., & Asner, G. P.(2017)
+* [Underproductive agriculture aids connectivity in tropical forests](https://www.sciencedirect.com/science/article/abs/pii/S0378112717308101) by Evans, L. J., Goossens, B., & Asner, G. P. (2017)

@@ -5,7 +5,7 @@ Version: 0.2.4
 Date: 2021-04-12
 Author: Andrew Plowright, Jean-Romain Roussel
 Maintainer: Andrew Plowright <andrew.plowright@alumni.ubc.ca>
-Description: Provides tools for analyzing remotely sensed forest data, including functions for detecting treetops from canopy models (Popescu & Wynne, 2004, <doi:10.14358/PERS.70.5.589>), outlining tree crowns (Meyer & Beucher, 1990, <doi:10.1016/1047-3203(90)90014-M>) and generating spatial statistics.
+Description: Provides tools for analyzing remotely sensed forest data, including functions for detecting treetops from canopy models, outlining tree crowns, calculating textural metrics and generating spatial statistics.
 Depends: R (>= 4.0)
 License: GPL (>= 3)
 Encoding: UTF-8

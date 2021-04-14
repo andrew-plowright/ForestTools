@@ -300,6 +300,6 @@ writeOGR(ttops, "C:\\myFiles\\outputs", "treetops", driver = "ESRI Shapefile")
 
 ## References
 
-Popescu, S. C., & Wynne, R. H. (2004). [Seeing the trees in the forest](http://www.ingentaconnect.com/content/asprs/pers/2004/00000070/00000005/art00003). _Photogrammetric Engineering & Remote Sensing, 70_(5), 589-604.
+Popescu, S. C., & Wynne, R. H. (2004). [Seeing the trees in the forest](https://www.ingentaconnect.com/content/asprs/pers/2004/00000070/00000005/art00003). _Photogrammetric Engineering & Remote Sensing, 70_(5), 589-604.
 
-Beucher, S., and Meyer, F. (1993). [The morphological approach to segmentation: the watershed transformation](https://www.researchgate.net/profile/Serge_Beucher/publication/233950923_Segmentation_The_Watershed_Transformation_Mathematical_Morphology_in_Image_Processing/links/55f7c6ce08aeba1d9efe4072.pdf). _Mathematical morphology in image processing_, 433-481.
+Beucher, S., and Meyer, F. (1993). [The morphological approach to segmentation: the watershed transformation](https://www.researchgate.net/profile/Serge-Beucher/publication/233950923_Segmentation_The_Watershed_Transformation_Mathematical_Morphology_in_Image_Processing/links/55f7c6ce08aeba1d9efe4072/Segmentation-The-Watershed-Transformation-Mathematical-Morphology-in-Image-Processing.pdf). _Mathematical morphology in image processing_, 433-481.

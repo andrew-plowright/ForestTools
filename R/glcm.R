@@ -126,7 +126,7 @@ glcm <- function(segs, image, n_grey = 32, angle = 0, clusters = 1, showprog = F
   }else{
 
     cl <- parallel::makeCluster(clusters)
-    doSNOW::registerDoSNOW(cl)
+    doParallel::registerDoParallel(cl)
     on.exit(parallel::stopCluster(cl))
 
     fe %dopar% worker(H)

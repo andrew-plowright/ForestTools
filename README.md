@@ -17,7 +17,7 @@ Individual trees can be detected and delineated using a combination of the
 (`mcws`) algorithms, both of which are applied to a rasterized **canopy height model (CHM)**.
 CHMs are typically derived from aerial LiDAR or photogrammetric point clouds.
 
-![image info](./img/treetops_segments.png)
+![image info](./man/figures/treetops_segments.png)
 
 
 ### Compute textural metrics
@@ -29,7 +29,7 @@ image and a segment raster (which can be produced using `mcws`). These metrics c
 
 The height and count of treetops can be summarized within a grid or within user-defined geographical areas using `sp_summarise`.
 
-![image info](./img/summarized.png)
+![image info](./man/figures/summarized.png)
 
 ### References
 

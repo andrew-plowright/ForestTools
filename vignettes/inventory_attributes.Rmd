@@ -27,7 +27,7 @@ The analysis workflow is as follows:
 2. The average height of the 100 tallest trees is calculated for each 1 ha cell in a continuous grid. This metric will be referred to as _top height_.
 3. The average top height is upscaled a second time to a set of polygonal management units (blocks).
 
-The process for detecting dominant treetops (step 1) is explained in detail in the accompanying [Canopy analysis](treetopAnalysis.html) vignette. In this document, we will simply use an existing set of treetops.
+The process for detecting dominant treetops (step 1) is explained in detail in the accompanying [Canopy analysis](treetop_analysis.html) vignette. In this document, we will simply use an existing set of treetops.
 
 Begin by loading the Forest Tools library and sample data. The sample data is derived from a photogrammetric survey of a 125 ha area in the Quesnel Timber Supply Area in British Columbia, Canada.
 

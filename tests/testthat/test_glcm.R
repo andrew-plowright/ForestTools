@@ -16,6 +16,9 @@ segsEmpty <- raster::setValues(segs, NA)
 testImgNA <- testImg
 testImgNA[,40:70] <- NA
 
+# Create image with negative values
+testImgNeg <- testImg
+testImgNeg[1] <- -1
 
 test_that("glcm: standard processing ", {
 
@@ -51,4 +54,22 @@ test_that("glcm: gives empty data.frame if no valid segments are provided", {
 
 })
 
+test_that("glcm_img: successful", {
+
+  tex <- glcm_img(testCHM)
+
+  expect_equal(tex[1, "glcm_mean"],     7.067751, tolerance = 0.001)
+  expect_equal(tex[1, "glcm_entropy"], 6.136393,  tolerance = 0.001)
+  expect_equal(tex[1, "glcm_maxProb"], 0.1277584, tolerance = 0.001)
+
+
+})
+
+test_that("glcm_img: failures", {
+
+  expect_error(glcm_img(testImgNA), "Input image cannot have NA values")
+
+  expect_error(glcm_img(testImgNeg, "Input image cannot have negative values"))
+
+})
 

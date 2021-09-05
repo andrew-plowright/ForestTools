@@ -152,10 +152,41 @@ glcm <- function(segs, image, n_grey = 32, angle = 0, clusters = 1, showprog = F
   cbind(treeID, segGLCM)
 }
 
+#' Get GLCM statistics for a single unsegmented image
+#'
+#' @param img matrix or raster. Input image
+#' @param n_grey integer. Number of grey levels used to discretize image
+#' @param angle integer. Angle at which GLCM will be calculated. Valid inputs are 0, 45, 90, or 135
+#' @param d numeric. Distance for calculating GLCM
+#'
+#' @export
+
+glcm_img <- function(img, n_grey = 32, angle = 0, d = 1, normalize = TRUE){
+
+  ### CHECK INPUTS ----
+  if("RasterLayer" %in% class(img)){
+    img <- raster::as.matrix(img)
+  }else if(!"matrix" %in% class(img)){
+    stop("Input image must be of class 'matrix' or 'RasterLayer'")
+  }
+
+  if(any(dim(img) == 0)) stop("Input image must contain values")
+  if(any(is.na(img))) stop("Input image cannot have NA values")
+  if(any(img < 0)) stop("Input image cannot have negative values")
+
+  # Compute GLCM matrix
+  img_glcm <- .calcGLCM(img, n_grey = n_grey, angle = angle, d = d, normalize = normalize)
+
+  # Calculate GLCM stats
+  stats_glcm <- .GLCMstats(img_glcm)
+
+  return(stats_glcm)
+
+}
 
 #' Calculate GLCM
 #'
-#' Some notes about this internal function:
+#' Some notes about this  function:
 #' 1. Input should be a matrix
 #' 2. Shouldn't receive negative values
 #' 3. Shouldn't receive all NA values

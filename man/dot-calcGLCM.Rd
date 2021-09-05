@@ -18,7 +18,7 @@
 \item{normalize}{boolean. Normalize output if TRUE}
 }
 \description{
-Some notes about this internal function:
+Some notes about this  function:
 1. Input should be a matrix
 2. Shouldn't receive negative values
 3. Shouldn't receive all NA values

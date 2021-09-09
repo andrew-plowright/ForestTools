@@ -6,7 +6,7 @@
 **Authors:** Andrew Plowright<br/> **License:** GPL 3
 
 [![Build
-Status](https://travis-ci.org/andrew-plowright/ForestTools.svg?branch=master)](https://travis-ci.org/andrew-plowright/ForestTools)
+Status](https://app.travis-ci.com/andrew-plowright/ForestTools.svg?branch=master)](https://app.travis-ci.com/andrew-plowright/ForestTools)
 
 The ForestTools R package offers functions to analyze remotely sensed forest data.
 

@@ -1,3 +1,7 @@
+## ForestTools 0.2.5
+
+Added `glcm_img` to allow GLCM statistics to be computed for an entire unsegmented image.
+
 ## ForestTools 0.2.4
 
 The `radiomics` package is no longer maintained, so with permission from the author, Joel Carlson, I've integrated the code for computing GLCM statistics into this library

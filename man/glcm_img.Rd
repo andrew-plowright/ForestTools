@@ -14,6 +14,8 @@ glcm_img(img, n_grey = 32, angle = 0, d = 1, normalize = TRUE)
 \item{angle}{integer. Angle at which GLCM will be calculated. Valid inputs are 0, 45, 90, or 135}
 
 \item{d}{numeric. Distance for calculating GLCM}
+
+\item{normalize}{boolean. Normalize output image before calculating statistics}
 }
 \description{
 Get GLCM statistics for a single unsegmented image

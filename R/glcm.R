@@ -158,6 +158,7 @@ glcm <- function(segs, image, n_grey = 32, angle = 0, clusters = 1, showprog = F
 #' @param n_grey integer. Number of grey levels used to discretize image
 #' @param angle integer. Angle at which GLCM will be calculated. Valid inputs are 0, 45, 90, or 135
 #' @param d numeric. Distance for calculating GLCM
+#' @param normalize boolean. Normalize output image before calculating statistics
 #'
 #' @export
 

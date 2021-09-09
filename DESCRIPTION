@@ -1,8 +1,8 @@
 Package: ForestTools
 Type: Package
 Title: Analyzing Remotely Sensed Forest Data
-Version: 0.2.4
-Date: 2021-04-12
+Version: 0.2.5
+Date: 2021-09-09
 Author: Andrew Plowright, Jean-Romain Roussel
 Maintainer: Andrew Plowright <andrew.plowright@alumni.ubc.ca>
 Description: Provides tools for analyzing remotely sensed forest data, including functions for detecting treetops from canopy models, outlining tree crowns, calculating textural metrics and generating spatial statistics.

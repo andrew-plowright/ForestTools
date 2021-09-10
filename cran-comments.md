@@ -13,8 +13,4 @@ There are no reverse dependencies.
 
 ## NOTES
 
-I received the following message last time, although this issue has been addressed. This library no longer requires
-the discontinued 'radiomics' package:
-
-X-CRAN-Comment: Archived on 2021-03-28 as requires archived package
-    'radiomics'.
+Invalid URL flagged on 2021-09-09 has been fixed

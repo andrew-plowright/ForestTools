@@ -59,7 +59,7 @@ The following is a non-exhaustive list of research papers that use the ForestToo
 
 * [The wildlife‐livestock interface on extensive free‐ranging pig farms in central Spain during the “montanera” period](https://onlinelibrary.wiley.com/doi/abs/10.1111/tbed.13854) by Triguero‐Ocaña, R., Laguna, E., Jiménez‐Ruiz, S., Fernández‐López, J., García‐Bocanegra, I., Barasona, J. Á., ... & Acevedo, P. (2020)
 
-* [Supporting Assessment of Forest Burned Areas by Aerial Photogrammetry: The Susa Valley (NW Italy) Fires of Autumn 2017](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC7974678/) by De Petris, S., Momo, E. J., & Borgogno-Mondino, E. (2020)
+* [Supporting Assessment of Forest Burned Areas by Aerial Photogrammetry: The Susa Valley (NW Italy) Fires of Autumn 2017](https://link.springer.com/chapter/10.1007/978-3-030-58811-3_59) by De Petris, S., Momo, E. J., & Borgogno-Mondino, E. (2020)
 
 * [Applying unmanned aerial vehicles (UAVs) to map shrubland structural attributes in northern Patagonia, Argentina](https://cdnsciencepub.com/doi/abs/10.1139/cjfr-2019-0440@cjfrjuvs-uav.issue1) by Gonzalez Musso, R. F., Oddi, F. J., Goldenberg, M. G., & Garibaldi, L. A. (2020)
 

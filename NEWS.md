@@ -1,3 +1,8 @@
+## ForestTools 0.2.6
+
+Behaviour change for `gclm`: images are now discretized BEFORE segmentation. Note that this will impact the results returned by the function.
+
+
 ## ForestTools 0.2.5
 
 Added `glcm_img` to allow GLCM statistics to be computed for an entire unsegmented image.

@@ -7,6 +7,7 @@ data-raw
 tests/createTestData
 inst/doc
 builder_ForestTools.R
+Rcpp_bugs.md
 oldfunctions
 doc
 Meta

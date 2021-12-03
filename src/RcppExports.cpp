@@ -5,6 +5,11 @@
 
 using namespace Rcpp;
 
+#ifdef RCPP_USE_GLOBAL_ROSTREAM
+Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
+Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
+#endif
+
 // glcm0
 NumericMatrix glcm0(NumericMatrix x, int n_grey, int d);
 RcppExport SEXP _ForestTools_glcm0(SEXP xSEXP, SEXP n_greySEXP, SEXP dSEXP) {

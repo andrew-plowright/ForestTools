@@ -28,7 +28,7 @@ Suggests:
     testthat,
     knitr,
     rmarkdown
-RoxygenNote: 7.1.1
+RoxygenNote: 7.1.2
 URL: https://github.com/andrew-plowright/ForestTools
 BugReports: https://github.com/andrew-plowright/ForestTools/issues
 VignetteBuilder: knitr

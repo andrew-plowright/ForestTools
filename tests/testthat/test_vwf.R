@@ -4,11 +4,10 @@ context("Tests for 'vwf'")
 
 ### LOAD TEST DATA ----
 
-  load("testData/testTrees.Rda")
-  load("testData/testCHM.Rda")
-  load("testData/emptyCHM.Rda")
-  load("testData/lowResCHM.Rda")
-  load("testData/latlongCHM.Rda")
+  load("test_data/testCHM.Rda")
+  load("test_data/emptyCHM.Rda")
+  load("test_data/lowResCHM.Rda")
+  load("test_data/latlongCHM.Rda")
 
 ### PERFORM TESTS ----
 

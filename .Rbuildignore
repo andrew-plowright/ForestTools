@@ -1,5 +1,6 @@
 ^scratch\.R$
-^tests/createTestData$
+^tests/create_test_data$
+^tests/polygonize_performance$
 ^.*\.Rproj$
 ^\.Rproj\.user$
 ^data-raw$
@@ -9,7 +10,6 @@
 ^README-.*\.png$
 ^cran-comments\.md$
 ^oldfunctions$
-^Dockerfile$
 ^CRAN-RELEASE$
 ^doc$
 ^Meta$

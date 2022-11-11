@@ -1,9 +1,9 @@
 context("Tests for 'sp_summarise'")
 
 # Load test data
-load("testData/areas-overlap.Rda")
-load("testData/areas-outside.Rda")
-load("testData/areas-partial.Rda")
+load("test_data/areas-overlap.Rda")
+load("test_data/areas-outside.Rda")
+load("test_data/areas-partial.Rda")
 
 # Note that 'proj4string' will now emit a warning using rgdal 1.5
 prj4 <- suppressWarnings(sp::proj4string(kootenayTrees))

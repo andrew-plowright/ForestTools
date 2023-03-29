@@ -1,29 +1,33 @@
 context("Tests for 'glcm'")
 
 # Read in test data
-testExtent <- raster::extent(439740.0,  439781.7, 5526491.8, 5526523.5)
-testTrees  <- raster::crop(kootenayTrees,      testExtent)
-testCHM    <- raster::crop(kootenayCHM,        testExtent)
-testImg    <- raster::crop(kootenayOrtho[[1]], testExtent)
+test_ext <- terra::ext(439740.0,  439781.7, 5526491.8, 5526523.5)
+test_chm <- terra::crop(terra::rast(kootenayCHM),        test_ext)
+test_img <- terra::crop(terra::rast(kootenayOrtho)[[1]], test_ext)
+
+sf::st_agr(kootenayTrees) <- "constant"
+test_trees <- sf::st_crop(kootenayTrees, sf::st_bbox(test_ext))
 
 # Create segments
-segs <- mcws(testTrees, testCHM, minHeight = 0.2, format = "raster")
+segs <- mcws(test_trees, test_chm, minHeight = 0.2, format = "raster")
 
 # Create blank segments
-segsEmpty <- raster::setValues(segs, NA)
+segs_empty <- terra::setValues(segs, NA)
 
 # Create an image with some blank values
-testImgNA <- testImg
-testImgNA[,40:70] <- NA
+test_img_na <- test_img
+test_img_na[,40:70] <- NA
 
 # Create image with negative values
-testImgNeg <- testImg
-testImgNeg[1] <- -1
+test_img_neg <- test_img
+test_img_neg[1] <- -1
+
+
 
 test_that("glcm: standard processing ", {
 
   # Compute texture with standard segments
-  tex1 <- glcm(segs, testImg)
+  tex1 <- glcm(segs, test_img)
 
   # All segments are included
   expect_true(all(na.omit(unique(segs[])) %in% tex1$treeID))
@@ -34,42 +38,35 @@ test_that("glcm: standard processing ", {
   expect_equal(tex1[1, "glcm_mean"],            98,     tolerance = 0.001)
   expect_equal(tex1[1, "glcm_IDN"],             0.9047, tolerance = 0.001)
   expect_equal(tex1[1, "glcm_inverseVariance"], 0.6666, tolerance = 0.001)
-
 })
 
 test_that("glcm: gives empty data.frame if no valid segments are provided", {
 
   # Compute text with blank segments
-  tex_empty <- glcm(segsEmpty, testImg)
+  tex_empty <- glcm(segs_empty, test_img)
 
   expect_equal(nrow(tex_empty), 0)
-
 })
 
 test_that("glcm: gives empty data.frame if no valid segments are provided", {
 
   expect_warning(
-    glcm(segs, testImgNA),
+    glcm(segs, test_img_na),
     "Could not calculate GLCM stats", all = TRUE)
-
 })
 
 test_that("glcm_img: successful", {
 
-  tex <- glcm_img(testCHM)
+  tex <- glcm_img(test_chm)
 
   expect_equal(tex[1, "glcm_mean"],     7.067751, tolerance = 0.001)
   expect_equal(tex[1, "glcm_entropy"], 6.136393,  tolerance = 0.001)
   expect_equal(tex[1, "glcm_maxProb"], 0.1277584, tolerance = 0.001)
-
-
 })
 
 test_that("glcm_img: failures", {
 
-  expect_error(glcm_img(testImgNA), "Input image cannot have NA values")
-
-  expect_error(glcm_img(testImgNeg, "Input image cannot have negative values"))
-
+  expect_error(glcm_img(test_img_na), "Input image cannot have NA values")
+  expect_error(glcm_img(test_img_neg, "Input image cannot have negative values"))
 })
 

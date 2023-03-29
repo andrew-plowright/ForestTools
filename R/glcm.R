@@ -1,283 +1,148 @@
 #' Grey-Level Co-Occurrence Matrix
 #'
-#' Generate textural metrics for a segmented raster using Grey-Level Co-Occurrence Matrices (GLCM). It will return a series of GLCM statistics
-#' for each segment (\code{segs}) based on an underlying single-band raster image (\code{image}) in the form of a data.frame.
+#' Generate textural metrics using Grey-Level Co-Occurrence Matrices (GLCM). Can be applied to an entire or image or, if a coterminous
+#' raster of segments is provided, GLCM can be calculated for each segment
 #'
 #' The underlying C++ code for computing GLCMs and their statistics was originally written by Joel Carlson for the
 #' defunct [radiomics](https://github.com/cran/radiomics) library. It has been reused here with permission from the author.
 #'
-#' @param segs RasterLayer. A segmented raster. Cell values should be equal to segment numbers
-#' @param image RasterLayer. A single-band raster layer from which texture is measured
-#' @param n_grey integer. Number of grey levels the image should be quantized into
+#' @param image SpatRaster. A single-band raster layer from which texture is measured
+#' @param segs SpatRaster. A segmented raster. Cell values should be equal to segment numbers. If \code{segs} are not provided,
+#' GLCM will be calculated for the entire image.
+#' @param n_grey integer. Number of grey levels into which the image will be discretized
 #' @param angle integer. Angle at which GLCM will be calculated. Valid inputs are 0, 45, 90, or 135
-#' @param clusters integer. Number of clusters to use during parallel processing
-#' @param showprog logical. Display progress in terminal
-#' @param roundCoords integer. Errors in coordinate precision can trigger errors in this function. Internally, the coordinates
-#' are rounded to this decimal place. Default value of 4 decimals.
 #'
 #' @return data.frame
 #'
 #' @examples
 #' \dontrun{
+#' library(terra)
+#' library(ForestTools)
+#'
+#' chm <- rast(kootenayCHM)
+#' image <- rast(kootenayOrtho)[[1]]
+#'
 #' # Generate raster segments
-#' segs <- mcws(kootenayTrees, kootenayCHM, minHeight = 0.2, format = "raster")
+#' segs <- mcws(kootenayTrees, chm, minHeight = 0.2, format = "raster")
 #'
 #' # Get textural metrics for ortho's red band
-#' tex <- glcm(segs, kootenayOrtho[[1]])
+#' tex <- glcm(image, segs)
 #' }
 #'
 #' @references Parmar, C., Velazquez, E.R., Leijenaar, R., Jermoumi, M., Carvalho, S., Mak, R.H., Mitra, S., Shankar, B.U., Kikinis, R., Haibe-Kains, B. and Lambin, P. (2014).
 #' \emph{Robust radiomics feature quantification using semiautomatic volumetric segmentation. PloS one, 9}(7)
 #'
 #' @export
-#'
-#' @importFrom foreach %do%
-#' @importFrom foreach %dopar%
 
-glcm <- function(segs, image, n_grey = 32, angle = 0, clusters = 1, showprog = FALSE, roundCoords = 4){
+glcm <- function(image, segs = NULL, n_grey = 32, angle = 0){
 
-  if(raster::nlayers(image) > 1) stop("'image' should have a single band")
+  # Check image
+  if(any(dim(image) == 0))     stop("'image' must contain usable values")
+  if(terra::nlyr(image) > 1)   stop("'image' should have a single band")
+  if(all(!is.finite(image[]))) stop("'image' must contain usable values")
 
-  if(!raster::compareRaster(segs, image, extent=TRUE, rowcol=TRUE, crs=TRUE, res = TRUE, orig = TRUE)){
-    stop("'segs' and 'image' rasters to not match extent, CRS or resolution")
-  }
+  # Get range
+  img_range <- terra::global(image, "range", na.rm = TRUE)
+  img_min <- img_range[,1]
+  img_max <- img_range[,2]
 
-  if(raster::cellStats(image, "min") < 0){
-    stop("Cannot compute GLCM metrics for segments containing negative values")
-  }
+  # Discretize image (this will replace NAs with 0)
+  img_disc <- .discretize_rast(image, img_min, img_max, n_grey)
 
-  # Create an empty data.frame
-  emptyRow <- .GLCMstats(matrix())
-  emptyRow[] <- NA
+  # Compute GLCM for whole image
+  if(is.null(segs)){
 
-  # Get image resolution
-  r = round(raster::res(image), roundCoords)
+    img_mat <- terra::as.matrix(img_disc, wide = TRUE)
 
-  # Convert image to data.frame and split according to segment values
-  M = raster::as.data.frame(image, xy = TRUE)
-  G = segs[]
-  H = split(M, G)
+    out_glcm <- .glcm_stats(.glcm_calc(img_mat, n_grey = n_grey, angle = angle))
 
-  # Return empty data.frame if there are no segments
-  if(length(H) == 0) return(cbind(treeID = integer(), emptyRow[-1,]))
-
-  # Error counts
-  errCount <- c(noDim = 0, allNA = 0)
-
-  # Create worker function
-  worker <- function(h){
-
-    # Create topology for segment
-    coords    = round(h[,1:2], roundCoords)
-    offset    = c(min(coords$x), min(coords$y))
-    segdim    = round((c(max(coords$x), max(coords$y)) - c(min(coords$x), min(coords$y)))/r + 1, roundCoords)
-    topology  = sp::GridTopology(offset, r, segdim)
-
-    # Segment as matrix
-    seg = as.matrix(sp::SpatialPixelsDataFrame(coords, h[,3, drop = FALSE], grid = topology))
-
-    # If segment has any missing dimensions, don't calculate
-    if(any(dim(seg) == 0)){
-
-      errCount["noDim"] <<- errCount["noDim"] + 1
-      emptyRow
-
-    # If segment contains all NA, don't calculate
-    }else if(all(is.na(seg))){
-
-      errCount["allNA"] <<- errCount["allNA"] + 1
-      emptyRow
-
-    # Otherwise, compute stats
-    }else{
-
-      .GLCMstats(.calcGLCM(seg, n_grey = n_grey, angle = angle))
-
-    }
-  }
-
-  # Progress bar
-  paropts <- if(showprog){
-
-    pb <- progress::progress_bar$new(
-      format = "Progress [:bar] Tree :current/:total. ETA: :eta",
-      total = length(H),
-      width = 80,
-      show_after = 0)
-    pb$tick(0)
-
-    list(progress = function(n) pb$tick())
-  }
-
-  # Create 'foreach' statement
-  fe <- foreach::foreach(H = H, .options.snow = paropts)
-
-  # Apply worker function (serial)
-  segGLCM <- do.call(plyr::rbind.fill, if(clusters == 1){
-
-    fe %do% {
-
-      result <- worker(H)
-      if(showprog) pb$tick()
-      return(result)
-    }
-
-  # Apply worker function (parallel)
+  # Compute GLCM by segments
   }else{
 
-    cl <- parallel::makeCluster(clusters)
-    doParallel::registerDoParallel(cl)
-    on.exit(parallel::stopCluster(cl))
+    # Check segments
+    if(all(!is.finite(segs[])))  stop("'segs' do not contain usable values")
+    terra::compareGeom(segs, image, res = TRUE)
 
-    fe %dopar% worker(H)
+    # Convert image to data.frame
+    img_df = data.frame(
+      terra::rowColFromCell(image, 1:(terra::ncell(img_disc))),
+      val = img_disc[drop = TRUE]
+    )
+    names(img_df)[1:3] <- c("row", "col", "val")
 
-  })
+    # Split according to segment values
+    seg_dfs  <- split(img_df, segs[drop = TRUE])
 
-  # Remove column created by empty segments
-  segGLCM$NA. <- NULL
+    # Remove non-finite segments
+    seg_dfs <- seg_dfs[!names(seg_dfs) %in% c("Inf", "-Inf", "NaN", "NA")]
 
-  # Report reasons for GLCM failure
-  if(errCount["noDim"] > 0){
-    warning("Could not calculate GLCM stats for ", errCount["noDim"], " segment(s) due to one or more image dimensions being equal to 0")
+    # Make empty row
+    empty_row <- .glcm_stats(matrix())
+    empty_row[] <- NA
+
+    # Create worker function
+    worker <- function(seg_df){
+
+      seg_df[,"row"] <- seg_df[,"row"] - min(seg_df[,"row"]) + 1
+      seg_df[,"col"] <- seg_df[,"col"] - min(seg_df[,"col"]) + 1
+
+      # NOTE: any space around the segment is filled by 0s at this stage
+      seg_mat <- as.matrix(Matrix::sparseMatrix(i = seg_df[,"row"], j =  seg_df[,"col"], x = seg_df[,"val"]))
+
+      if(all(seg_mat == 0)) return(empty_row)
+
+      .glcm_stats(.glcm_calc(seg_mat, n_grey = n_grey, angle = angle))
+    }
+
+    # Apply worker to compute GLCMs
+    out_glcm <- do.call(plyr::rbind.fill, lapply(seg_dfs, worker))
+
+    # Return result
+    row.names(out_glcm) <- names(seg_dfs)
+
   }
-  if(errCount["allNA"] > 0){
-    warning("Could not calculate GLCM stats for ", errCount["allNA"], " segment(s) having no values")
-  }
 
-
-  # Add segment IDs
-  treeID <- as.integer(as.character(levels(factor(G))))
-
-  # Return result
-  cbind(treeID, segGLCM)
+  return(out_glcm)
 }
 
-#' Get GLCM statistics for a single unsegmented image
-#'
-#' @param img matrix or raster. Input image
-#' @param n_grey integer. Number of grey levels used to discretize image
-#' @param angle integer. Angle at which GLCM will be calculated. Valid inputs are 0, 45, 90, or 135
-#' @param d numeric. Distance for calculating GLCM
-#' @param normalize boolean. Normalize output image before calculating statistics
-#'
-#' @export
 
-glcm_img <- function(img, n_grey = 32, angle = 0, d = 1, normalize = TRUE){
 
-  ### CHECK INPUTS ----
-  if("RasterLayer" %in% class(img)){
-    img <- raster::as.matrix(img)
-  }else if(!"matrix" %in% class(img)){
-    stop("Input image must be of class 'matrix' or 'RasterLayer'")
-  }
+.glcm_calc <- function(seg_mat, n_grey, angle, d = 1){
 
-  if(any(dim(img) == 0)) stop("Input image must contain values")
-  if(any(is.na(img))) stop("Input image cannot have NA values")
-  if(any(img < 0)) stop("Input image cannot have negative values")
-
-  # Compute GLCM matrix
-  img_glcm <- .calcGLCM(img, n_grey = n_grey, angle = angle, d = d, normalize = normalize)
-
-  # Calculate GLCM stats
-  stats_glcm <- .GLCMstats(img_glcm)
-
-  return(stats_glcm)
-
-}
-
-#' Calculate GLCM
-#'
-#' Some notes about this  function:
-#' 1. Input should be a matrix
-#' 2. Shouldn't receive negative values
-#' 3. Shouldn't receive all NA values
-#' 4. Shouldn't be an empty matrix (i.e.: nrow = 0, ncol = 0)
-#' 5. 'n_grey' shouldn't be larger than the number of unique values
-#'
-#' @param data matrix. Input image
-#' @param n_grey integer. Number of grey levels used to discretize image
-#' @param angle integer. Angle at which GLCM will be calculated. Valid inputs are 0, 45, 90, or 135
-#' @param d numeric. Distance for calculating GLCM
-#' @param normalize boolean. Normalize output if TRUE
-
-.calcGLCM <- function(data, n_grey, angle, d = 1, normalize = TRUE){
-
-  data <- .discretizeImage(data, n_grey = n_grey)
-
-  unique_vals <- sort(unique(c(data)))
-
-  #the value of 0 is reserved for NAs in the matrix,
-  #if there are any 0's in the DF, add 1 to all values
-  #original values will be replaced after
-  if(is.element(0, data)) data <- data + 1
-
-  #Convert All NAs to 0
-  data[is.na(data)] <- 0
-
+  unique_vals <- sort(unique(c(seg_mat)))
+  unique_vals <- unique_vals[unique_vals > 0]
 
   if(identical(angle, 0)){
-
-    counts <- glcm0(data, n_grey = max(data), d)
+    counts <- glcm0(seg_mat, n_grey = n_grey, d)
 
   } else if (identical(angle, 45)){
-    counts <- glcm45(data, n_grey = max(data), d)
+    counts <- glcm45(seg_mat, n_grey = n_grey, d)
 
   } else if (identical(angle, 90)){
-    counts <- glcm90(data, n_grey = max(data), d)
+    counts <- glcm90(seg_mat, n_grey = n_grey, d)
 
   } else if (identical(angle, 135)){
-    counts <- glcm135(data, n_grey = max(data), d)
+    counts <- glcm135(seg_mat, n_grey = n_grey, d)
 
   } else {
     stop("angle must be one of '0', '45', '90', '135'.")
   }
 
-  #Row 1 and Col 1 hold NA values, remove them
-  counts <- counts[-1, -1]
+  # Row 1 and Col 1 hold NA values, remove them
+  counts <- counts[-1, -1, drop = FALSE]
 
-  #Situation where matrix is composed of a single NA
-  if(length(counts) == 0){
-    counts
+  # Situation where matrix is composed of a single NA
+  if(length(counts) == 0) return(counts)
 
-  }
-
-  #Replace proper values in column and row names
-  #Two situations:
-  #1. No zeroes were present, thus nothing was added
-  #2. One was added to all entries because there were zeros in the matrix
-
-  if(is.matrix(counts)){
-
-    if(dim(counts)[1] == max(unique_vals)){ #ie. 1 wasn't added
-      counts <- counts[unique_vals, unique_vals]
-      #counts <- counts[which(rownames(counts) %in% unique_vals), which(colnames(counts) %in% unique_vals)]
-
-    } else if (dim(counts)[1] == max(unique_vals)+1) {
-      #counts <- counts[which((as.numeric(rownames(counts)) - 1) %in% unique_vals), which((as.numeric(colnames(counts)) - 1) %in% unique_vals)]
-      counts <- counts[unique_vals + 1, unique_vals + 1]
-    }
-  }
-
-  if(!is.matrix(counts)) {
-    #Edge case where only a single grey value present - leads to a numeric, rather than a matrix
-    #Therefore case to 1x1 matrix
-    counts <- matrix(counts)
-  }
+  counts <- counts[unique_vals, unique_vals, drop = FALSE]
 
   rownames(counts) <- colnames(counts) <- unique_vals
 
-  #GLCMs should be symmetrical, so the transpose is added
+  # GLCMs should be symmetrical, so the transpose is added
   counts <- counts + t(counts)
 
-  #Normalize
-  if(normalize){
-
-    count_sum <- sum(counts)
-
-    if(count_sum > 0){
-      counts <- counts/count_sum
-    }
-  }
+  # Normalize
+  counts <- counts/sum(counts)
 
   return(counts)
 
@@ -285,9 +150,9 @@ glcm_img <- function(img, n_grey = 32, angle = 0, d = 1, normalize = TRUE){
 
 #' Calculate stats for GLCM
 #'
-#' @param data matrix. GLCM computed using '.calcGLCM'
+#' @param data matrix. GLCM computed using '.glcm_calc'
 
-.GLCMstats <- function(data){
+.glcm_stats <- function(data){
 
   #Set up allowed features
 
@@ -309,24 +174,24 @@ glcm_img <- function(img, n_grey = 32, angle = 0, d = 1, normalize = TRUE){
 }
 
 
-.discretizeImage <- function(data, n_grey){
+.discretize_rast <- function(rast, img_min, img_max, n_grey){
 
-  l_unique <- length(unique(c(data)))
+  if(img_min == img_max){
 
-  if(n_grey >= l_unique){
-
-    return(data)
+    # This neatly sets NA to 0 and everything else to 1
+    new_values <- as.integer(is.finite(rast[drop = TRUE]))
 
   }else{
 
-    discretized <- cut(
-      data,
-      breaks = seq(min(data, na.rm = TRUE), max(data, na.rm = TRUE), length.out=(n_grey + 1)),
-      labels = seq(1, n_grey, 1),
-      include.lowest = TRUE,
-      right  = FALSE)
+    breaks <- seq(img_min, img_max, length.out=(n_grey + 1))
 
-    return(matrix(as.numeric(discretized), nrow=nrow(data)))
+    levels <- seq(1, n_grey, 1)
 
+    new_values <- as.integer(cut(rast[drop = TRUE], breaks = breaks, labels = levels, include.lowest = TRUE, right = FALSE))
+
+    # Using cut replaced NaN and Inf with NAs
+    new_values[is.na(new_values)] <- 0
   }
+
+  terra::setValues(rast, new_values)
 }

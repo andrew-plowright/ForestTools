@@ -77,49 +77,49 @@ GLCM Features
 }
 \section{Functions}{
 \itemize{
-\item \code{glcm_mean}: Mean
+\item \code{glcm_mean()}: Mean
 
-\item \code{glcm_variance}: Variance
+\item \code{glcm_variance()}: Variance
 
-\item \code{glcm_autoCorrelation}: Autocorrelation
+\item \code{glcm_autoCorrelation()}: Autocorrelation
 
-\item \code{glcm_cProminence}: Cluster Prominence
+\item \code{glcm_cProminence()}: Cluster Prominence
 
-\item \code{glcm_cShade}: Cluster Shade
+\item \code{glcm_cShade()}: Cluster Shade
 
-\item \code{glcm_cTendency}: Cluster Tendency
+\item \code{glcm_cTendency()}: Cluster Tendency
 
-\item \code{glcm_contrast}: Contrast
+\item \code{glcm_contrast()}: Contrast
 
-\item \code{glcm_correlation}: Correlation
+\item \code{glcm_correlation()}: Correlation
 
-\item \code{glcm_differenceEntropy}: Difference Entropy
+\item \code{glcm_differenceEntropy()}: Difference Entropy
 
-\item \code{glcm_dissimilarity}: Dissimilarity
+\item \code{glcm_dissimilarity()}: Dissimilarity
 
-\item \code{glcm_energy}: Energy
+\item \code{glcm_energy()}: Energy
 
-\item \code{glcm_entropy}: Entropy
+\item \code{glcm_entropy()}: Entropy
 
-\item \code{glcm_homogeneity1}: Homogeneity
+\item \code{glcm_homogeneity1()}: Homogeneity
 
-\item \code{glcm_homogeneity2}: Homogeneity 2
+\item \code{glcm_homogeneity2()}: Homogeneity 2
 
-\item \code{glcm_IDMN}: Inverse Difference Moment (Normalized)
+\item \code{glcm_IDMN()}: Inverse Difference Moment (Normalized)
 
-\item \code{glcm_IDN}: Inverse Difference (Normalized)
+\item \code{glcm_IDN()}: Inverse Difference (Normalized)
 
-\item \code{glcm_inverseVariance}: Inverse Variance
+\item \code{glcm_inverseVariance()}: Inverse Variance
 
-\item \code{glcm_maxProb}: Maximum Probability
+\item \code{glcm_maxProb()}: Maximum Probability
 
-\item \code{glcm_sumAverage}: Sum Average
+\item \code{glcm_sumAverage()}: Sum Average
 
-\item \code{glcm_sumEntropy}: Sum Entropy
+\item \code{glcm_sumEntropy()}: Sum Entropy
 
-\item \code{glcm_sumVariance}: Sum Variance
+\item \code{glcm_sumVariance()}: Sum Variance
+
 }}
-
 \references{
 \url{https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0102107}
 }

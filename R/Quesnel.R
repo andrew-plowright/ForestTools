@@ -3,7 +3,7 @@
 #' A canopy height model of a 125 hectare section of forest in the Quesnel Timber Supply Area, in
 #' British Columbia, Canada.
 #'
-#' @format A RasterLayer
+#' @format PackedSpatRaster object
 #' \describe{Cell values are equal to canopy height above ground (in meters)}
 #' @source Data acquired from a photogrammetric drone survey performed by Spire Aerobotics
 #' on September 15th, 2016.
@@ -17,7 +17,7 @@
 #' function to the \link{quesnelCHM} raster dataset. Only trees over 2 m above ground
 #' were detected.
 #'
-#' @format A \link[sp:SpatialPoints]{SpatialPointsDataFrame} with the following attributes:
+#' @format Simple point feature collection with the following attributes:
 #' \describe{
 #'   \item{height}{height of the tree's apex, in meters above ground}
 #'   \item{winRadius}{radius of the moving window (see \code{\link{vwf}}) at
@@ -32,7 +32,7 @@
 #' in British Columbia, Canada. Each block contains trees of different
 #' levels of maturity. Overlaps with \link{quesnelTrees} and \link{quesnelCHM}.
 #'
-#' @format A \link[sp:SpatialPolygons]{SpatialPolygonsDataFrame} with the following attributes:
+#' @format Simple polygon feature collection with the following attributes:
 #' \describe{
 #'   \item{BlockID}{numerical identifier for each block}
 #'   \item{Shape_Leng}{length of polygon on meters}

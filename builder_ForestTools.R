@@ -14,13 +14,11 @@
   usethis::use_package("methods")
 
   usethis::use_testthat()
-  usethis::use_travis()
   usethis::use_readme_rmd()
   usethis::use_news_md()
   usethis::use_cran_comments()
 
   usethis::use_build_ignore("builder_ForestTools.R")
-
 
   usethis::use_git_ignore("scratch.R")
 

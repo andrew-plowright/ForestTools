@@ -113,7 +113,7 @@ mcws <- function(treetops, CHM, minHeight = 0, format = "raster", OSGeoPath = NU
       treetops_ras <- terra::rasterize(treetops, CHM, "treeID", background = 0)
 
       # Convert data to 'img' files
-      CHM_img <- imager::as.cimg(terra::as.matrix(CHM, wide = TRUE))
+      CHM_img   <- imager::as.cimg(terra::as.matrix(CHM, wide = TRUE))
       ttops_img <- imager::as.cimg(terra::as.matrix(treetops_ras, wide = TRUE))
 
       if(verbose) cat("..Applying watershed segmentation algorithm", "\n")

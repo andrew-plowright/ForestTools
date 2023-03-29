@@ -6,8 +6,9 @@ Rcpp_bugs.md
 .RData
 .Ruserdata
 data-raw
+obsolete
 tests/create_test_data
-tests/polygonize_performance
 inst/doc
 doc
 Meta
+wip

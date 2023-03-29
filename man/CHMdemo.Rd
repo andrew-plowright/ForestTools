@@ -5,7 +5,7 @@
 \alias{CHMdemo}
 \title{Canopy height model demo}
 \format{
-A RasterLayer
+PackedSpatRaster object
 \describe{Cell values are equal to canopy height above ground (in meters)}
 }
 \usage{

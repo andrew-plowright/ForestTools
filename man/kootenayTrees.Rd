@@ -5,7 +5,7 @@
 \alias{kootenayTrees}
 \title{Kootenay forest - Dominant trees over 2 m}
 \format{
-A \link[sp:SpatialPoints]{SpatialPointsDataFrame} with the following attributes:
+Simple point feature collection with the following attributes:
 \describe{
   \item{height}{height of the tree's apex, in meters above ground}
   \item{winRadius}{radius of the moving window (see \code{\link{vwf}}) at

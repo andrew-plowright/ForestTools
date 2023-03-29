@@ -5,7 +5,7 @@
 \alias{kootenayCHM}
 \title{Kootenay forest - Canopy height model}
 \format{
-A RasterLayer
+PackedSpatRaster object
 \describe{Cell values are equal to canopy height above ground (in meters)}
 }
 \source{

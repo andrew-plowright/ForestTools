@@ -5,7 +5,7 @@
 \alias{kootenayOrtho}
 \title{Kootenay forest - Orthomosaic}
 \format{
-A RasterLayer
+PackedSpatRaster object
 \describe{Cell values are equal to canopy height above ground (in meters)}
 }
 \source{

@@ -1,3 +1,8 @@
+## ForestTools 0.3.0
+
+- Removed `sp_summarise`. If you thought this tool was useful and would like me to restore it, please let me know.
+
+
 ## ForestTools 0.2.6
 
 Behaviour change for `gclm`: images are now discretized BEFORE segmentation. Note that this will impact the results returned by the function.

@@ -23,7 +23,6 @@ test_img_neg <- test_img
 test_img_neg[1] <- -1
 
 
-
 test_that("glcm: standard processing ", {
 
   # Compute texture with standard segments

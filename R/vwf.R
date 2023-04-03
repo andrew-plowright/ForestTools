@@ -15,6 +15,7 @@
 #' @param warnings logical. If set to FALSE, this function will not emit warnings related to inputs.
 #' @param minWinNeib character. Define whether the smallest possible search window (3x3) should use a \code{queen} or
 #' a \code{rook} neighborhood.
+#' @param IDfield character. Name of field for unique tree identifier
 #'
 #' @references Popescu, S. C., & Wynne, R. H. (2004). Seeing the trees in the forest. \emph{Photogrammetric Engineering & Remote Sensing, 70}(5), 589-604.
 #'
@@ -37,9 +38,11 @@
 #'
 #' @export
 
-vwf <- function(CHM, winFun, minHeight = NULL, warnings = TRUE, minWinNeib = "queen"){
+vwf <- function(CHM, winFun, minHeight = NULL, warnings = TRUE, minWinNeib = "queen", IDfield = "treeID"){
 
   ### CHECK INPUTS ----
+
+  if("RasterLayer" %in% class(CHM)) CHM <- terra::rast(CHM)
 
   # Check for valid inputs for 'minWinNeib'
   if(!minWinNeib %in% c("queen", "rook")) stop("Invalid input for 'minWinNeib'. Set to 'queen' or 'rook'")
@@ -83,6 +86,7 @@ vwf <- function(CHM, winFun, minHeight = NULL, warnings = TRUE, minWinNeib = "qu
     }
   }
 
+
   ### CREATE WINDOWS ----
 
   # Here, the variably sized windows used for detecting trees are "pre-generated". First, a series of 'win_radii'
@@ -118,7 +122,6 @@ vwf <- function(CHM, winFun, minHeight = NULL, warnings = TRUE, minWinNeib = "qu
     "Adjusting the 'winFun' function is recommended."
   )
 
-
   # Convert radii into windows
   windows <- lapply(win_radii, function(radius){
 
@@ -140,6 +143,7 @@ vwf <- function(CHM, winFun, minHeight = NULL, warnings = TRUE, minWinNeib = "qu
   })
   names(windows) <- win_radii
 
+
   ### APPLY VWF FUNCTION ----
 
   # Apply local maxima-finding function to raster
@@ -154,8 +158,10 @@ vwf <- function(CHM, winFun, minHeight = NULL, warnings = TRUE, minWinNeib = "qu
   local_max_pts <- sf::st_as_sf(terra::as.points(local_max_ras, na.rm = TRUE, values = TRUE))
   names(local_max_pts)[1] <- 'height'
 
-  # Add 'winRadius'
+  # Add 'winRadius' and ID field
   local_max_pts[["winRadius"]] <- winFun(local_max_pts[["height"]])
+  local_max_pts[[IDfield]] <- 1:nrow(local_max_pts)
+
 
   ### RETURN OUTPUT ----
 

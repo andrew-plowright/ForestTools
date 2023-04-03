@@ -5,9 +5,6 @@
 
 **Authors:** Andrew Plowright<br/> **License:** GPL 3
 
-[![Build
-Status](https://app.travis-ci.com/andrew-plowright/ForestTools.svg?branch=master)](https://app.travis-ci.com/andrew-plowright/ForestTools)
-
 The ForestTools R package offers functions to analyze remotely sensed forest data.
 
 ### Detect and segment trees
@@ -25,11 +22,6 @@ CHMs are typically derived from aerial LiDAR or photogrammetric point clouds.
 **Grey-level co-occurrence matrices** (GLCMs) and their associated statistics can be computed for individual trees using a single-band
 image and a segment raster (which can be produced using `mcws`). These metrics can be used to characterize and classify trees.
 
-### Summarize forest information
-
-The height and count of treetops can be summarized within a grid or within user-defined geographical areas using `sp_summarise`.
-
-![image info](./man/figures/summarized.png)
 
 ### References
 

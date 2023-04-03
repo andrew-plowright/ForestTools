@@ -11,30 +11,30 @@ CHM_orphans <- terra::rast("test_data/CHM_orphans.tif")
 
 test_that("mcws: expected results using standard parameters", {
 
-  segs_standard <- mcws(ttops_test, CHM_test, minHeight = 1, verbose = FALSE)
+  segs_standard <- mcws(ttops_test, CHM_test, minHeight = 1)
 
   expect_equal(length(unique(segs_standard[])), 1116)
 })
 
 test_that("mcws: returns an error if 'minHeight' is too high",{
 
-  expect_error(mcws(ttops_test, CHM_test, minHeight = 30, verbose = FALSE),
+  expect_error(mcws(ttops_test, CHM_test, minHeight = 30),
                "\'minHeight\' is set higher than the highest cell value in \'CHM\'")
 })
 
 test_that("mcws: returns an error if 'CHM' is empty",{
 
-  expect_error(mcws(ttops_test, CHM_empty, verbose = FALSE),
+  expect_error(mcws(ttops_test, CHM_empty),
                "'CHM' does not contain any usable values.")
 })
 
 test_that("mcws: removes trees outside of CHM area and those that over NA values",{
 
   # Perform segmentation on 'orphan trees' test dataset
-  segs_poly        <- mcws(ttops_orphans, CHM_orphans, format = "polygons", verbose = FALSE)
-  segs_ras         <- mcws(ttops_orphans, CHM_orphans, format = "raster",   verbose = FALSE)
-  segs_poly_min_2m <- mcws(ttops_orphans, CHM_orphans, minHeight = 2, format = "polygons", verbose = FALSE)
-  segs_ras_min_2m  <- mcws(ttops_orphans, CHM_orphans, minHeight = 2, format = "raster",   verbose = FALSE)
+  segs_poly        <- mcws(ttops_orphans, CHM_orphans, format = "polygons")
+  segs_ras         <- mcws(ttops_orphans, CHM_orphans, format = "raster")
+  segs_poly_min_2m <- mcws(ttops_orphans, CHM_orphans, minHeight = 2, format = "polygons")
+  segs_ras_min_2m  <- mcws(ttops_orphans, CHM_orphans, minHeight = 2, format = "raster")
 
   # Expected behaviour: ttops_vals will equal NaN for any trees outside the range, and NA for NA values inside the range
   # using is.finite filters out both

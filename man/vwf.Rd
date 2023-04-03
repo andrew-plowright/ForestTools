@@ -4,7 +4,14 @@
 \alias{vwf}
 \title{Variable Window Filter}
 \usage{
-vwf(CHM, winFun, minHeight = NULL, warnings = TRUE, minWinNeib = "queen")
+vwf(
+  CHM,
+  winFun,
+  minHeight = NULL,
+  warnings = TRUE,
+  minWinNeib = "queen",
+  IDfield = "treeID"
+)
 }
 \arguments{
 \item{CHM}{Canopy height model in SpatRaster format.}
@@ -20,6 +27,8 @@ this value will be masked out.}
 
 \item{minWinNeib}{character. Define whether the smallest possible search window (3x3) should use a \code{queen} or
 a \code{rook} neighborhood.}
+
+\item{IDfield}{character. Name of field for unique tree identifier}
 }
 \value{
 Simple feature collection of POINT type. The point locations of detected treetops. The object contains two fields in its

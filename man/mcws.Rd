@@ -10,7 +10,7 @@ mcws(
   minHeight = 0,
   format = "raster",
   OSGeoPath = NULL,
-  verbose = FALSE
+  IDfield = "treeID"
 )
 }
 \arguments{
@@ -28,7 +28,7 @@ height of \code{treetops}.}
 
 \item{OSGeoPath}{character. Obsolete. Will be removed next version}
 
-\item{verbose}{logical. Print processing progress to console.}
+\item{IDfield}{character. Name of field for unique tree identifier}
 }
 \value{
 Depending on the argument set with \code{format}, this function will return a map of outlined

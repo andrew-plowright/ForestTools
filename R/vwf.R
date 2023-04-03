@@ -161,7 +161,7 @@ vwf <- function(CHM, winFun, minHeight = NULL, warnings = TRUE, minWinNeib = "qu
   # Add 'winRadius' and ID field
   local_max_pts[["winRadius"]] <- winFun(local_max_pts[["height"]])
   local_max_pts[[IDfield]] <- 1:nrow(local_max_pts)
-
+  local_max_pts <- local_max_pts[,c(IDfield, "height", "winRadius", "geometry")]
 
   ### RETURN OUTPUT ----
 

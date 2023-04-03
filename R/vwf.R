@@ -4,25 +4,21 @@
 #'
 #' This function uses the resolution of the raster to figure out how many cells the window needs to cover.
 #' This means that the raster value (representing height above ground) and the map unit (represented by the raster's resolution),
-#' need to be in the _same unit_. This can cause issues if the raster is in lat/long, whereby its resolution is in decimal degrees.
+#' need to be in the _same unit_. This can cause issues if the raster is in lat/lon, whereby its resolution is in decimal degrees.
 #'
-#' @param CHM Canopy height model. Either in \link[raster]{raster} format, or a path directing to a raster file. A character vector of multiple paths directing to a
-#' tiled raster dataset can also be used.
+#' @param CHM Canopy height model in SpatRaster format.
 #' @param winFun function. The function that determines the size of the window at any given location on the
 #' canopy. It should take the value of a given \code{CHM} pixel as its only argument, and return the desired *radius* of
 #' the circular search window when centered on that pixel. Size of the window is in map units.
 #' @param minHeight numeric. The minimum height value for a \code{CHM} pixel to be considered as a potential treetop. All \code{CHM} pixels beneath
 #' this value will be masked out.
-#' @param maxWinDiameter numeric. Sets a cap on the maximum window diameter (in cells). If an
-#' improperly calibrated function is set for \code{winFun}, it may produce overly large windows that would perform poorly
-#' and significantly slow processing time. This setting can be disabled by setting to \code{NULL}.
+#' @param warnings logical. If set to FALSE, this function will not emit warnings related to inputs.
 #' @param minWinNeib character. Define whether the smallest possible search window (3x3) should use a \code{queen} or
 #' a \code{rook} neighborhood.
-#' @param verbose logical. Print progress to console if set to \code{TRUE}.
 #'
 #' @references Popescu, S. C., & Wynne, R. H. (2004). Seeing the trees in the forest. \emph{Photogrammetric Engineering & Remote Sensing, 70}(5), 589-604.
 #'
-#' @return \link[sp:SpatialPoints]{SpatialPointsDataFrame}. The point locations of detected treetops. The object contains two fields in its
+#' @return Simple feature collection of POINT type. The point locations of detected treetops. The object contains two fields in its
 #' data table: \emph{height} is the height of the tree, as extracted from the \code{CHM}, and \emph{winRadius} is the radius
 #' of the search window when the treetop was detected. Note that \emph{winRadius} does not necessarily correspond to the radius
 #' of the tree's crown.
@@ -41,172 +37,159 @@
 #'
 #' @export
 
-vwf <- function(CHM, winFun, minHeight = NULL, maxWinDiameter = 99, minWinNeib = "queen", verbose = FALSE){
+vwf <- function(CHM, winFun, minHeight = NULL, warnings = TRUE, minWinNeib = "queen"){
 
-  ### CHECK INPUTS
+  ### CHECK INPUTS ----
 
-    if(verbose) cat("Checking inputs", "\n")
+  # Check for valid inputs for 'minWinNeib'
+  if(!minWinNeib %in% c("queen", "rook")) stop("Invalid input for 'minWinNeib'. Set to 'queen' or 'rook'")
 
-    # Check for valid inputs for 'minWinNeib'
-    if(!minWinNeib %in% c("queen", "rook")) stop("Invalid input for 'minWinNeib'. Set to 'queen' or 'rook'")
+  # Check for unprojected rasters
+  CHM_crs <- terra::crs(CHM)
+  CHM_cs <- regmatches(CHM_crs, gregexpr("(?<=CS\\[).*?(?=,)", CHM_crs, perl=T))[[1]]
+  if(warnings && length(CHM_cs) > 0 && !CHM_cs == "Cartesian") warning(
+    "Detected coordinate system: '", CHM_cs ,"'.\n",
+    "It is recommended that the CHM be projected using a cartesian coordinate system"
+  )
 
-    # Check for unprojected rasters
-    CHM.crs <- as.character(raster::crs(CHM))
-    CHM.prj <- regmatches(CHM.crs, regexpr("(?<=proj=).*?(?=\\s)", CHM.crs, perl = TRUE))
-    if(length(CHM.prj) > 0 && CHM.prj %in% c(c("latlong", "latlon", "longlat", "lonlat"))){
-      warning("'CHM' map units are in degrees. Ensure that 'winFun' outputs values in this unit.")
-    }
+  # Round out CHM resolution to fifth decimal and check that CHM has square cells.
+  # Rounding is necessary since a lack of precision in CHM cell size call cause the
+  # 'focalWeight' function to misbehave
+  res_round <- round(terra::res(CHM), 5)
+  if(res_round[1] != res_round[2]) stop("Input 'CHM' does not have square cells")
+  if(res_round[1] == 0) stop("The map units of the 'CHM' are too small")
 
-    # Round out CHM resolution to fifth decimal and check that CHM has square cells.
-    # Rounding is necessary since a lack of precision in CHM cell size call cause the
-    # 'focalWeight' function to misbehave
-    roundRes <- round(raster::res(CHM), 5)
-    if(roundRes[1] != roundRes[2]) stop("Input 'CHM' does not have square cells")
-    if(roundRes[1] == 0)           stop("The map units of the 'CHM' are too small")
+  # Ensure that 'minHeight' argument is given a positive value
+  if(!is.null(minHeight) && minHeight <= 0) stop("Minimum canopy height must be set to a positive value.")
 
-    # Ensure that 'minHeight' argument is given a positive value
-    if(!is.null(minHeight) && minHeight <= 0) stop("Minimum canopy height must be set to a positive value.")
+  # Get range of CHM values
+  CHM_rng <- terra::minmax(CHM, compute = TRUE)[,1, drop = TRUE]
 
-    # Get range of CHM values
-    CHM.rng <- if(CHM@data@haveminmax){
-      c(CHM@data@min, CHM@data@max)
-    }else{
-      suppressWarnings(raster::cellStats(CHM, "range"))
-    }
-    names(CHM.rng) <- c("min", "max")
-
-    # Check if CHM has usable values
-    if(is.infinite(CHM.rng["max"]) | is.infinite(CHM.rng["min"])){stop("Input 'CHM' does not contain any usable values. Check input data.")}
+  # Check if CHM has usable values
+  if(any(!is.finite(CHM_rng))) stop("Could not compute min/max range of CHM. The CHM may contain unusable values.")
 
 
   ### APPLY MINIMUM CANOPY HEIGHT ----
 
-    if(!is.null(minHeight)){
+  if(!is.null(minHeight)){
 
-      if(minHeight >= CHM.rng["max"]) stop("'minHeight' is set to a value higher than the highest cell value in 'CHM'")
+    if(minHeight >= CHM_rng["max"]) stop("'minHeight' is set to a value higher than the highest cell value in 'CHM'")
 
-      # Mask sections of CHM that are lower than 'minHeight'
-      if(minHeight > CHM.rng["min"]){
+    # Mask sections of CHM that are lower than 'minHeight'
+    if(minHeight > CHM_rng["min"]){
 
-        CHM[CHM < minHeight] <- NA
-        CHM.rng["min"] <- minHeight
-
-      }
+      CHM[CHM < minHeight] <- NA
+      CHM_rng["min"] <- minHeight
     }
-
+  }
 
   ### CREATE WINDOWS ----
 
-    # Here, the variably sized windows used for detecting trees are "pre-generated". First, a series of 'winRadii'
-    # is generated, representing all the sizes the windows can take based on the range of potential values returned
-    # by 'winFun'. These radii are then converted to binary matrices, where values of 1 represent the circular shape
-    # of each window. These matrices are then converted to vectors and
+  # Here, the variably sized windows used for detecting trees are "pre-generated". First, a series of 'win_radii'
+  # is generated, representing all the sizes the windows can take based on the range of potential values returned
+  # by 'winFun'. These radii are then converted to binary matrices, where values of 1 represent the circular shape
+  # of each window. These matrices are then converted to vectors and
 
-    if(verbose) cat("Creating windows", "\n")
+  # Generate a list of radii
+  seq_floor   <- .rounder(winFun(CHM_rng["min"]), interval = res_round[1], direction = "down")
+  seq_ceiling <- .rounder(winFun(CHM_rng["max"]), interval = res_round[1], direction = "up")
+  if(is.infinite(seq_floor)) seq_floor <- 0 # Watch out for parabola!
+  win_radii <- seq(seq_floor, seq_ceiling, by = res_round[1])
 
-    # Generate a list of radii
-    seqFloor   <- APfun::AProunder(winFun(CHM.rng["min"]), interval = roundRes[1], direction = "down")
-    seqCeiling <- APfun::AProunder(winFun(CHM.rng["max"]), interval = roundRes[1], direction = "up")
-    if(is.infinite(seqFloor)) seqFloor <- 0 # Watch out for parabola!
-    winRadii <- seq(seqFloor, seqCeiling, by = roundRes[1])
+  # Remove radii that are smaller than the CHM's resolution
+  win_radii <- win_radii[win_radii >= res_round[1]]
+  if(warnings && length(win_radii) == 0){
+    warning(
+      "The maximum window radius computed with 'winFun' is smaller than the CHM's resolution\n",
+      "A 3x3 cell search window will be uniformly applied\n",
+      "Use a higher resolution 'CHM' or adjust 'winFun' to produce wider dynamic windows"
+    )
+    win_radii <- res_round[1]
+  }
 
-    # Remove radii that are smaller than the CHM's resolution
-    winRadii <- winRadii[winRadii >= roundRes[1]]
-    if(length(winRadii) == 0){
-      warning("The maximum window radius computed with 'winFun' is smaller than the CHM's resolution",
-              "\nA 3x3 cell search window will be uniformly applied",
-              "\nUse a higher resolution 'CHM' or adjust 'winFun' to produce wider dynamic windows")
-      winRadii <- roundRes[1]
-    }
+  # Calculate the dimensions of the largest matrix to be created from the generated list of radii.
+  # Note that it needs to be an uneven integer
+  win_diam <- ceiling((max(win_radii) / res_round[1]) * 2)
+  if (win_diam %% 2 == 0) win_diam <- win_diam + 1
 
-    # Calculate the dimensions of the largest matrix to be created from the generated list of radii
-
-    # NOTE: 'winDiameter' should be an uneven integer. This was causing a problem until Michael Koontz
-    # pointed out the issue on 2018/11/15. Having the sequence of 'winRadii' created using AProunder should
-    # solve this issue but just a failsafe, 'ceiling' is used to force the number into an integer and
-    # an explicit check for even numbers was added
-    winDiameter <- ceiling((max(winRadii) / roundRes[1]) * 2)
-    if (winDiameter %% 2 == 0) winDiameter <- winDiameter + 1
-
-    # Check if input formula will yield a window size bigger than the maximum set by 'maxWinDiameter'
-    if(!is.null(maxWinDiameter) && winDiameter > maxWinDiameter){
-
-        stop("Input function for 'winFun' yields a window diameter of ",  winDiameter, " cells, which is wider than the maximum allowable value in \'maxWinDiameter\'.",
-             "\nChange the 'winFun' function or set 'maxWinDiameter' to a higher value (or to NULL).")
-    }
-
-    # Convert radii into windows
-    windows <- lapply(winRadii, function(radius){
-
-      # Based on the unit size of the input CHM and a given radius, this function will create a matrix whose non-zero
-      # values will form the shape of a circular window
-      win.mat <- raster::focalWeight(raster::raster(resolution = roundRes), radius, type = "circle")
-
-      # Apply Queen's neighborhood if circle is 3x3
-      if(nrow(win.mat) == 3 && minWinNeib == "queen") win.mat[] <- 1
-
-      # Pad the window to the size of the biggest matrix created from the list of radii
-      win.pad <- raster::extend(raster::raster(win.mat), (winDiameter - ncol(win.mat)) /2, value = 0)
-
-      # The matrix values are then transformed into a vector
-      win.vec <- as.vector(win.pad != 0)
-
-      return(win.vec)
-
-    })
-    names(windows) <- winRadii
+  # Check if input formula will yield a particularly wide window diameter
+  if(warnings && win_diam > 100) warning(
+    "Input function for 'winFun' yields a window diameter of ",  win_diam, "which is particularly large.\n",
+    "Adjusting the 'winFun' function is recommended."
+  )
 
 
-  ### CREATE VWF FUNCTION ----
+  # Convert radii into windows
+  windows <- lapply(win_radii, function(radius){
 
-    .vwMax <- function(x, ...){
+    # Based on the unit size of the input CHM and a given radius, this function will create a matrix whose non-zero
+    # values will form the shape of a circular window
+    win_mat <- terra::focalMat(terra::rast(resolution = res_round), radius, type="circle")
 
-      # Locate central value in the moving window.
-      centralValue <- x[length(x) / 2 + 0.5]
+    # Apply Queen's neighborhood if circle is 3x3
+    if(nrow(win_mat) == 3 && minWinNeib == "queen") win_mat[] <- 1
 
-      # If central value is NA, then return NA.
-      if(is.na(centralValue)){
+    # Pad the window to the size of the biggest matrix created from the list of radii
+    win_pad <- terra::extend(terra::rast(win_mat), (win_diam - ncol(win_mat)) /2, fill = 0)
 
-        return(NA)
+    # The matrix values are then transformed into a vector
+    win_vec <- as.vector(win_pad != 0)
 
-      }else{
+    return(win_vec)
 
-        # Calculate the expected crown radius.
-        radius <- winFun(centralValue)
-
-        # Retrieve windows size closest to radius
-        window <- windows[[which.min(abs(as.numeric(names(windows)) -  radius))]]
-
-        # If the central value is the highest value within the variably-sized window (i.e.: local maxima), return 1. If not, return 0.
-        return(if(max(x[window], na.rm = TRUE) == centralValue) 1 else 0)
-
-      }
-    }
-
+  })
+  names(windows) <- win_radii
 
   ### APPLY VWF FUNCTION ----
 
-    if(verbose) cat("Detecting local maxima", "\n")
+  # Apply local maxima-finding function to raster
+  local_max_ras <- terra::focal(
+    CHM,
+    matrix(1, win_diam, win_diam),
+    fun     = .variable_window,
+    windows = windows,
+    winFun  = winFun)
 
-    # Apply local maxima-finding function to raster
-    localMax <- raster::rasterToPoints(
+  # Convert to points
+  local_max_pts <- sf::st_as_sf(terra::as.points(local_max_ras, na.rm = TRUE, values = TRUE))
+  names(local_max_pts)[1] <- 'height'
 
-      raster::focal(CHM, matrix(1, winDiameter, winDiameter), .vwMax,
-        pad = TRUE, padValue = NA),
-
-      fun = function(x) x == 1, spatial = TRUE)
-
-    # Add attributes
-    localMax[["height"]]    <- raster::extract(CHM, localMax)
-    localMax[["winRadius"]] <- winFun(localMax[["height"]])
-    localMax[["treeID"]]    <- 1:length(localMax)
-    localMax[["layer"]] <- NULL
-
+  # Add 'winRadius'
+  local_max_pts[["winRadius"]] <- winFun(local_max_pts[["height"]])
 
   ### RETURN OUTPUT ----
 
-    return(localMax)
+  return(local_max_pts)
 
+}
+
+
+.variable_window <- function(x, windows, winFun, ...){
+
+  # Locate central value in the moving window.
+  centralValue <- x[length(x) / 2 + 0.5]
+
+  # If central value is NA, then return NA.
+  if(is.na(centralValue)){
+
+    return(NA)
+
+  }else{
+
+    # Calculate the expected crown radius.
+    radius <- winFun(centralValue)
+
+    # Retrieve windows size closest to radius
+    window <- windows[[which.min(abs(as.numeric(names(windows)) -  radius))]]
+
+    # If the central value is the highest value within the variably-sized window (i.e.: local maxima), return 1. If not, return 0.
+    return(if(max(x[window], na.rm = TRUE) == centralValue) centralValue else NA)
   }
+}
 
+.rounder <- function(value, interval, direction){
+
+  if(direction == "up")   return(interval * ceiling(value / interval))
+  if(direction == "down") return(interval * floor(  value / interval))
+}
 

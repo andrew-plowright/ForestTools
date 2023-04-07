@@ -41,13 +41,8 @@ glcm <- function(image, segs = NULL, n_grey = 32, angle = 0){
   if(terra::nlyr(image) > 1)   stop("'image' should have a single band")
   if(all(!is.finite(image[]))) stop("'image' must contain usable values")
 
-  # Get range
-  img_range <- terra::global(image, "range", na.rm = TRUE)
-  img_min <- img_range[,1]
-  img_max <- img_range[,2]
-
   # Discretize image (this will replace NAs with 0)
-  img_disc <- .discretize_rast(image, img_min, img_max, n_grey)
+  img_disc <- .discretize_rast(image, n_grey)
 
   # Compute GLCM for whole image
   if(is.null(segs)){
@@ -60,7 +55,7 @@ glcm <- function(image, segs = NULL, n_grey = 32, angle = 0){
   }else{
 
     # Check segments
-    if(all(!is.finite(segs[])))  stop("'segs' do not contain usable values")
+    if(all(!is.finite(segs[])))  stop("'segs' must contain usable values")
     terra::compareGeom(segs, image, res = TRUE)
 
     # Convert image to data.frame
@@ -81,7 +76,7 @@ glcm <- function(image, segs = NULL, n_grey = 32, angle = 0){
     empty_row[] <- NA
 
     # Create worker function
-    worker <- function(seg_df){
+    .glcm_by_seg <- function(seg_df){
 
       seg_df[,"row"] <- seg_df[,"row"] - min(seg_df[,"row"]) + 1
       seg_df[,"col"] <- seg_df[,"col"] - min(seg_df[,"col"]) + 1
@@ -95,7 +90,7 @@ glcm <- function(image, segs = NULL, n_grey = 32, angle = 0){
     }
 
     # Apply worker to compute GLCMs
-    out_glcm <- do.call(plyr::rbind.fill, lapply(seg_dfs, worker))
+    out_glcm <- do.call(plyr::rbind.fill, lapply(seg_dfs, .glcm_by_seg))
 
     # Return result
     row.names(out_glcm) <- names(seg_dfs)
@@ -174,7 +169,12 @@ glcm <- function(image, segs = NULL, n_grey = 32, angle = 0){
 }
 
 
-.discretize_rast <- function(rast, img_min, img_max, n_grey){
+.discretize_rast <- function(rast, n_grey){
+
+  # Get range
+  img_range <- terra::minmax(rast, compute = TRUE)
+  img_min <- img_range[1,]
+  img_max <- img_range[2,]
 
   if(img_min == img_max){
 

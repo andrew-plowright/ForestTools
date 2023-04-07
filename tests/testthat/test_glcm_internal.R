@@ -12,6 +12,8 @@ tumor_disc   <- terra::as.matrix(.discretize_rast(terra::rast(tumor),   n_grey =
 noise_disc   <- terra::as.matrix(.discretize_rast(terra::rast(noise),   n_grey = 32), wide = TRUE)
 bars_disc    <- terra::as.matrix(.discretize_rast(terra::rast(bars),    n_grey = 20), wide = TRUE)
 
+
+
 # Read function
 read_validation_matrix <- function(name){
   as.matrix(read.table(file.path("validation_data/glcm", paste0(name, ".csv")),  header=TRUE, sep=",", check.names=FALSE, row.names = 1) )
@@ -86,3 +88,29 @@ test_that("135 degree GLCM features are properly calculated", {
 
 })
 
+
+test_that("Edge cases: all zeroes", {
+
+  zero <- matrix(0, nrow=3, ncol=3)
+
+  zero_glcm <- .glcm_calc(zero, angle=0, n_grey = 12)
+
+  expect_equal(ncol(zero_glcm), 0)
+  expect_equal(nrow(zero_glcm), 0)
+
+  expect_true(all(.glcm_stats(zero_glcm) %in% list(NA, 0)))
+
+})
+
+test_that("Edge cases: 1x1", {
+
+  one <- matrix(1, nrow=1, ncol=1)
+
+  one_glcm <- .glcm_calc(one, angle=0, n_grey = 12)
+
+  expect_equal(ncol(one_glcm), 1)
+  expect_equal(nrow(one_glcm), 1)
+
+  expect_true(all(.glcm_stats(one_glcm) %in% list(NaN, NA, 0)))
+
+})

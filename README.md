@@ -1,6 +1,7 @@
 ForestTools <img src="man/figures/logo.png" align="right" width ="200"/>
 ======================================================================================================
 ![license](https://img.shields.io/badge/Licence-GPL--3-blue.svg) 
+[![](https://www.r-pkg.org/badges/version/ForestTools)](https://www.r-pkg.org/pkg/ForestTools)
 [![R-CMD-check](https://github.com/andrew-plowright/ForestTools/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/andrew-plowright/ForestTools/actions/workflows/R-CMD-check.yaml)
 [![](https://cranlogs.r-pkg.org/badges/ForestTools)](https://CRAN.R-project.org/package=ForestTools)
 

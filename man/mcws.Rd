@@ -14,11 +14,9 @@ mcws(
 )
 }
 \arguments{
-\item{treetops}{The point locations of treetops in sf format. The function will generally produce a
-number of crown segments equal to the number of treetops.}
+\item{treetops}{sf. The point locations of treetops in \code{sf} format.}
 
-\item{CHM}{Canopy height model in SpatRaster format. Should be the same that was used to create
-the input for \code{treetops}.}
+\item{CHM}{SpatRaster. Canopy height model in \code{SpatRaster} format. This should be the same CHM that was used to the detect the \code{treetops}.}
 
 \item{minHeight}{numeric. The minimum height value for a \code{CHM} pixel to be considered as part of a crown segment.
 All \code{CHM} pixels beneath this value will be masked out. Note that this value should be lower than the minimum
@@ -28,11 +26,11 @@ height of \code{treetops}.}
 
 \item{OSGeoPath}{character. Obsolete. Will be removed next version}
 
-\item{IDfield}{character. Name of field for unique tree identifier}
+\item{IDfield}{character. Name of the field for storing the unique tree identifier}
 }
 \value{
-Depending on the argument set with \code{format}, this function will return a map of outlined
-crowns as either a SpatRaster class object, in which distinct crowns are given a unique cell value, or a sf class object, in which each crown
+Depending on the setting for \code{format}, this function will return a map of outlined
+crowns as either a \code{SpatRaster} class object, in which distinct crowns are given a unique cell value, or a \code{sf} class object, in which each crown
 is represented by a polygon.
 }
 \description{
@@ -41,22 +39,28 @@ Segmentation is guided by the point locations of treetops, typically detected us
 See Meyer & Beucher (1990) for details on watershed segmentation.
 }
 \details{
-Crown segments are returned as either a SpatRaster or a sf (Simple Feature) class object,
+Crown segments are returned as either a \code{SpatRaster} or a \code{sf} (Simple Feature) class object,
 as defined using the \code{format} argument. For many analytic purposes, it is preferable to have
 crown outlines as polygons. However, polygonal crown maps take up significantly more disk space, and take
-longer to process. It is advisable to run this function using a raster output first, in order to check
-its results and adjust parameters.
+longer to process. It is advisable to run this function using a raster output first to review
+results and adjust parameters.
 
 NOTE: when setting \code{format} to 'polygons', orphaned segments (i.e.: outlines without an associated treetop) will be removed.
-This is an issue with the 'raster' format that has yet to be resolved.
+This will NOT occur using 'raster' format. This issue will be resolved eventually but requires the watershed function to
+be rewritten.
 }
 \examples{
 \dontrun{
-# Use variable window filter to detect treetops in demo canopy height model
-ttops <- vwf(CHMdemo, winFun = function(x){x * 0.06 + 0.5}, minHeight = 2)
+library(terra)
+library(ForestTools)
 
-# Use 'mcws' to outline tree crowns
-segs <- mcws(ttops, CHMdemo, minHeight = 1)
+chm <- rast(kootenayCHM)
+
+# Use variable window filter to detect treetops
+ttops <- vwf(chm, winFun = function(x){x * 0.06 + 0.5}, minHeight = 2)
+
+# Segment tree crowns
+segs <- mcws(ttops, chm, minHeight = 1)
 }
 
 }
@@ -65,6 +69,5 @@ Meyer, F., & Beucher, S. (1990). Morphological segmentation. \emph{Journal of vi
 image representation, 1}(1), 21-46.
 }
 \seealso{
-\code{\link{vwf}} \code{\link{sp_summarise}} \code{\link[imager]{watershed}} \cr \cr
-OSGeo4W download page: \url{https://trac.osgeo.org/osgeo4w/}
+\code{\link{vwf}}
 }

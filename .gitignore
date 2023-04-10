@@ -1,5 +1,4 @@
 scratch.R
-builder.R
 Rcpp_bugs.md
 .Rproj.user
 .Rhistory
@@ -8,6 +7,7 @@ Rcpp_bugs.md
 data-raw
 obsolete
 tests/create_test_data
+man/figures/logo.psd
 inst/doc
 doc
 Meta

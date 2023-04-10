@@ -6,7 +6,7 @@
 #' This means that the raster value (representing height above ground) and the map unit (represented by the raster's resolution),
 #' need to be in the _same unit_. This can cause issues if the raster is in lat/lon, whereby its resolution is in decimal degrees.
 #'
-#' @param CHM Canopy height model in SpatRaster format.
+#' @param CHM SpatRaster. Canopy height model in SpatRaster format.
 #' @param winFun function. The function that determines the size of the window at any given location on the
 #' canopy. It should take the value of a given \code{CHM} pixel as its only argument, and return the desired *radius* of
 #' the circular search window when centered on that pixel. Size of the window is in map units.
@@ -24,7 +24,15 @@
 #' of the search window when the treetop was detected. Note that \emph{winRadius} does not necessarily correspond to the radius
 #' of the tree's crown.
 #'
+#' @seealso \code{\link{mcws}}
+#'
 #' @examples
+#' \dontrun{
+#' library(terra)
+#' library(ForestTools)
+#'
+#' chm <- rast(kootenayCHM)
+#'
 #' # Set function for determining variable window radius
 #' winFunction <- function(x){x * 0.06 + 0.5}
 #'
@@ -32,9 +40,8 @@
 #' minHgt <- 2
 #'
 #' # Detect treetops in demo canopy height model
-#' ttops <- vwf(CHMdemo, winFunction, minHgt)
-#'
-#' @seealso \code{\link{mcws}} \code{\link{sp_summarise}}
+#' ttops <- vwf(chm, winFunction, minHgt)
+#' }
 #'
 #' @export
 

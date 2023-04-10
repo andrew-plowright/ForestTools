@@ -1,7 +1,11 @@
 ## Test environments
-* local Windows install, R 4.0.4
-* ubuntu 16.04.6 (on travis-ci), R 4.0.2
+
+* local Windows install, R 4.2.1
 * Win-builder (devel and release)
+* Ubuntu Linux 20.04.1 LTS, R-release, GCC via r-hub
+* Fedora Linux, R-devel, clang, gfortran via r-hub
+* Windows Server 2022 via win-builder
+
 
 ## R CMD check results
 
@@ -13,4 +17,3 @@ There are no reverse dependencies.
 
 ## NOTES
 
-Invalid URL flagged on 2021-09-09 has been fixed

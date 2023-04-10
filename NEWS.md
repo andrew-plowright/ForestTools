@@ -1,18 +1,25 @@
-## ForestTools 0.3.0
+## ForestTools 1.0.0 (2023-04-10)
 
-- Removed `sp_summarise`. If you thought this tool was useful and would like me to restore it, please let me know.
+Replaced `raster`, `sf`, and `rgeos` dependencies with `terra` and `sf`.
+
+Performance improvements for `glcm`. Tests indicate it's now running 2.7x faster than before.
+
+Removed `glcm_img`. If you would like to generate GLCM statistics for a single, unsegmented image, simply use
+`glcm` without a `segs` argument.
+
+Removed `sp_summarise`. Other packages offered better, more flexible options for summarizing tree-level information by geographical units. If you thought this tool was useful and would like me to restore it, please let me know.
 
 
-## ForestTools 0.2.6
+## ForestTools 0.2.6 (2021-09-21)
 
 Behaviour change for `gclm`: images are now discretized BEFORE segmentation. Note that this will impact the results returned by the function.
 
 
-## ForestTools 0.2.5
+## ForestTools 0.2.5 (2021-09-09)
 
 Added `glcm_img` to allow GLCM statistics to be computed for an entire unsegmented image.
 
-## ForestTools 0.2.4
+## ForestTools 0.2.4 (2021-04-13)
 
 The `radiomics` package is no longer maintained, so with permission from the author, Joel Carlson, I've integrated the code for computing GLCM statistics into this library
 

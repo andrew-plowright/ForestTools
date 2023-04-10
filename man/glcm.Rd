@@ -21,7 +21,7 @@ data.frame
 }
 \description{
 Generate textural metrics using Grey-Level Co-Occurrence Matrices (GLCM). Can be applied to an entire or image or, if a coterminous
-raster of segments is provided, GLCM can be calculated for each segment
+raster of segments is provided, GLCM can be calculated for each segment.
 }
 \details{
 The underlying C++ code for computing GLCMs and their statistics was originally written by Joel Carlson for the
@@ -46,4 +46,7 @@ tex <- glcm(image, segs)
 \references{
 Parmar, C., Velazquez, E.R., Leijenaar, R., Jermoumi, M., Carvalho, S., Mak, R.H., Mitra, S., Shankar, B.U., Kikinis, R., Haibe-Kains, B. and Lambin, P. (2014).
 \emph{Robust radiomics feature quantification using semiautomatic volumetric segmentation. PloS one, 9}(7)
+}
+\seealso{
+\code{\link{mcws}}
 }

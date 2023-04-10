@@ -1,7 +1,7 @@
 #' Grey-Level Co-Occurrence Matrix
 #'
 #' Generate textural metrics using Grey-Level Co-Occurrence Matrices (GLCM). Can be applied to an entire or image or, if a coterminous
-#' raster of segments is provided, GLCM can be calculated for each segment
+#' raster of segments is provided, GLCM can be calculated for each segment.
 #'
 #' The underlying C++ code for computing GLCMs and their statistics was originally written by Joel Carlson for the
 #' defunct [radiomics](https://github.com/cran/radiomics) library. It has been reused here with permission from the author.
@@ -13,6 +13,11 @@
 #' @param angle integer. Angle at which GLCM will be calculated. Valid inputs are 0, 45, 90, or 135
 #'
 #' @return data.frame
+#'
+#' @references Parmar, C., Velazquez, E.R., Leijenaar, R., Jermoumi, M., Carvalho, S., Mak, R.H., Mitra, S., Shankar, B.U., Kikinis, R., Haibe-Kains, B. and Lambin, P. (2014).
+#' \emph{Robust radiomics feature quantification using semiautomatic volumetric segmentation. PloS one, 9}(7)
+#'
+#' @seealso \code{\link{mcws}}
 #'
 #' @examples
 #' \dontrun{
@@ -28,9 +33,6 @@
 #' # Get textural metrics for ortho's red band
 #' tex <- glcm(image, segs)
 #' }
-#'
-#' @references Parmar, C., Velazquez, E.R., Leijenaar, R., Jermoumi, M., Carvalho, S., Mak, R.H., Mitra, S., Shankar, B.U., Kikinis, R., Haibe-Kains, B. and Lambin, P. (2014).
-#' \emph{Robust radiomics feature quantification using semiautomatic volumetric segmentation. PloS one, 9}(7)
 #'
 #' @export
 
@@ -100,8 +102,6 @@ glcm <- function(image, segs = NULL, n_grey = 32, angle = 0){
   return(out_glcm)
 }
 
-
-
 .glcm_calc <- function(seg_mat, n_grey, angle, d = 1){
 
   unique_vals <- sort(unique(c(seg_mat)))
@@ -143,10 +143,6 @@ glcm <- function(image, segs = NULL, n_grey = 32, angle = 0){
 
 }
 
-#' Calculate stats for GLCM
-#'
-#' @param data matrix. GLCM computed using '.glcm_calc'
-
 .glcm_stats <- function(data){
 
   #Set up allowed features
@@ -167,7 +163,6 @@ glcm <- function(image, segs = NULL, n_grey = 32, angle = 0){
   colnames(feature_df) <- stats_list
   return(feature_df)
 }
-
 
 .discretize_rast <- function(rast, n_grey){
 

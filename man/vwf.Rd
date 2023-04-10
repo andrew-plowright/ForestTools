@@ -14,7 +14,7 @@ vwf(
 )
 }
 \arguments{
-\item{CHM}{Canopy height model in SpatRaster format.}
+\item{CHM}{SpatRaster. Canopy height model in SpatRaster format.}
 
 \item{winFun}{function. The function that determines the size of the window at any given location on the
 canopy. It should take the value of a given \code{CHM} pixel as its only argument, and return the desired *radius* of
@@ -45,6 +45,12 @@ This means that the raster value (representing height above ground) and the map 
 need to be in the _same unit_. This can cause issues if the raster is in lat/lon, whereby its resolution is in decimal degrees.
 }
 \examples{
+\dontrun{
+library(terra)
+library(ForestTools)
+
+chm <- rast(kootenayCHM)
+
 # Set function for determining variable window radius
 winFunction <- function(x){x * 0.06 + 0.5}
 
@@ -52,12 +58,13 @@ winFunction <- function(x){x * 0.06 + 0.5}
 minHgt <- 2
 
 # Detect treetops in demo canopy height model
-ttops <- vwf(CHMdemo, winFunction, minHgt)
+ttops <- vwf(chm, winFunction, minHgt)
+}
 
 }
 \references{
 Popescu, S. C., & Wynne, R. H. (2004). Seeing the trees in the forest. \emph{Photogrammetric Engineering & Remote Sensing, 70}(5), 589-604.
 }
 \seealso{
-\code{\link{mcws}} \code{\link{sp_summarise}}
+\code{\link{mcws}}
 }

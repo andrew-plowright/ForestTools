@@ -22,7 +22,7 @@ https://github.com/andrew-plowright/ForestTools.
 ### Detect and segment trees
 
 Individual trees can be detected and delineated using a combination of the
-**variable window filter**  (`vwf`) and **marker-controlled segmentation**
+**variable window filter**  (`vwf`) and **marker-controlled watershed segmentation**
 (`mcws`) algorithms, both of which are applied to a rasterized **canopy height model (CHM)**.
 CHMs are typically derived from aerial LiDAR or photogrammetric point clouds.
 
@@ -40,7 +40,7 @@ image and a segment raster (which can be produced using `mcws`). These metrics c
 This library implements techniques developed in the following studies:
 
 * **Variable window filter**: [Seeing the trees in the forest](https://www.ingentaconnect.com/content/asprs/pers/2004/00000070/00000005/art00003) by Popescu, S. C., & Wynne, R. H. (2004)
-* **Marker-controlled segmentation**: [Morphological segmentation](https://www.sciencedirect.com/science/article/pii/104732039090014M) by Meyer, F., & Beucher, S. (1990)
+* **Marker-controlled watershed segmentation**: [Morphological segmentation](https://www.sciencedirect.com/science/article/pii/104732039090014M) by Meyer, F., & Beucher, S. (1990)
 * **Grey-level co-occurrence matrices**: [Robust radiomics feature quantification using semiautomatic volumetric segmentation](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0102107) by Parmar, C., Velazquez, E.R., Leijenaar, R., Jermoumi, M., Carvalho, S., Mak, R.H., Mitra, S., Shankar, B.U., Kikinis, R., Haibe-Kains, B. and Lambin, P. (2014)
 
 

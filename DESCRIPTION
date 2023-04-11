@@ -3,11 +3,12 @@ Type: Package
 Title: Tools for Analyzing Remote Sensing Forest Data
 Version: 1.0.0
 Date: 2023-04-10
-Author: Andrew Plowright
-Maintainer: Andrew Plowright <andrew.plowright@alumni.ubc.ca>
+Authors@R: c(
+    person("Andrew", "Plowright", email = "andrew.plowright@alumni.ubc.ca", role = c("aut", "cre")),
+    person("Jean-Romain", "Roussel", email = "jean-romain.roussel.1@ulaval.ca", role = c("ctb"), comment = "Contributed to segment-based GLCM segmentation"))
 Description: Tools for analyzing remote sensing forest data, including functions for detecting treetops from canopy models, outlining tree crowns, and calculating textural metrics.
 Depends: R (>= 4.2)
-License: GPL (>= 3)
+License: GPL-3
 Encoding: UTF-8
 LazyData: true
 LinkingTo: Rcpp

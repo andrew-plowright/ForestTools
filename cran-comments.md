@@ -19,3 +19,5 @@ There are no reverse dependencies.
 
 Forbidden links were flagged in the README file. These are all links to secure
 scientific journal articles, so they may be false positives.
+
+Fixed canonical CRAN link.

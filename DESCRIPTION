@@ -2,7 +2,7 @@ Package: ForestTools
 Type: Package
 Title: Tools for Analyzing Remote Sensing Forest Data
 Version: 1.0.0
-Date: 2023-04-10
+Date: 2023-08-07
 Authors@R: c(
     person("Andrew", "Plowright", email = "andrew.plowright@alumni.ubc.ca", role = c("aut", "cre")),
     person("Jean-Romain", "Roussel", email = "jean-romain.roussel.1@ulaval.ca", role = c("ctb"), comment = "Contributed to segment-based GLCM segmentation"))
@@ -23,7 +23,7 @@ Suggests:
     testthat,
     knitr,
     rmarkdown
-RoxygenNote: 7.2.1
+RoxygenNote: 7.2.3
 URL: https://github.com/andrew-plowright/ForestTools
 BugReports: https://github.com/andrew-plowright/ForestTools/issues
 VignetteBuilder: knitr

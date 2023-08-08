@@ -50,4 +50,4 @@ jobs:
 
       - name: Install XQuartz on macOS
         if: runner.os == 'macOS'
-        run: brew cask install 
+        run: brew install xquartz --cask

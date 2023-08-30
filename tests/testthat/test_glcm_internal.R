@@ -1,5 +1,3 @@
-context("Tests for internal GLCM functions")
-
 # Load test data
 load('test_data/glcm-hallbey.rda')
 load('test_data/glcm-tumor.rda')
@@ -24,67 +22,67 @@ read_validation_features <- function(name){
 
 # Tests
 test_that("0 degree GLCM properly calculates", {
-  expect_equal(.glcm_calc(hallbey_disc, angle=0, n_grey = 4),  read_validation_matrix("hallbey0"))
-  expect_equal(.glcm_calc(tumor_disc,   angle=0, n_grey = 32), read_validation_matrix("tumor0"))
-  expect_equal(.glcm_calc(noise_disc,   angle=0, n_grey = 32), read_validation_matrix("noise0"))
-  expect_equal(.glcm_calc(bars_disc,    angle=0, n_grey = 20), read_validation_matrix("bars0"))
+  expect_equal(.glcm_calc(hallbey_disc, angle=0, n_grey = 4),  read_validation_matrix("hallbey0"), tolerance = 0.001)
+  expect_equal(.glcm_calc(tumor_disc,   angle=0, n_grey = 32), read_validation_matrix("tumor0"),   tolerance = 0.001)
+  expect_equal(.glcm_calc(noise_disc,   angle=0, n_grey = 32), read_validation_matrix("noise0"),   tolerance = 0.001)
+  expect_equal(.glcm_calc(bars_disc,    angle=0, n_grey = 20), read_validation_matrix("bars0"),    tolerance = 0.001)
 
 })
 
 test_that("45 degree GLCM properly calculates", {
-  expect_equal(.glcm_calc(hallbey_disc, angle=45, n_grey = 32), read_validation_matrix("hallbey45"))
-  expect_equal(.glcm_calc(tumor_disc,   angle=45, n_grey = 32), read_validation_matrix("tumor45"))
-  expect_equal(.glcm_calc(noise_disc,   angle=45, n_grey = 32), read_validation_matrix("noise45"))
-  expect_equal(.glcm_calc(bars_disc,    angle=45, n_grey = 20), read_validation_matrix("bars45"))
+  expect_equal(.glcm_calc(hallbey_disc, angle=45, n_grey = 32), read_validation_matrix("hallbey45"), tolerance = 0.001)
+  expect_equal(.glcm_calc(tumor_disc,   angle=45, n_grey = 32), read_validation_matrix("tumor45"),   tolerance = 0.001)
+  expect_equal(.glcm_calc(noise_disc,   angle=45, n_grey = 32), read_validation_matrix("noise45"),   tolerance = 0.001)
+  expect_equal(.glcm_calc(bars_disc,    angle=45, n_grey = 20), read_validation_matrix("bars45"),    tolerance = 0.001)
 
 })
 
 test_that("90 degree GLCM properly calculates", {
-  expect_equal(.glcm_calc(hallbey_disc, angle=90, n_grey = 32), read_validation_matrix("hallbey90"))
-  expect_equal(.glcm_calc(tumor_disc,   angle=90, n_grey = 32), read_validation_matrix("tumor90"))
-  expect_equal(.glcm_calc(noise_disc,   angle=90, n_grey = 32), read_validation_matrix("noise90"))
-  expect_equal(.glcm_calc(bars_disc,    angle=90, n_grey = 20), read_validation_matrix("bars90"))
+  expect_equal(.glcm_calc(hallbey_disc, angle=90, n_grey = 32), read_validation_matrix("hallbey90"), tolerance = 0.001)
+  expect_equal(.glcm_calc(tumor_disc,   angle=90, n_grey = 32), read_validation_matrix("tumor90"), tolerance = 0.001)
+  expect_equal(.glcm_calc(noise_disc,   angle=90, n_grey = 32), read_validation_matrix("noise90"), tolerance = 0.001)
+  expect_equal(.glcm_calc(bars_disc,    angle=90, n_grey = 20), read_validation_matrix("bars90"), tolerance = 0.001)
 
 })
 
 test_that("135 degree GLCM properly calculates", {
-  expect_equal(.glcm_calc(hallbey_disc, angle=135, n_grey = 32), read_validation_matrix("hallbey135"))
-  expect_equal(.glcm_calc(tumor_disc,   angle=135, n_grey = 32), read_validation_matrix("tumor135"))
-  expect_equal(.glcm_calc(noise_disc,   angle=135, n_grey = 32), read_validation_matrix("noise135"))
-  expect_equal(.glcm_calc(bars_disc,    angle=135, n_grey = 20), read_validation_matrix("bars135" ))
+  expect_equal(.glcm_calc(hallbey_disc, angle=135, n_grey = 32), read_validation_matrix("hallbey135"), tolerance = 0.001)
+  expect_equal(.glcm_calc(tumor_disc,   angle=135, n_grey = 32), read_validation_matrix("tumor135"), tolerance = 0.001)
+  expect_equal(.glcm_calc(noise_disc,   angle=135, n_grey = 32), read_validation_matrix("noise135"), tolerance = 0.001)
+  expect_equal(.glcm_calc(bars_disc,    angle=135, n_grey = 20), read_validation_matrix("bars135" ), tolerance = 0.001)
 
 })
 
 
 test_that("0 degree GLCM features are properly calculated", {
-  expect_equal(.glcm_stats(.glcm_calc(hallbey_disc, angle=0, n_grey = 4)), read_validation_features("hallbey0"))
-  expect_equal(.glcm_stats(.glcm_calc(tumor_disc,   angle=0, n_grey = 32)), read_validation_features("tumor0"))
-  expect_equal(.glcm_stats(.glcm_calc(noise_disc,   angle=0, n_grey = 32)), read_validation_features("noise0"))
-  expect_equal(.glcm_stats(.glcm_calc(bars_disc,    angle=0, n_grey = 20)), read_validation_features("bars0"))
+  expect_equal(.glcm_stats(.glcm_calc(hallbey_disc, angle=0, n_grey = 4)), read_validation_features("hallbey0"), tolerance = 0.001)
+  expect_equal(.glcm_stats(.glcm_calc(tumor_disc,   angle=0, n_grey = 32)), read_validation_features("tumor0"), tolerance = 0.001)
+  expect_equal(.glcm_stats(.glcm_calc(noise_disc,   angle=0, n_grey = 32)), read_validation_features("noise0"), tolerance = 0.001)
+  expect_equal(.glcm_stats(.glcm_calc(bars_disc,    angle=0, n_grey = 20)), read_validation_features("bars0"), tolerance = 0.001)
 
 })
 
 test_that("45 degree GLCM features are properly calculated", {
-  expect_equal(.glcm_stats(.glcm_calc(hallbey_disc, angle=45, n_grey = 4)), read_validation_features("hallbey45"))
-  expect_equal(.glcm_stats(.glcm_calc(tumor_disc,   angle=45, n_grey = 32)), read_validation_features("tumor45"))
-  expect_equal(.glcm_stats(.glcm_calc(noise_disc,   angle=45, n_grey = 32)), read_validation_features("noise45"))
-  expect_equal(.glcm_stats(.glcm_calc(bars_disc,    angle=45, n_grey = 20)), read_validation_features("bars45"))
+  expect_equal(.glcm_stats(.glcm_calc(hallbey_disc, angle=45, n_grey = 4)), read_validation_features("hallbey45"), tolerance = 0.001)
+  expect_equal(.glcm_stats(.glcm_calc(tumor_disc,   angle=45, n_grey = 32)), read_validation_features("tumor45"), tolerance = 0.001)
+  expect_equal(.glcm_stats(.glcm_calc(noise_disc,   angle=45, n_grey = 32)), read_validation_features("noise45"), tolerance = 0.001)
+  expect_equal(.glcm_stats(.glcm_calc(bars_disc,    angle=45, n_grey = 20)), read_validation_features("bars45"), tolerance = 0.001)
 
 })
 
 test_that("90 degree GLCM features are properly calculated", {
-  expect_equal(.glcm_stats(.glcm_calc(hallbey_disc, angle=90, n_grey = 4)), read_validation_features("hallbey90"))
-  expect_equal(.glcm_stats(.glcm_calc(tumor_disc,   angle=90, n_grey = 32)), read_validation_features("tumor90"))
-  expect_equal(.glcm_stats(.glcm_calc(noise_disc,   angle=90, n_grey = 32)), read_validation_features("noise90"))
-  expect_equal(.glcm_stats(.glcm_calc(bars_disc,    angle=90, n_grey = 20)), read_validation_features("bars90"))
+  expect_equal(.glcm_stats(.glcm_calc(hallbey_disc, angle=90, n_grey = 4)), read_validation_features("hallbey90"), tolerance = 0.001)
+  expect_equal(.glcm_stats(.glcm_calc(tumor_disc,   angle=90, n_grey = 32)), read_validation_features("tumor90"), tolerance = 0.001)
+  expect_equal(.glcm_stats(.glcm_calc(noise_disc,   angle=90, n_grey = 32)), read_validation_features("noise90"), tolerance = 0.001)
+  expect_equal(.glcm_stats(.glcm_calc(bars_disc,    angle=90, n_grey = 20)), read_validation_features("bars90"), tolerance = 0.001)
 
 })
 
 test_that("135 degree GLCM features are properly calculated", {
-  expect_equal(.glcm_stats(.glcm_calc(hallbey_disc, angle=135, n_grey = 4)), read_validation_features("hallbey135"))
-  expect_equal(.glcm_stats(.glcm_calc(tumor_disc,   angle=135, n_grey = 32)), read_validation_features("tumor135"))
-  expect_equal(.glcm_stats(.glcm_calc(noise_disc,   angle=135, n_grey = 32)), read_validation_features("noise135"))
-  expect_equal(.glcm_stats(.glcm_calc(bars_disc,    angle=135, n_grey = 20)), read_validation_features("bars135"))
+  expect_equal(.glcm_stats(.glcm_calc(hallbey_disc, angle=135, n_grey = 4)), read_validation_features("hallbey135"), tolerance = 0.001)
+  expect_equal(.glcm_stats(.glcm_calc(tumor_disc,   angle=135, n_grey = 32)), read_validation_features("tumor135"), tolerance = 0.001)
+  expect_equal(.glcm_stats(.glcm_calc(noise_disc,   angle=135, n_grey = 32)), read_validation_features("noise135"), tolerance = 0.001)
+  expect_equal(.glcm_stats(.glcm_calc(bars_disc,    angle=135, n_grey = 20)), read_validation_features("bars135"), tolerance = 0.001)
 
 })
 

@@ -1,5 +1,3 @@
-context("Tests for 'mcws'")
-
 # Load test data
 load("test_data/ttops_test.Rda")
 load("test_data/ttops_orphans.Rda")

@@ -1,7 +1,3 @@
-library(ForestTools)
-
-context("Tests for 'vwf'")
-
 ### LOAD TEST DATA ----
 
   chm_test   <- terra::rast("test_data/CHM_test.tif")

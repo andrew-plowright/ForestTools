@@ -16,3 +16,4 @@
 ^\.github$
 ^man/figures/logo\.psd$
 ^Dockerfile$
+^CRAN-SUBMISSION$

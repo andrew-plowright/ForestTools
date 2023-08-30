@@ -1,5 +1,3 @@
-context("Tests for 'glcm'")
-
 # Read in test data
 test_ext <- terra::ext(439740.0,  439781.7, 5526491.8, 5526523.5)
 test_chm <- terra::crop(terra::rast(kootenayCHM),        test_ext)

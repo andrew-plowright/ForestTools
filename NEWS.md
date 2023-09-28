@@ -1,5 +1,9 @@
 # ForestTools
 
+# ForestTools 1.0.1 (2023-09-27)
+
+Add additional tests and fixed a few bugs.
+
 # ForestTools 1.0.0 (2023-04-10)
 
 Replaced `raster`, `sf`, and `rgeos` dependencies with `terra` and `sf`.

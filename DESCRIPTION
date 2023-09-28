@@ -1,7 +1,7 @@
 Package: ForestTools
 Type: Package
 Title: Tools for Analyzing Remote Sensing Forest Data
-Version: 1.0.0.10
+Version: 1.0.1
 Date: 2023-09-27
 Authors@R: c(
     person("Andrew", "Plowright", email = "andrew.plowright@alumni.ubc.ca", role = c("aut", "cre")),

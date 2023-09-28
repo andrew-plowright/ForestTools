@@ -1,8 +1,8 @@
 Package: ForestTools
 Type: Package
 Title: Tools for Analyzing Remote Sensing Forest Data
-Version: 1.0.0.9000
-Date: 2023-08-30
+Version: 1.0.0.10
+Date: 2023-09-27
 Authors@R: c(
     person("Andrew", "Plowright", email = "andrew.plowright@alumni.ubc.ca", role = c("aut", "cre")),
     person("Jean-Romain", "Roussel", email = "jean-romain.roussel.1@ulaval.ca", role = c("ctb"), comment = "Contributed to segment-based GLCM segmentation"))

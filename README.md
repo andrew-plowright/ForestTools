@@ -135,7 +135,7 @@ The following is a non-exhaustive list of research papers that use the ForestToo
 
 * [Uav-based lidar scanning for individual tree detection and height measurement in young forest permanent trials](https://www.mdpi.com/2072-4292/14/1/170) by Rodríguez-Puerta, F., Gómez-García, E., Martín-García, S., Pérez-Rodríguez, F., & Prada, E. (2021)
 
-* [UAV-derived forest degradation assessments for planning and monitoring forest ecosystem restoration: towards a forest degradation index](https://www.cifor.org/knowledge/publication/8199) by Lee, K. (2021)
+* [UAV-derived forest degradation assessments for planning and monitoring forest ecosystem restoration: towards a forest degradation index](https://www.cifor.org/knowledge/publication/8199/) by Lee, K. (2021)
 
 * [Potential for Individual Tree Monitoring in Ponderosa Pine-Dominated Forests Using Unmanned Aerial System Structure from Motion Point Clouds](https://cdnsciencepub.com/doi/abs/10.1139/cjfr-2020-0433) by Creasy, M. B., Tinkham, W. T., Hoffman, C. M., & Vogeler, J. C. (2021)
 

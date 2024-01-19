@@ -2,7 +2,7 @@
 title: "Spatial Statistics with ForestTools"
 author: "Andrew Plowright"
 date: "2024-01-19"
-output: html_document
+output: github_document
 ---
 
 ```{r setup, include=FALSE}

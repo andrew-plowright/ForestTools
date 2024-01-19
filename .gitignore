@@ -8,8 +8,9 @@ data-raw
 obsolete
 tests/create_test_data
 man/figures/logo.psd
-inst/doc
-doc
 Meta
 wip
 CRAN-SUBMISSION
+/Meta/
+/doc/
+inst/doc

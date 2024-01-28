@@ -4,7 +4,7 @@
 \alias{glcm}
 \title{Grey-Level Co-Occurrence Matrix}
 \usage{
-glcm(image, segs = NULL, n_grey = 32, angle = 0)
+glcm(image, segs = NULL, n_grey = 32, angle = c(0, 1), discretize_range = NULL)
 }
 \arguments{
 \item{image}{SpatRaster. A single-band raster layer from which texture is measured}
@@ -14,7 +14,10 @@ GLCM will be calculated for the entire image.}
 
 \item{n_grey}{integer. Number of grey levels into which the image will be discretized}
 
-\item{angle}{integer. Angle at which GLCM will be calculated. Valid inputs are 0, 45, 90, or 135}
+\item{angle}{integer. Angle at which GLCM will be calculated. Ex.: `c(0,1)`}
+
+\item{discretize_range}{numeric. Vector of two values indicating the minimum and maximum input values for discretizing the image.
+This can be useful when processing tiles of a larger image, for which you may want to impose a consistent value range.}
 }
 \value{
 data.frame
@@ -22,10 +25,6 @@ data.frame
 \description{
 Generate textural metrics using Grey-Level Co-Occurrence Matrices (GLCM). Can be applied to an entire or image or, if a coterminous
 raster of segments is provided, GLCM can be calculated for each segment.
-}
-\details{
-The underlying C++ code for computing GLCMs and their statistics was originally written by Joel Carlson for the
-defunct [radiomics](https://github.com/cran/radiomics) library. It has been reused here with permission from the author.
 }
 \examples{
 \dontrun{

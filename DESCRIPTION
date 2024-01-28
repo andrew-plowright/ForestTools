@@ -18,7 +18,7 @@ Imports:
     Matrix,
     plyr,
     imager,
-    Rcpp
+    GLCMTextures
 Suggests:
     testthat (>= 3.0.0),
     knitr,

@@ -3,5 +3,3 @@
 export(glcm)
 export(mcws)
 export(vwf)
-importFrom(Rcpp,sourceCpp)
-useDynLib(ForestTools)

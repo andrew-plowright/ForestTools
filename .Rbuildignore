@@ -1,6 +1,4 @@
 ^obsolete$
-^doc$
-^Meta$
 ^wip$
 ^scratch\.R$
 ^Rcpp_bugs.md$
@@ -9,7 +7,7 @@
 ^CRAN-RELEASE$
 ^cran-comments\.md$
 ^tests/create_test_data$
-^tests/polygonize_performance$
+^tests/testthat/validation_data/glcm_metrics/obsolete
 ^.*\.Rproj$
 ^\.Rproj\.user$
 ^data-raw$

@@ -7,7 +7,7 @@ ForestTools <img src="man/figures/logo.png" align="right" width ="200"/>
 
 The ForestTools R package offers functions to analyze remote sensing forest data. Please consult the [NEWS.md](NEWS.md) file for updates.
 
-To get started, consult the [canopy analysis tutorial](guides/treetop_analysis.md). For a quick guide on generating spatial statistics from ForestTools outputs, consult the [spatial statistics tutorial](guides/spatial_statistics.md)
+To get started, consult the [canopy analysis tutorial](inst/guides/treetop_analysis.md). For a quick guide on generating spatial statistics from ForestTools outputs, consult the [spatial statistics tutorial](inst/guides/spatial_statistics.md)
 
 To cite the package use `citation("ForestTools")` from within R.
 

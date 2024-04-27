@@ -1,6 +1,6 @@
 # ForestTools
 
-## 1.0.2 (2024-04-27)
+## ForestTools 1.0.2 (2024-04-27)
 
 Since version 0.2.4, the `glcm` function has used Rcpp code that was inherited from the now-defunct `radiomics` package. My intention was for `ForestTool` to adapt GCLM metrics for segmented tree crowns, not provide the foundational code to compute those metrics. Now that the [GLCMTextures](https://github.com/ailich/GLCMTextures) library is carrying the GLCM computation torch, I have added it as a dependency for `ForestTools`. 
 
@@ -33,11 +33,11 @@ glcm_ASM | | ✔
 
 
 
-## 1.0.1 (2023-09-27)
+## ForestTools 1.0.1 (2023-09-27)
 
 Add additional tests and fixed a few bugs.
 
-## 1.0.0 (2023-04-10)
+## ForestTools 1.0.0 (2023-04-10)
 
 Replaced `raster`, `sf`, and `rgeos` dependencies with `terra` and `sf`.
 
@@ -49,20 +49,20 @@ Removed `glcm_img`. If you would like to generate GLCM statistics for a single, 
 Removed `sp_summarise`. Other packages offered better, more flexible options for summarizing tree-level information by geographical units. If you thought this tool was useful and would like me to restore it, please let me know.
 
 
-## 0.2.6 (2021-09-21)
+## ForestTools 0.2.6 (2021-09-21)
 
 Behaviour change for `gclm`: images are now discretized BEFORE segmentation. Note that this will impact the results returned by the function.
 
 
-## 0.2.5 (2021-09-09)
+## ForestTools 0.2.5 (2021-09-09)
 
 Added `glcm_img` to allow GLCM statistics to be computed for an entire unsegmented image.
 
-## 0.2.4 (2021-04-13)
+## ForestTools 0.2.4 (2021-04-13)
 
 The `radiomics` package is no longer maintained, so with permission from the author, Joel Carlson, I've integrated the code for computing GLCM statistics into this library
 
-## 0.2.1
+## ForestTools 0.2.1
 
 Added:
 
@@ -72,7 +72,7 @@ New function:
 
 * `glcm`, for computing textural metrics of a segmented canopy. Thanks to Jean-Romain Roussel for providing code for this function.
 
-## 0.2.0
+## ForestTools 0.2.0
 
 **BACKWARD INCOMPATIBILITY WARNING**
 
@@ -97,25 +97,25 @@ In addition, I've made the following changes to `vwf` (formerly `TreetopFinder`)
 * In addition to controlling the _maximum_ window diameter, the user can now tweak the behavior of the _minimum_ diameter as well. Essentially, the smallest window will always be a 3x3 cell window, regardless of the computed window radius. The neighborhood of this smallest window can be set to either [a rook or a queen case contiguity](https://i.stack.imgur.com/CWIHi.jpg) using the `minWinNeib` argument.
 * I've removed the function's compatibility with the `TileManager` package. Although I had put considerable effort into adding this feature initially, I've realized that A) no one was using it, B) it is preferable for the user to manage tiles him or herself instead of having them managed "under the hood" by the `vwf` function. Let me know if you thought this feature was useful and perhaps I can write a vignette suggesting preferable ways to manage a tiled CHM.
 
-## 0.1.5
+## ForestTools 0.1.5
 
 * Fixed a persistent bug in 'TreeTopFinder' whereby CHMs with imprecise cell sizes (i.e.: cell dimensions that aren't accurate after a certain number of decimals), would cause issues with the shape of the focal windows. Internally, CHM cell dimensions are now rounded to the fifth decimal.
 
-## 0.1.4
+## ForestTools 0.1.4
 
 * Add a new option for generating polygonal tree crowns with 'SegmentCrowns' using GDAL utilities from OSGeo4W. See documentation for 'SegmentCrowns' as well as new vignette: "Options for creating polygonal crown maps".
 
-## 0.1.2
+## ForestTools 0.1.2
 
 * Added the 'Quesnel' dataset. Added a new vignette: "Calculating inventory attributes using Forest Tools".
 
-## 0.1.1
+## ForestTools 0.1.1
 
 * Modified 'SegmentCrowns' function so that it can produce tree crowns in polygon format. The function will also calculate crown area, and filter out crowns that are not associated with a treetop point location.
 
 * Changed name of 'TreeTopSummary' function to 'SpatialStatistics'. This reflects its new functionality, which allows crown maps to be inputted as well as treetop locations. 
 
-## 0.1.0
+## ForestTools 0.1.0
 
 * Initial release of ForestTools
 

@@ -11,19 +11,17 @@ Depends: R (>= 4.2)
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
-LinkingTo: Rcpp
 Imports:
     terra,
     sf,
     Matrix,
-    plyr,
     imager,
     GLCMTextures
 Suggests:
     testthat (>= 3.0.0),
     knitr,
     rmarkdown
-RoxygenNote: 7.2.3
+RoxygenNote: 7.3.1
 URL: https://github.com/andrew-plowright/ForestTools
 BugReports: https://github.com/andrew-plowright/ForestTools/issues
 VignetteBuilder: knitr

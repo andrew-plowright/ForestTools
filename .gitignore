@@ -7,10 +7,9 @@ Rcpp_bugs.md
 data-raw
 obsolete
 tests/create_test_data
+tests/testthat/validation_data/glcm_metrics/obsolete
 man/figures/logo.psd
 Meta
 wip
 CRAN-SUBMISSION
-/Meta/
-/doc/
 inst/doc

@@ -7,17 +7,17 @@ ForestTools <img src="man/figures/logo.png" align="right" width ="200"/>
 
 The ForestTools R package offers functions to analyze remote sensing forest data. Please consult the [NEWS.md](NEWS.md) file for updates.
 
-To get started, consult the [canopy analysis tutorial](https://CRAN.R-project.org/package=ForestTools/vignettes/treetop_analysis.html). For a quick guide on generating spatial statistics from ForestTools outputs, consult the [spatial statistics tutorial](https://github.com/andrew-plowright/ForestTools/blob/b737d1af3e557d2b60760a51720eb7ef61174775/guides/spatial_statistics.md)
+To get started, consult the [canopy analysis tutorial](guides/treetop_analysis.md). For a quick guide on generating spatial statistics from ForestTools outputs, consult the [spatial statistics tutorial](guides/spatial_statistics.md)
 
 To cite the package use `citation("ForestTools")` from within R.
 
 ```
-Andrew Plowright (2023). ForestTools: Tools for Analyzing Remote Sensing Forest Data. R package version 1.0.0,
+Plowright A. (2023). ForestTools: Tools for Analyzing Remote Sensing Forest Data. R package version 1.0.2,
 https://github.com/andrew-plowright/ForestTools.
 ```
 
 
-# Features
+## Features
 
 ### Detect and segment trees
 
@@ -32,10 +32,10 @@ CHMs are typically derived from aerial LiDAR or photogrammetric point clouds.
 ### Compute textural metrics
 
 **Grey-level co-occurrence matrices** (GLCMs) and their associated statistics can be computed for individual trees using a single-band
-image and a segment raster (which can be produced using `mcws`). These metrics can be used to characterize and classify trees.
+image and a segment raster (which can be produced using `mcws`). These metrics can be used as predictors for tree classification.
 
 
-# References
+## References
 
 This library implements techniques developed in the following studies:
 
@@ -44,13 +44,55 @@ This library implements techniques developed in the following studies:
 * **Grey-level co-occurrence matrices**: [Robust radiomics feature quantification using semiautomatic volumetric segmentation](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0102107) by Parmar, C., Velazquez, E.R., Leijenaar, R., Jermoumi, M., Carvalho, S., Mak, R.H., Mitra, S., Shankar, B.U., Kikinis, R., Haibe-Kains, B. and Lambin, P. (2014)
 
 
-# Research
+## Research
 
-The following is a non-exhaustive list of research papers that use the ForestTools library. Several of these studies discuss topics such as algorithm parameterization, and may be informative for users of this library.
+The following is a non-exhaustive list of studies that use the ForestTools library. Several of these papers discuss topics such as algorithm parameterization, and may be informative for users of this library.
+
+### 2024
+
+* [UAV-based LiDAR and Multispectral images for forest trait retrieval](https://meetingorganizer.copernicus.org/EGU24/EGU24-19456.html) by Vignali, L., Panigada, C., Tagliabue, G., Savinelli, B., Garzonio, R., Colombo, & Rossini, M. (2024)
+
+* [Coupling UAV and satellite data for tree species identification to map the distribution of Caspian poplar](https://link.springer.com/article/10.1007/s10980-024-01846-8) by Miraki, M., Sohrabi, H., Fatehi, P., & Kneubuehler, M. (2024)
 
 ### 2023
 
 * [A novel post-fire method to estimate individual tree crown scorch height and volume using simple RPAS-derived data](https://fireecology.springeropen.com/articles/10.1186/s42408-023-00174-7) by Arkin, J., Coops, N. C., Daniels, L. D., & Plowright, A. (2023)
+
+* [Prediction of Open Woodland Transpiration Incorporating Sun-Induced Chlorophyll Fluorescence and Vegetation Structure ](https://www.mdpi.com/2072-4292/16/1/143) by Gao, S., Woodgate, W., Ma, X., & Doody, T. M. (2023)
+
+* [From Local to Micro: Exploratory Data Analysis on Urban Forests and Microclimates in Portland, Oregon, USA](https://ieeexplore.ieee.org/abstract/document/10282088) by Yao, X., & Kim, M. (2023)
+
+* [Mapping and monitoring of vegetation regeneration and fuel under major transmission power lines through image and photogrammetric analysis of drone-derived data](https://www.tandfonline.com/doi/full/10.1080/10106049.2023.2280597) by Sos, J., Penglase, K., Lewis, T., Srivastava, P. K., Singh, H., & Srivastava, S. K. (2023)
+
+* [Patterns of Florida Bonneted Bat Occupancy at the Northern Extent of Its Range](https://meridian.allenpress.com/jfwm/article/doi/10.3996/JFWM-22-055/494603) by Schorr, R. A., Pitcher, K. A., Aldredge, R. A., & Lukacs, P. M. (2023)
+
+* [Remotely sensed and ground measurements reveal intraspecific differences in early season needle unfolding and senescence, but lack of variability in litter flammability of Pinus halepensis](https://www.sciencedirect.com/science/article/pii/S0378112723007090) by Lombardi, E., Kefauver, S.C., Serrano, L., Sin, E., Piñas-Bonilla, P., Pérez, B., Luna, B., Zavala, G., de Dios, V.R. and Voltas, J. (2023)
+
+* [A New Approach to Estimate Fuel Budget and Wildfire Hazard Assessment in Commercial Plantations Using Drone-Based Photogrammetry and Image Analysis](https://www.mdpi.com/2072-4292/15/10/2621) by Penglase, K., Lewis, T., & Srivastava, S. K. (2023)
+
+* [Biomass Estimation of Urban Forests Using LiDAR and High-Resolution Aerial Imagery in Athens–Clarke County, GA](https://www.mdpi.com/1999-4907/14/5/1064) by Henn, K. A., & Peduzzi, A. (2023)
+
+* [Monitoring Individual Tree Phenology in a Multi-Species Forest Using High Resolution UAV Images](https://www.mdpi.com/2072-4292/15/14/3599) by Kleinsmann, J., Verbesselt, J., & Kooistra, L. (2023)
+
+* [Urban Treetop Detection and Tree-Height Estimation from Unmanned-Aerial-Vehicle Images](https://www.mdpi.com/2072-4292/15/15/3779) by Wu, H., Zhuang, M., Chen, Y., Meng, C., Wu, C., Ouyang, L., Liu, Y., Shu, Y., Tao, Y., Qiu, T. and Li, J. (2023)
+
+* [Modeling Biometrie Attributes from Tree Height Using Unmanned Aerial Vehicles (UAV) in Natural Forest Stands](http://www.scielo.org.co/scielo.php?pid=S0120-56092023000200002&script=sci_arttext) by Quiñonez-Barrazal, G., Pompa-García, M., Vivar-Vivar, E.D., Gallardo-Salazar, J.L., Hernández, F.J., Rodríguez-Flores, F.D.J., Solís-Moreno, R., Bretado-Velázquez, J.L., Valdez-Cepeda, R.D. and Hernández-Díaz, J.C. (2023)
+
+* [Detection of standing retention trees in boreal forests with airborne laser scanning point clouds and multispectral imagery](https://besjournals.onlinelibrary.wiley.com/doi/full/10.1111/2041-210X.13995) by Hardenbol, A. A., Korhonen, L., Kukkonen, M., & Maltamo, M. (2023)
+
+* [Multi-temporal NDVI analysis using UAV images of tree crowns in a northern Mexican pine-oak forest](https://link.springer.com/article/10.1007/s11676-023-01639-w) by Gallardo-Salazar, J. L., Rosas-Chavoya, M., Pompa-García, M., López-Serrano, P. M., García-Montiel, E., Meléndez-Soto, A., & Jiménez-Jiménez, S. I. (2023)
+
+* [A Lidar-based Method for 3D Urban Forest Evaluation and Microclimate Assessment, a Case Study in Portland, Oregon, USA](https://essopenarchive.org/doi/full/10.22541/essoar.170914530.09781933) by Yao, X., & Kim, M. (2023)
+
+* [Effects of long‐term fixed fire regimes on African savanna vegetation biomass, vertical structure and tree stem density](https://besjournals.onlinelibrary.wiley.com/doi/abs/10.1111/1365-2664.14435) by Singh, J., Boucher, P. B., Hockridge, E. G., & Davies, A. B. (2023)
+
+* [The role of in-channel vegetation in driving and controlling the geomorphic changes along a gravel-bed river](https://www.sciencedirect.com/science/article/pii/S0169555X23002234) by Picco, L., Pellegrini, G., Iroumé, A., Lenzi, M. A., & Rainato, R. (2023)
+
+* [Using photogrammetry to assess the recovery of a cypress forest and its impact on water-borne erosion. Case study: Guadalupe Island](https://www.researchsquare.com/article/rs-3717140/v1) by Vera-Ortega, L. A., Hinojosa-Corona, A., Luna, L., & Gudiño-Elizondo, N. (2023)
+
+* [UAV data collection parameters impact on accuracy of Scots pine stand mensuration](https://www.researchgate.net/profile/Roman-Zadorozhniuk/publication/371550369_UAV_data_collection_parameters_impact_on_accuracy_of_Scots_pine_stand_mensuration/links/64917bf1c41fb852dd19c381/UAV-data-collection-parameters-impact-on-accuracy-of-Scots-pine-stand-mensuration.pdf) by Zadorozhniuk, R. (2023)
+
+* [Risk Analysis for Asset Protection in Hoyt Arboretum, Portland, OR](https://pdxscholar.library.pdx.edu/geog_master_GIS_reports/6/) by Kossnar, N. (2023).
 
 * [Modelling internal tree attributes for breeding applications in Douglas-fir progeny trials using RPAS-ALS](https://www.sciencedirect.com/science/article/pii/S2666017222000347) by du Toit, F., Coops, N. C., Ratcliffe, B., El-Kassaby, Y. A., & Lucieer, A. (2023)
 
@@ -98,9 +140,7 @@ The following is a non-exhaustive list of research papers that use the ForestToo
 
 * [Combining aerial photos and LiDAR data to detect canopy cover change in urban forests](https://journals.plos.org/plosone/article?id=10.1371/journal.pone.0273487) by Coupland, K., Hamilton, D., & Griess, V. C. (2022)
 
-
 * [Effects of Flight and Smoothing Parameters on the Detection of Taxus and Olive Trees with UAV-Borne Imagery](https://www.mdpi.com/2504-446X/6/8/197) by Ottoy, S., Tziolas, N., Van Meerbeek, K., Aravidis, I., Tilkin, S., Sismanis, M., Stavrakoudis, D., Gitas, I. Z., Zalidis, G. & De Vocht, A. (2022)
-
 
 * [Modeling the Missing DBHs: Influence of Model Form on UAV DBH Characterization](https://www.mdpi.com/1999-4907/13/12/2077) by Tinkham, W. T., Swayze, N. C., Hoffman, C. M., Lad, L. E., & Battaglia, M. A. (2022)
 
@@ -121,7 +161,6 @@ The following is a non-exhaustive list of research papers that use the ForestToo
 * [Above Ground Biomass Estimation of Syzygium aromaticum using structure from motion (SfM) derived from Unmanned Aerial Vehicle in Paninggahan Agroforest Area, West Sumatra](http://jbioua.fmipa.unand.ac.id/index.php/jbioua/article/view/338) by Harapan, T. S., Husna, A., Febriamansyah, T. A., Mutashim, M., Saputra, A., Taufiq, A., & Mukhtar, E. (2021)
 
 * [Influence of flight parameters on UAS-based monitoring of tree height, diameter, and density](https://www.sciencedirect.com/science/article/abs/pii/S0034425721002601) by Swayze, N. C., Tinkham, W. T., Vogeler, J. C., & Hudak, A. T. (2021)
-
 
 * [Detection of aspen in conifer-dominated boreal forests with seasonal multispectral drone image point clouds](https://www.silvafennica.fi/article/10515/author/20257) by Hardenbol, A. A., Kuzmin, A., Korhonen, L., Korpelainen, P., Kumpula, T., Maltamo, M., & Kouki, J. (2021)
 

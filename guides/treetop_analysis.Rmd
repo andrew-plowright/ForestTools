@@ -1,17 +1,13 @@
 ---
 title: "Canopy Analysis in R Using ForestTools"
 author: "Andrew Plowright"
-output: rmarkdown::html_vignette
-vignette: >
-  %\VignetteIndexEntry{Canopy analysis in R using Forest Tools}
-  %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteEncoding{UTF-8}
+output: github_document
 ---
 ```{r global_options, include=FALSE, dpi =  300}
 knitr::opts_knit$set(global.par = TRUE)
 options(rmarkdown.html_vignette.check_title = FALSE)
 ```
-```{r setup}
+```{r setup, include=FALSE}
 library(ForestTools)
 ```
 
@@ -40,7 +36,7 @@ chm <- terra::rast(kootenayCHM)
 
 View the CHM using the `plot` function. The cell values are equal to the canopy's height above ground.
 
-```{r, fig.width = 4, fig.height = 2.51}
+```{r, fig.width = 6, fig.height = 4}
 # Remove plot margins (optional)
 par(mar = rep(0.5, 4))
 
@@ -64,7 +60,7 @@ ttops <- vwf(chm, winFun = lin, minHeight = 2)
 
 We can now plot these treetops on top of the CHM.
 
-```{r, fig.width = 4, fig.height = 2.51}
+```{r, fig.width = 6, fig.height = 4}
 # Plot CHM
 plot(chm, xlab = "", ylab = "", xaxt='n', yaxt = 'n')
 
@@ -88,7 +84,7 @@ The `mcws` function implements the `watershed` algorithm from the [imager](https
 
 The `mcws` function also takes a `minHeight` argument, although this value should be lower than that which was assigned to `vwf`. For the latter, `minHeight` defines the lowest expected treetop, whereas for the former it should correspond to the height above ground of the fringes of the lowest trees. 
 
-```{r, fig.width = 4, fig.height = 2.51}
+```{r, fig.width = 6, fig.height = 4}
 # Create crown map
 crowns_ras <- mcws(treetops = ttops, CHM = chm, minHeight = 1.5)
 
@@ -98,7 +94,7 @@ plot(crowns_ras, col = sample(rainbow(50), nrow(unique(chm)), replace = TRUE), l
 
 By default, `mcws` returns a raster, where each crown is given a unique cell value. Depending on the intended purpose of the crown map, it may be preferable to store these outlines as polygons. This can be accomplished by setting the `format` argument to "polygons". As an added benefit, these polygons will inherit the attributes of the treetops from which they were generated, such as _height_.
 
-```{r, fig.width = 4, fig.height = 2.51}
+```{r, fig.width = 6, fig.height = 4}
 # Create polygon crown map
 crowns_poly <- mcws(treetops = ttops, CHM = chm, format = "polygons", minHeight = 1.5)
 

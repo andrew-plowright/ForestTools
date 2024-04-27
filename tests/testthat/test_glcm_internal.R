@@ -1,3 +1,9 @@
+# NOTE
+# These tests are a holdover from when this package had its own function for making GLCMs
+# Since 2024-04-27, ForestTools now delegates this to the external GLCMTextures library, which is tested here.
+# It's debatable whether or not testing GLCMTextures is appropriate within the ForestTools package, but
+# I've included these anyways just to ensure consistency of results
+
 # Load test data
 load('test_data/glcm-hallbey.rda')
 load('test_data/glcm-tumor.rda')
@@ -10,105 +16,102 @@ tumor_disc   <- terra::as.matrix(.discretize_rast(terra::rast(tumor),   n_grey =
 noise_disc   <- terra::as.matrix(.discretize_rast(terra::rast(noise),   n_grey = 32), wide = TRUE)
 bars_disc    <- terra::as.matrix(.discretize_rast(terra::rast(bars),    n_grey = 20), wide = TRUE)
 
-
-
 # Read function
 read_validation_matrix <- function(name){
-  as.matrix(read.table(file.path("validation_data/glcm", paste0(name, ".csv")),  header=TRUE, sep=",", check.names=FALSE, row.names = 1) )
+  unname(as.matrix(read.table(file.path("validation_data/glcm", paste0(name, ".csv")), header=TRUE, sep=",", check.names=FALSE, row.names = 1) ) )
 }
-read_validation_features <- function(name){
-  read.csv(file.path("validation_data/glcm_features", paste0(name, ".csv")), stringsAsFactors = FALSE)
+read_validation_metrics <- function(name){
+  unlist(read.csv(file.path("validation_data/glcm_metrics", paste0(name, ".csv")), stringsAsFactors = FALSE))
 }
+
 
 # Tests
-test_that("0 degree GLCM properly calculates", {
-  expect_equal(.glcm_calc(hallbey_disc, angle=0, n_grey = 4),  read_validation_matrix("hallbey0"), tolerance = 0.001)
-  expect_equal(.glcm_calc(tumor_disc,   angle=0, n_grey = 32), read_validation_matrix("tumor0"),   tolerance = 0.001)
-  expect_equal(.glcm_calc(noise_disc,   angle=0, n_grey = 32), read_validation_matrix("noise0"),   tolerance = 0.001)
-  expect_equal(.glcm_calc(bars_disc,    angle=0, n_grey = 20), read_validation_matrix("bars0"),    tolerance = 0.001)
+test_that("0 degree GLCM", {
+
+  expect_equal(GLCMTextures::make_glcm(hallbey_disc - 1, shift=c(1,0), n_levels= 4), read_validation_matrix("hallbey0"), tolerance = 0.001)
+  expect_equal(GLCMTextures::make_glcm(tumor_disc   - 1, shift=c(1,0), n_levels=32), read_validation_matrix("tumor0"),   tolerance = 0.001)
+  expect_equal(GLCMTextures::make_glcm(noise_disc   - 1, shift=c(1,0), n_levels=32), read_validation_matrix("noise0"),   tolerance = 0.001)
+  expect_equal(GLCMTextures::make_glcm(bars_disc    - 1, shift=c(1,0), n_levels=20), read_validation_matrix("bars0"),    tolerance = 0.001)
 
 })
 
-test_that("45 degree GLCM properly calculates", {
-  expect_equal(.glcm_calc(hallbey_disc, angle=45, n_grey = 32), read_validation_matrix("hallbey45"), tolerance = 0.001)
-  expect_equal(.glcm_calc(tumor_disc,   angle=45, n_grey = 32), read_validation_matrix("tumor45"),   tolerance = 0.001)
-  expect_equal(.glcm_calc(noise_disc,   angle=45, n_grey = 32), read_validation_matrix("noise45"),   tolerance = 0.001)
-  expect_equal(.glcm_calc(bars_disc,    angle=45, n_grey = 20), read_validation_matrix("bars45"),    tolerance = 0.001)
+test_that("45 degree GLCM", {
+
+  expect_equal(GLCMTextures::make_glcm(hallbey_disc - 1, shift=c(1,1), n_levels= 4), read_validation_matrix("hallbey45"), tolerance = 0.001)
+  expect_equal(GLCMTextures::make_glcm(tumor_disc   - 1, shift=c(1,1), n_levels=32), read_validation_matrix("tumor45"),   tolerance = 0.001)
+  expect_equal(GLCMTextures::make_glcm(noise_disc   - 1, shift=c(1,1), n_levels=32), read_validation_matrix("noise45"),   tolerance = 0.001)
+  expect_equal(GLCMTextures::make_glcm(bars_disc    - 1, shift=c(1,1), n_levels=20), read_validation_matrix("bars45"),    tolerance = 0.001)
 
 })
 
-test_that("90 degree GLCM properly calculates", {
-  expect_equal(.glcm_calc(hallbey_disc, angle=90, n_grey = 32), read_validation_matrix("hallbey90"), tolerance = 0.001)
-  expect_equal(.glcm_calc(tumor_disc,   angle=90, n_grey = 32), read_validation_matrix("tumor90"), tolerance = 0.001)
-  expect_equal(.glcm_calc(noise_disc,   angle=90, n_grey = 32), read_validation_matrix("noise90"), tolerance = 0.001)
-  expect_equal(.glcm_calc(bars_disc,    angle=90, n_grey = 20), read_validation_matrix("bars90"), tolerance = 0.001)
+test_that("90 degree GLCM", {
+
+  expect_equal(GLCMTextures::make_glcm(hallbey_disc - 1, shift=c(0,1), n_levels= 4), read_validation_matrix("hallbey90"), tolerance = 0.001)
+  expect_equal(GLCMTextures::make_glcm(tumor_disc   - 1, shift=c(0,1), n_levels=32), read_validation_matrix("tumor90"),   tolerance = 0.001)
+  expect_equal(GLCMTextures::make_glcm(noise_disc   - 1, shift=c(0,1), n_levels=32), read_validation_matrix("noise90"),   tolerance = 0.001)
+  expect_equal(GLCMTextures::make_glcm(bars_disc    - 1, shift=c(0,1), n_levels=20), read_validation_matrix("bars90"),    tolerance = 0.001)
 
 })
 
-test_that("135 degree GLCM properly calculates", {
-  expect_equal(.glcm_calc(hallbey_disc, angle=135, n_grey = 32), read_validation_matrix("hallbey135"), tolerance = 0.001)
-  expect_equal(.glcm_calc(tumor_disc,   angle=135, n_grey = 32), read_validation_matrix("tumor135"), tolerance = 0.001)
-  expect_equal(.glcm_calc(noise_disc,   angle=135, n_grey = 32), read_validation_matrix("noise135"), tolerance = 0.001)
-  expect_equal(.glcm_calc(bars_disc,    angle=135, n_grey = 20), read_validation_matrix("bars135" ), tolerance = 0.001)
+test_that("135 degree GLCM", {
+
+  expect_equal(GLCMTextures::make_glcm(hallbey_disc - 1, shift=c(-1,1), n_levels= 4), read_validation_matrix("hallbey135"), tolerance = 0.001)
+  expect_equal(GLCMTextures::make_glcm(tumor_disc   - 1, shift=c(-1,1), n_levels=32), read_validation_matrix("tumor135"),   tolerance = 0.001)
+  expect_equal(GLCMTextures::make_glcm(noise_disc   - 1, shift=c(-1,1), n_levels=32), read_validation_matrix("noise135"),   tolerance = 0.001)
+  expect_equal(GLCMTextures::make_glcm(bars_disc    - 1, shift=c(-1,1), n_levels=20), read_validation_matrix("bars135"),    tolerance = 0.001)
 
 })
 
+test_that("0 degree GLCM metrics", {
 
-test_that("0 degree GLCM features are properly calculated", {
-  expect_equal(.glcm_stats(.glcm_calc(hallbey_disc, angle=0, n_grey = 4)), read_validation_features("hallbey0"), tolerance = 0.001)
-  expect_equal(.glcm_stats(.glcm_calc(tumor_disc,   angle=0, n_grey = 32)), read_validation_features("tumor0"), tolerance = 0.001)
-  expect_equal(.glcm_stats(.glcm_calc(noise_disc,   angle=0, n_grey = 32)), read_validation_features("noise0"), tolerance = 0.001)
-  expect_equal(.glcm_stats(.glcm_calc(bars_disc,    angle=0, n_grey = 20)), read_validation_features("bars0"), tolerance = 0.001)
-
-})
-
-test_that("45 degree GLCM features are properly calculated", {
-  expect_equal(.glcm_stats(.glcm_calc(hallbey_disc, angle=45, n_grey = 4)), read_validation_features("hallbey45"), tolerance = 0.001)
-  expect_equal(.glcm_stats(.glcm_calc(tumor_disc,   angle=45, n_grey = 32)), read_validation_features("tumor45"), tolerance = 0.001)
-  expect_equal(.glcm_stats(.glcm_calc(noise_disc,   angle=45, n_grey = 32)), read_validation_features("noise45"), tolerance = 0.001)
-  expect_equal(.glcm_stats(.glcm_calc(bars_disc,    angle=45, n_grey = 20)), read_validation_features("bars45"), tolerance = 0.001)
+  expect_equal(GLCMTextures::glcm_metrics(GLCMTextures::make_glcm(hallbey_disc - 1, shift=c(1,0), n_levels= 4)), read_validation_metrics("hallbey0"), tolerance = 0.001)
+  expect_equal(GLCMTextures::glcm_metrics(GLCMTextures::make_glcm(tumor_disc   - 1, shift=c(1,0), n_levels=32)), read_validation_metrics("tumor0"),   tolerance = 0.001)
+  expect_equal(GLCMTextures::glcm_metrics(GLCMTextures::make_glcm(noise_disc   - 1, shift=c(1,0), n_levels=32)), read_validation_metrics("noise0"),   tolerance = 0.001)
+  expect_equal(GLCMTextures::glcm_metrics(GLCMTextures::make_glcm(bars_disc    - 1, shift=c(1,0), n_levels=20)), read_validation_metrics("bars0"),    tolerance = 0.001)
 
 })
 
-test_that("90 degree GLCM features are properly calculated", {
-  expect_equal(.glcm_stats(.glcm_calc(hallbey_disc, angle=90, n_grey = 4)), read_validation_features("hallbey90"), tolerance = 0.001)
-  expect_equal(.glcm_stats(.glcm_calc(tumor_disc,   angle=90, n_grey = 32)), read_validation_features("tumor90"), tolerance = 0.001)
-  expect_equal(.glcm_stats(.glcm_calc(noise_disc,   angle=90, n_grey = 32)), read_validation_features("noise90"), tolerance = 0.001)
-  expect_equal(.glcm_stats(.glcm_calc(bars_disc,    angle=90, n_grey = 20)), read_validation_features("bars90"), tolerance = 0.001)
+test_that("45 degree GLCM metrics", {
+
+  expect_equal(GLCMTextures::glcm_metrics(GLCMTextures::make_glcm(hallbey_disc - 1, shift=c(1,1), n_levels= 4)), read_validation_metrics("hallbey45"), tolerance = 0.001)
+  expect_equal(GLCMTextures::glcm_metrics(GLCMTextures::make_glcm(tumor_disc   - 1, shift=c(1,1), n_levels=32)), read_validation_metrics("tumor45"),   tolerance = 0.001)
+  expect_equal(GLCMTextures::glcm_metrics(GLCMTextures::make_glcm(noise_disc   - 1, shift=c(1,1), n_levels=32)), read_validation_metrics("noise45"),   tolerance = 0.001)
+  expect_equal(GLCMTextures::glcm_metrics(GLCMTextures::make_glcm(bars_disc    - 1, shift=c(1,1), n_levels=20)), read_validation_metrics("bars45"),    tolerance = 0.001)
 
 })
 
-test_that("135 degree GLCM features are properly calculated", {
-  expect_equal(.glcm_stats(.glcm_calc(hallbey_disc, angle=135, n_grey = 4)), read_validation_features("hallbey135"), tolerance = 0.001)
-  expect_equal(.glcm_stats(.glcm_calc(tumor_disc,   angle=135, n_grey = 32)), read_validation_features("tumor135"), tolerance = 0.001)
-  expect_equal(.glcm_stats(.glcm_calc(noise_disc,   angle=135, n_grey = 32)), read_validation_features("noise135"), tolerance = 0.001)
-  expect_equal(.glcm_stats(.glcm_calc(bars_disc,    angle=135, n_grey = 20)), read_validation_features("bars135"), tolerance = 0.001)
+test_that("90 degree GLCM metrics", {
+
+  expect_equal(GLCMTextures::glcm_metrics(GLCMTextures::make_glcm(hallbey_disc - 1, shift=c(0,1), n_levels= 4)), read_validation_metrics("hallbey90"), tolerance = 0.001)
+  expect_equal(GLCMTextures::glcm_metrics(GLCMTextures::make_glcm(tumor_disc   - 1, shift=c(0,1), n_levels=32)), read_validation_metrics("tumor90"),   tolerance = 0.001)
+  expect_equal(GLCMTextures::glcm_metrics(GLCMTextures::make_glcm(noise_disc   - 1, shift=c(0,1), n_levels=32)), read_validation_metrics("noise90"),   tolerance = 0.001)
+  expect_equal(GLCMTextures::glcm_metrics(GLCMTextures::make_glcm(bars_disc    - 1, shift=c(0,1), n_levels=20)), read_validation_metrics("bars90"),    tolerance = 0.001)
+
+})
+
+test_that("135 degree GLCM metrics", {
+
+  expect_equal(GLCMTextures::glcm_metrics(GLCMTextures::make_glcm(hallbey_disc - 1, shift=c(-1,1), n_levels= 4)), read_validation_metrics("hallbey135"), tolerance = 0.001)
+  expect_equal(GLCMTextures::glcm_metrics(GLCMTextures::make_glcm(tumor_disc   - 1, shift=c(-1,1), n_levels=32)), read_validation_metrics("tumor135"),   tolerance = 0.001)
+  expect_equal(GLCMTextures::glcm_metrics(GLCMTextures::make_glcm(noise_disc   - 1, shift=c(-1,1), n_levels=32)), read_validation_metrics("noise135"),   tolerance = 0.001)
+  expect_equal(GLCMTextures::glcm_metrics(GLCMTextures::make_glcm(bars_disc    - 1, shift=c(-1,1), n_levels=20)), read_validation_metrics("bars135"),    tolerance = 0.001)
 
 })
 
 
 test_that("Edge cases: all zeroes", {
 
+  # Note that the significance of this test has changed since it was originally written.
+  # GLCMTextures treats '0' as an ordinary value, instead of a missing value
+
   zero <- matrix(0, nrow=3, ncol=3)
 
-  zero_glcm <- .glcm_calc(zero, angle=0, n_grey = 12)
+  zero_glcm <- GLCMTextures::make_glcm(zero, shift=c(0,1), n_levels = 1)
 
-  expect_equal(ncol(zero_glcm), 0)
-  expect_equal(nrow(zero_glcm), 0)
+  expect_equal(zero_glcm, matrix(1))
 
-  expect_true(all(.glcm_stats(zero_glcm) %in% list(NA, 0)))
-
-})
-
-test_that("Edge cases: 1x1", {
-
-  one <- matrix(1, nrow=1, ncol=1)
-
-  one_glcm <- .glcm_calc(one, angle=0, n_grey = 12)
-
-  expect_equal(ncol(one_glcm), 1)
-  expect_equal(nrow(one_glcm), 1)
-
-  expect_true(all(.glcm_stats(one_glcm) %in% list(NaN, NA, 0)))
+  expect_true(all(GLCMTextures::glcm_metrics(zero_glcm) %in% list(NaN, 1, 0)))
 
 })
+
+

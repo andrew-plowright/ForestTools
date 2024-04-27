@@ -20,9 +20,9 @@ test_that("glcm_img: successful", {
 
   tex <- glcm(test_chm)
 
-  expect_equal(tex[1, "glcm_mean"],     7.067751, tolerance = 0.001)
-  expect_equal(tex[1, "glcm_entropy"], 6.136393,  tolerance = 0.001)
-  expect_equal(tex[1, "glcm_maxProb"], 0.1277584, tolerance = 0.001)
+  expect_equal(unname(tex["glcm_mean"]),     6.06713953, tolerance = 0.001)
+  expect_equal(unname(tex["glcm_entropy"]),  4.254495,   tolerance = 0.001)
+  expect_equal(unname(tex["glcm_contrast"]), 3.05149631, tolerance = 0.001)
 })
 
 test_that("glcm: with segments", {
@@ -36,9 +36,9 @@ test_that("glcm: with segments", {
   # No missing values
   expect_false(any(is.na(tex1$glcm_mean)))
 
-  expect_equal(tex1[1, "glcm_mean"],            13.100, tolerance = 0.001)
-  expect_equal(tex1[1, "glcm_IDN"],              0.750, tolerance = 0.001)
-  expect_equal(tex1[1, "glcm_inverseVariance"],  1.000, tolerance = 0.001)
+  expect_equal(tex1[1, "glcm_mean"],     12.66667,    tolerance = 0.001)
+  expect_equal(tex1[1, "glcm_entropy"],   0.6365142 , tolerance = 0.001)
+  expect_equal(tex1[1, "glcm_contrast"],  0,          tolerance = 0.001)
 })
 
 test_that("glcm: errors with empty inputs", {

@@ -174,9 +174,9 @@ The following is a non-exhaustive list of studies that use the ForestTools libra
 
 * [Uav-based lidar scanning for individual tree detection and height measurement in young forest permanent trials](https://www.mdpi.com/2072-4292/14/1/170) by Rodríguez-Puerta, F., Gómez-García, E., Martín-García, S., Pérez-Rodríguez, F., & Prada, E. (2021)
 
-* [UAV-derived forest degradation assessments for planning and monitoring forest ecosystem restoration: towards a forest degradation index](https://www.cifor.org/knowledge/publication/8199/) by Lee, K. (2021)
+* [UAV-derived forest degradation assessments for planning and monitoring forest ecosystem restoration: towards a forest degradation index](https://www.cifor-icraf.org/knowledge/publication/8199/) by Lee, K. (2021)
 
-* [Potential for Individual Tree Monitoring in Ponderosa Pine-Dominated Forests Using Unmanned Aerial System Structure from Motion Point Clouds](https://cdnsciencepub.com/doi/abs/10.1139/cjfr-2020-0433) by Creasy, M. B., Tinkham, W. T., Hoffman, C. M., & Vogeler, J. C. (2021)
+* [Potential for Individual Tree Monitoring in Ponderosa Pine-Dominated Forests Using Unmanned Aerial System Structure from Motion Point Clouds](https://doi.org/10.1139/cjfr-2020-0433) by Creasy, M. B., Tinkham, W. T., Hoffman, C. M., & Vogeler, J. C. (2021)
 
 * [Assessment of Above-Ground Carbon Storage by Urban Trees Using LiDAR Data: The Case of a University Campus](https://www.mdpi.com/1999-4907/12/1/62) by Gülçin, D., & van den Bosch, C. C. K. (2021)
 
@@ -196,7 +196,7 @@ The following is a non-exhaustive list of studies that use the ForestTools libra
 
 * [Supporting Assessment of Forest Burned Areas by Aerial Photogrammetry: The Susa Valley (NW Italy) Fires of Autumn 2017](https://link.springer.com/chapter/10.1007/978-3-030-58811-3_59) by De Petris, S., Momo, E. J., & Borgogno-Mondino, E. (2020)
 
-* [Applying unmanned aerial vehicles (UAVs) to map shrubland structural attributes in northern Patagonia, Argentina](https://cdnsciencepub.com/doi/abs/10.1139/cjfr-2019-0440@cjfrjuvs-uav.issue1) by Gonzalez Musso, R. F., Oddi, F. J., Goldenberg, M. G., & Garibaldi, L. A. (2020)
+* [Applying unmanned aerial vehicles (UAVs) to map shrubland structural attributes in northern Patagonia, Argentina](https://doi.org/10.1139/cjfr-2019-0440) by Gonzalez Musso, R. F., Oddi, F. J., Goldenberg, M. G., & Garibaldi, L. A. (2020)
 
 * [Automated Canopy Delineation and Size Metrics Extraction for Strawberry Dry Weight Modeling Using Raster Analysis of High-Resolution Imagery](https://www.mdpi.com/2072-4292/12/21/3632) by Abd-Elrahman, A., Guan, Z., Dalid, C., Whitaker, V., Britt, K., Wilkinson, B., & Gonzalez, A. (2020)
 

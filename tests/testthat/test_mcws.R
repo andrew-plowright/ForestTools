@@ -1,14 +1,9 @@
 # Load test data
-
-
 ttops_test <- sf::st_read("test_data/ttops_test.gpkg", quiet=TRUE)
 ttops_orphans <- sf::st_read("test_data/ttops_orphans.gpkg", quiet=TRUE)
 CHM_test    <- terra::rast("test_data/CHM_test.tif")
 CHM_empty   <- terra::rast("test_data/CHM_empty.tif")
 CHM_orphans <- terra::rast("test_data/CHM_orphans.tif")
-
-
-
 
 
 test_that("mcws: expected results using standard parameters", {
@@ -55,6 +50,6 @@ test_that("mcws: removes trees outside of CHM area and those that over NA values
   expect_equal(nrow(ttops_min_2m), length(segs_ras_unique_min_2m))
 })
 
-
+# Remove reused data
 rm(ttops_test, ttops_orphans, CHM_test, CHM_orphans, CHM_empty)
 

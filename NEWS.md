@@ -1,5 +1,9 @@
 # ForestTools
 
+## ForestTools 1.0.3 (2024-01-15)
+
+Updated compability with newest `GLCMTextures` package.
+
 ## ForestTools 1.0.2 (2024-04-27)
 
 Since version 0.2.4, the `glcm` function has used Rcpp code that was inherited from the now-defunct `radiomics` package. My intention was for `ForestTool` to adapt GCLM metrics for segmented tree crowns, not provide the foundational code to compute those metrics. Now that the [GLCMTextures](https://github.com/ailich/GLCMTextures) library is carrying the GLCM computation torch, I have added it as a dependency for `ForestTools`. 

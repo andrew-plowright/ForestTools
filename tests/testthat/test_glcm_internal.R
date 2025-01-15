@@ -10,6 +10,8 @@ load('test_data/glcm-tumor.rda')
 load('test_data/glcm-noise.rda')
 load('test_data/glcm-bars.rda')
 
+metrics<- c("glcm_contrast", "glcm_dissimilarity", "glcm_homogeneity", "glcm_ASM", "glcm_entropy", "glcm_mean", "glcm_variance", "glcm_correlation")
+
 # Discretize images
 hallbey_disc <- terra::as.matrix(.discretize_rast(terra::rast(hallbey), n_grey = 4),  wide = TRUE)
 tumor_disc   <- terra::as.matrix(.discretize_rast(terra::rast(tumor),   n_grey = 32), wide = TRUE)
@@ -64,37 +66,37 @@ test_that("135 degree GLCM", {
 
 test_that("0 degree GLCM metrics", {
 
-  expect_equal(GLCMTextures::glcm_metrics(GLCMTextures::make_glcm(hallbey_disc - 1, shift=c(1,0), n_levels= 4)), read_validation_metrics("hallbey0"), tolerance = 0.001)
-  expect_equal(GLCMTextures::glcm_metrics(GLCMTextures::make_glcm(tumor_disc   - 1, shift=c(1,0), n_levels=32)), read_validation_metrics("tumor0"),   tolerance = 0.001)
-  expect_equal(GLCMTextures::glcm_metrics(GLCMTextures::make_glcm(noise_disc   - 1, shift=c(1,0), n_levels=32)), read_validation_metrics("noise0"),   tolerance = 0.001)
-  expect_equal(GLCMTextures::glcm_metrics(GLCMTextures::make_glcm(bars_disc    - 1, shift=c(1,0), n_levels=20)), read_validation_metrics("bars0"),    tolerance = 0.001)
+  expect_equal(GLCMTextures::glcm_metrics(GLCMTextures::make_glcm(hallbey_disc - 1, shift=c(1,0), n_levels= 4), metrics=metrics), read_validation_metrics("hallbey0")[metrics], tolerance = 0.001)
+  expect_equal(GLCMTextures::glcm_metrics(GLCMTextures::make_glcm(tumor_disc   - 1, shift=c(1,0), n_levels=32), metrics=metrics), read_validation_metrics("tumor0")[metrics],   tolerance = 0.001)
+  expect_equal(GLCMTextures::glcm_metrics(GLCMTextures::make_glcm(noise_disc   - 1, shift=c(1,0), n_levels=32), metrics=metrics), read_validation_metrics("noise0")[metrics],   tolerance = 0.001)
+  expect_equal(GLCMTextures::glcm_metrics(GLCMTextures::make_glcm(bars_disc    - 1, shift=c(1,0), n_levels=20), metrics=metrics), read_validation_metrics("bars0")[metrics],    tolerance = 0.001)
 
 })
 
 test_that("45 degree GLCM metrics", {
 
-  expect_equal(GLCMTextures::glcm_metrics(GLCMTextures::make_glcm(hallbey_disc - 1, shift=c(1,1), n_levels= 4)), read_validation_metrics("hallbey45"), tolerance = 0.001)
-  expect_equal(GLCMTextures::glcm_metrics(GLCMTextures::make_glcm(tumor_disc   - 1, shift=c(1,1), n_levels=32)), read_validation_metrics("tumor45"),   tolerance = 0.001)
-  expect_equal(GLCMTextures::glcm_metrics(GLCMTextures::make_glcm(noise_disc   - 1, shift=c(1,1), n_levels=32)), read_validation_metrics("noise45"),   tolerance = 0.001)
-  expect_equal(GLCMTextures::glcm_metrics(GLCMTextures::make_glcm(bars_disc    - 1, shift=c(1,1), n_levels=20)), read_validation_metrics("bars45"),    tolerance = 0.001)
+  expect_equal(GLCMTextures::glcm_metrics(GLCMTextures::make_glcm(hallbey_disc - 1, shift=c(1,1), n_levels= 4), metrics=metrics), read_validation_metrics("hallbey45")[metrics], tolerance = 0.001)
+  expect_equal(GLCMTextures::glcm_metrics(GLCMTextures::make_glcm(tumor_disc   - 1, shift=c(1,1), n_levels=32), metrics=metrics), read_validation_metrics("tumor45")[metrics],   tolerance = 0.001)
+  expect_equal(GLCMTextures::glcm_metrics(GLCMTextures::make_glcm(noise_disc   - 1, shift=c(1,1), n_levels=32), metrics=metrics), read_validation_metrics("noise45")[metrics],   tolerance = 0.001)
+  expect_equal(GLCMTextures::glcm_metrics(GLCMTextures::make_glcm(bars_disc    - 1, shift=c(1,1), n_levels=20), metrics=metrics), read_validation_metrics("bars45")[metrics],    tolerance = 0.001)
 
 })
 
 test_that("90 degree GLCM metrics", {
 
-  expect_equal(GLCMTextures::glcm_metrics(GLCMTextures::make_glcm(hallbey_disc - 1, shift=c(0,1), n_levels= 4)), read_validation_metrics("hallbey90"), tolerance = 0.001)
-  expect_equal(GLCMTextures::glcm_metrics(GLCMTextures::make_glcm(tumor_disc   - 1, shift=c(0,1), n_levels=32)), read_validation_metrics("tumor90"),   tolerance = 0.001)
-  expect_equal(GLCMTextures::glcm_metrics(GLCMTextures::make_glcm(noise_disc   - 1, shift=c(0,1), n_levels=32)), read_validation_metrics("noise90"),   tolerance = 0.001)
-  expect_equal(GLCMTextures::glcm_metrics(GLCMTextures::make_glcm(bars_disc    - 1, shift=c(0,1), n_levels=20)), read_validation_metrics("bars90"),    tolerance = 0.001)
+  expect_equal(GLCMTextures::glcm_metrics(GLCMTextures::make_glcm(hallbey_disc - 1, shift=c(0,1), n_levels= 4), metrics=metrics), read_validation_metrics("hallbey90")[metrics], tolerance = 0.001)
+  expect_equal(GLCMTextures::glcm_metrics(GLCMTextures::make_glcm(tumor_disc   - 1, shift=c(0,1), n_levels=32), metrics=metrics), read_validation_metrics("tumor90")[metrics],   tolerance = 0.001)
+  expect_equal(GLCMTextures::glcm_metrics(GLCMTextures::make_glcm(noise_disc   - 1, shift=c(0,1), n_levels=32), metrics=metrics), read_validation_metrics("noise90")[metrics],   tolerance = 0.001)
+  expect_equal(GLCMTextures::glcm_metrics(GLCMTextures::make_glcm(bars_disc    - 1, shift=c(0,1), n_levels=20), metrics=metrics), read_validation_metrics("bars90")[metrics],    tolerance = 0.001)
 
 })
 
 test_that("135 degree GLCM metrics", {
 
-  expect_equal(GLCMTextures::glcm_metrics(GLCMTextures::make_glcm(hallbey_disc - 1, shift=c(-1,1), n_levels= 4)), read_validation_metrics("hallbey135"), tolerance = 0.001)
-  expect_equal(GLCMTextures::glcm_metrics(GLCMTextures::make_glcm(tumor_disc   - 1, shift=c(-1,1), n_levels=32)), read_validation_metrics("tumor135"),   tolerance = 0.001)
-  expect_equal(GLCMTextures::glcm_metrics(GLCMTextures::make_glcm(noise_disc   - 1, shift=c(-1,1), n_levels=32)), read_validation_metrics("noise135"),   tolerance = 0.001)
-  expect_equal(GLCMTextures::glcm_metrics(GLCMTextures::make_glcm(bars_disc    - 1, shift=c(-1,1), n_levels=20)), read_validation_metrics("bars135"),    tolerance = 0.001)
+  expect_equal(GLCMTextures::glcm_metrics(GLCMTextures::make_glcm(hallbey_disc - 1, shift=c(-1,1), n_levels= 4), metrics=metrics), read_validation_metrics("hallbey135")[metrics], tolerance = 0.001)
+  expect_equal(GLCMTextures::glcm_metrics(GLCMTextures::make_glcm(tumor_disc   - 1, shift=c(-1,1), n_levels=32), metrics=metrics), read_validation_metrics("tumor135")[metrics],   tolerance = 0.001)
+  expect_equal(GLCMTextures::glcm_metrics(GLCMTextures::make_glcm(noise_disc   - 1, shift=c(-1,1), n_levels=32), metrics=metrics), read_validation_metrics("noise135")[metrics],   tolerance = 0.001)
+  expect_equal(GLCMTextures::glcm_metrics(GLCMTextures::make_glcm(bars_disc    - 1, shift=c(-1,1), n_levels=20), metrics=metrics), read_validation_metrics("bars135")[metrics],    tolerance = 0.001)
 
 })
 

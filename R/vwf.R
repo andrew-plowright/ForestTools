@@ -16,6 +16,9 @@
 #' @param minWinNeib character. Define whether the smallest possible search window (3x3) should use a \code{queen} or
 #' a \code{rook} neighborhood.
 #' @param IDfield character. Name of field for unique tree identifier
+#' @param resolution_round integer. The raster resolution is used to compute the dimensions of the search windows. By default, this resolution is rounded
+#' to 5 decimal places. The number of decimal places can be changed using this parameter. Increasing this value is also a work-around for errors
+#' relating to non-square cell sizes.
 #'
 #' @references Popescu, S. C., & Wynne, R. H. (2004). Seeing the trees in the forest. \emph{Photogrammetric Engineering & Remote Sensing, 70}(5), 589-604.
 #'
@@ -45,7 +48,7 @@
 #'
 #' @export
 
-vwf <- function(CHM, winFun, minHeight = NULL, warnings = TRUE, minWinNeib = "queen", IDfield = "treeID"){
+vwf <- function(CHM, winFun, minHeight = NULL, warnings = TRUE, minWinNeib = "queen", IDfield = "treeID", resolution_round = 5){
 
   ### CHECK INPUTS ----
 
@@ -65,7 +68,7 @@ vwf <- function(CHM, winFun, minHeight = NULL, warnings = TRUE, minWinNeib = "qu
   # Round out CHM resolution to fifth decimal and check that CHM has square cells.
   # Rounding is necessary since a lack of precision in CHM cell size call cause the
   # 'focalWeight' function to misbehave
-  res_round <- round(terra::res(CHM), 5)
+  res_round <- round(terra::res(CHM), resolution_round)
   if(res_round[1] != res_round[2]) stop("Input 'CHM' does not have square cells")
   if(res_round[1] == 0) stop("The map units of the 'CHM' are too small")
 

@@ -1,18 +1,22 @@
 ## Test environments
 
-* local Windows install, R 4.3.1
-* Windows Server 2022 via win-builder
-* Ubuntu Linux 20.04.1 via r-hub
+### Local development environment
+- OS: Linux Mint version 22
+- R version: 4.3.3
+- Locale: en_CA.UTF-8
+- Compiler: gcc (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0
+
+### Remote environments
+* Windows Server 2022 via r-hub
+* Windows Server 2022 via check_win_devel
+* Ubuntu Linux 24.04 via r-hub
+* macOS 13.7.2 via r-hub
+* macOS 14.7.2 via r-hub
 
 ## R CMD check results
 
-0 errors | 0 warnings | 1 note
+0 errors | 0 warnings | 0 notes
 
 ## Reverse dependencies
 
 There are no reverse dependencies.
-
-## NOTES
-
-Forbidden links were flagged in the README file. These are all links to secure
-scientific journal articles, so they may be false positives.

@@ -84,7 +84,7 @@ The following is a non-exhaustive list of studies that use the ForestTools libra
 
 * [A Lidar-based Method for 3D Urban Forest Evaluation and Microclimate Assessment, a Case Study in Portland, Oregon, USA](https://essopenarchive.org/doi/full/10.22541/essoar.170914530.09781933) by Yao, X., & Kim, M. (2023)
 
-* [Effects of long‐term fixed fire regimes on African savanna vegetation biomass, vertical structure and tree stem density](https://besjournals.onlinelibrary.wiley.com/doi/abs/10.1111/1365-2664.14435) by Singh, J., Boucher, P. B., Hockridge, E. G., & Davies, A. B. (2023)
+* [Effects of long‐term fixed fire regimes on African savanna vegetation biomass, vertical structure and tree stem density](https://besjournals.onlinelibrary.wiley.com/doi/abs/10.1111/1365-2664.14435/) by Singh, J., Boucher, P. B., Hockridge, E. G., & Davies, A. B. (2023)
 
 * [The role of in-channel vegetation in driving and controlling the geomorphic changes along a gravel-bed river](https://www.sciencedirect.com/science/article/pii/S0169555X23002234) by Picco, L., Pellegrini, G., Iroumé, A., Lenzi, M. A., & Rainato, R. (2023)
 
@@ -126,7 +126,7 @@ The following is a non-exhaustive list of studies that use the ForestTools libra
 
 * [Detection of standing retention trees in boreal forests with airborne laser scanning point clouds and multispectral imagery](https://besjournals.onlinelibrary.wiley.com/doi/full/10.1111/2041-210X.13995) by Hardenbol, A. A., Korhonen, L., Kukkonen, M., & Maltamo, M. (2022)
 
-* [Optimizing aerial imagery collection and processing parameters for drone-based individual tree mapping in structurally complex conifer forests](https://besjournals.onlinelibrary.wiley.com/doi/full/10.1111/2041-210X.13860) by Young, D. J., Koontz, M. J., & Weeks, J. (2022)
+* [Optimizing aerial imagery collection and processing parameters for drone-based individual tree mapping in structurally complex conifer forests](https://besjournals.onlinelibrary.wiley.com/doi/full/10.1111/2041-210X.13860/) by Young, D. J., Koontz, M. J., & Weeks, J. (2022)
 
 * [Assessing Structural Complexity of Individual Scots Pine Trees by Comparing Terrestrial Laser Scanning and Photogrammetric Point Clouds](https://www.mdpi.com/1999-4907/13/8/1305) by Tienaho, N., Yrttimaa, T., Kankare, V., Vastaranta, M., Luoma, V., Honkavaara, E., ... & Saarinen, N. (2022)
 
@@ -176,7 +176,7 @@ The following is a non-exhaustive list of studies that use the ForestTools libra
 
 * [UAV-derived forest degradation assessments for planning and monitoring forest ecosystem restoration: towards a forest degradation index](https://www.cifor-icraf.org/knowledge/publication/8199/) by Lee, K. (2021)
 
-* [Potential for Individual Tree Monitoring in Ponderosa Pine-Dominated Forests Using Unmanned Aerial System Structure from Motion Point Clouds](https://doi.org/10.1139/cjfr-2020-0433) by Creasy, M. B., Tinkham, W. T., Hoffman, C. M., & Vogeler, J. C. (2021)
+* [Potential for Individual Tree Monitoring in Ponderosa Pine-Dominated Forests Using Unmanned Aerial System Structure from Motion Point Clouds](https://cdnsciencepub.com/doi/10.1139/cjfr-2020-0433/) by Creasy, M. B., Tinkham, W. T., Hoffman, C. M., & Vogeler, J. C. (2021)
 
 * [Assessment of Above-Ground Carbon Storage by Urban Trees Using LiDAR Data: The Case of a University Campus](https://www.mdpi.com/1999-4907/12/1/62) by Gülçin, D., & van den Bosch, C. C. K. (2021)
 

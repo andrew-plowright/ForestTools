@@ -17,7 +17,7 @@
 #' a \code{rook} neighborhood.
 #' @param IDfield character. Name of field for unique tree identifier
 #' @param resolution_round integer. The raster resolution is used to compute the dimensions of the search windows. By default, this resolution is rounded
-#' to 5 decimal places. The number of decimal places can be changed using this parameter. Increasing this value is also a work-around for errors
+#' to 5 decimal places. The number of decimal places can be changed using this parameter. Increasing this value is also a work-around for warnings
 #' relating to non-square cell sizes.
 #'
 #' @references Popescu, S. C., & Wynne, R. H. (2004). Seeing the trees in the forest. \emph{Photogrammetric Engineering & Remote Sensing, 70}(5), 589-604.
@@ -58,18 +58,15 @@ vwf <- function(CHM, winFun, minHeight = NULL, warnings = TRUE, minWinNeib = "qu
   if(!minWinNeib %in% c("queen", "rook")) stop("Invalid input for 'minWinNeib'. Set to 'queen' or 'rook'")
 
   # Check for unprojected rasters
-  CHM_crs <- terra::crs(CHM)
-  CHM_cs <- regmatches(CHM_crs, gregexpr("(?<=CS\\[).*?(?=,)", CHM_crs, perl=T))[[1]]
-  if(warnings && length(CHM_cs) > 0 && !CHM_cs == "Cartesian") warning(
-    "Detected coordinate system: '", CHM_cs ,"'.\n",
-    "It is recommended that the CHM be projected using a cartesian coordinate system"
-  )
+  if(warnings && (terra::crs(CHM) != "") &&  terra::is.lonlat(CHM)){
+    warning("The input CHM has a lat/lon coordinate system. Projected coordinate systems are recommended.")
+  }
 
   # Round out CHM resolution to fifth decimal and check that CHM has square cells.
   # Rounding is necessary since a lack of precision in CHM cell size call cause the
   # 'focalWeight' function to misbehave
   res_round <- round(terra::res(CHM), resolution_round)
-  if(res_round[1] != res_round[2]) stop("Input 'CHM' does not have square cells")
+  if(warnings && (res_round[1] != res_round[2])) warning("Input 'CHM' does not have square cells")
   if(res_round[1] == 0) stop("The map units of the 'CHM' are too small")
 
   # Ensure that 'minHeight' argument is given a positive value

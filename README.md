@@ -16,7 +16,6 @@ Plowright A. (2023). ForestTools: Tools for Analyzing Remote Sensing Forest Data
 https://github.com/andrew-plowright/ForestTools.
 ```
 
-
 ## Features
 
 ### Detect and segment trees
@@ -27,7 +26,6 @@ Individual trees can be detected and delineated using a combination of the
 CHMs are typically derived from aerial LiDAR or photogrammetric point clouds.
 
 ![image info](./man/figures/treetops_segments.png)
-
 
 ### Compute textural metrics
 
@@ -48,11 +46,57 @@ This library implements techniques developed in the following studies:
 
 The following is a non-exhaustive list of studies that use the ForestTools library. Several of these papers discuss topics such as algorithm parameterization, and may be informative for users of this library.
 
+### 2025
+
+* [Photogrammetry to Assess the Recovery of a Forest: Case Study of Guadalupe Island](https://www.investigacionesgeograficas.unam.mx/index.php/rig/article/view/60914) by Vera-Ortega, L. A., Hinojosa, A., & Luna, L. (2025)
+
+* [Responses of spectral indices to heat and drought differ by tree size in Douglas-fir](https://www.sciencedirect.com/science/article/pii/S2666017224000774) by Waite, O.J., Coops, N.C., Grubinger, S., Isaac-Renton, M., Degner, J., King, J. and Liu, A. (2025)
+
 ### 2024
+
+* [Monitoring climate change impacts on vegetation canopies in Central Europe with passive remote sensing techniques: new insights and perspectives](https://mediatum.ub.tum.de/1743662) by Kloos, S. (2024)
+
+* [A comparison and development of methods for estimating shrub volume using drone-imagery-derived point clouds](https://esajournals.onlinelibrary.wiley.com/doi/full/10.1002/ecs2.4877) by Harrison, G.R., Shrestha, A., Strand, E.K. and Karl, J.W. (2024)
+
+* [From LiDAR data to vegetation biophysical variables](https://ddd.uab.cat/record/299201) by Ventura Rodríguez, P. (2024)
+
+* [A Viewscape-based Approach for Assessing Perceived Walkability in Cities](https://www.researchgate.net/publication/381488507_A_Viewscape-based_Approach_for_Assessing_Perceived_Walkability_in_Cities) by Yang, X., Lindquist, M., Van Berkel, D. and Grace, D. (2024)
+
+* [Use of a Consumer-Grade UAV Laser Scanner to Identify Trees and Estimate Key Tree Attributes across a Point Density Range](https://www.mdpi.com/1999-4907/15/6/899) by Watt, M.S., Jayathunga, S., Hartley, R.J., Pearse, G.D., Massam, P.D., Cajes, D., Steer, B.S. and Estarija, H.J.C. (2024)
+
+* [Mapping tree canopy thermal refugia for birds using biophysical models and LiDAR](https://link.springer.com/article/10.1007/s00484-024-02833-z) by Strydom, L.H., Conradie, S.R., Smit, I.P., Greve, M., Boucher, P.B., Davies, A.B. and McKechnie, A.E. (2024)
+
+* [Early Detection of Southern Pine Beetle Attack by UAV-Collected Multispectral Imagery](https://www.mdpi.com/2072-4292/16/14/2608) by Kanaskie, C.R., Routhier, M.R., Fraser, B.T., Congalton, R.G., Ayres, M.P. and Garnas, J.R. (2024)
+
+* [Characterizing heterogeneous forest structure in ponderosa pine forests via UAS-derived structure from motion](https://link.springer.com/article/10.1007/s10661-024-12703-1) by Hanna, L., Tinkham, W.T., Battaglia, M.A., Vogeler, J.C., Ritter, S.M. and Hoffman, C.M. (2024)
+
+* [Ground-based calibration for remote sensing of biomass in the tallest forests](https://www.sciencedirect.com/science/article/pii/S0378112724001919) by Sillett, S.C., Graham, M.E., Montague, J.P., Antoine, M.E. and Koch, G.W. (2024)
+
+* [Integrating Drone-Based LiDAR and Multispectral Data for Tree Monitoring](https://www.mdpi.com/2504-446X/8/12/744) by Savinelli, B., Tagliabue, G., Vignali, L., Garzonio, R., Gentili, R., Panigada, C. and Rossini, M. (2024)
+
+* [Accounting for the impact of tree size and soil spatial variability on leaching from orchards](https://www.sciencedirect.com/science/article/abs/pii/S0168169924003879) by Turkeltaub, T., Peltin, B., Dagan, A., Paz-Kagan, T., Rave, E. and Baram, S. (2024)
+
+* [Canopy Structural Changes in Black Pine Trees Affected by Pine Processionary Moth Using Drone-Derived Data](https://www.mdpi.com/2504-446X/8/3/75#B38-drones-08-00075) by Domingo, D., Gómez, C., Mauro, F., Houdas, H., Sangüesa-Barreda, G. and Rodríguez-Puerta, F. (2024)
+
+* [Active Remote Sensing Assessment of Biomass Productivity and Canopy Structure of Short-Rotation Coppice American Sycamore (Platanus occidentalis L.)](https://www.proquest.com/docview/3085007539) by Ukachukwu, O.J., Smart, L., Jeziorska, J., Mitasova, H. and King, J.S. (2024)
+
+* [Automated detection of an insect-induced keystone vegetation phenotype using airborne LiDAR](https://besjournals.onlinelibrary.wiley.com/doi/full/10.1111/2041-210X.14298) by Wang, Z., Huben, R., Boucher, P.B., Van Amburg, C., Zeng, J., Chung, N., Wang, J., King, J., Knecht, R.J., Ng'iru, I. and Baraza, A. (2024)
+
+* [Individual urban trees detection based on point clouds derived from UAV-RGB imagery and local maxima algorithm, a case study of Fateh Garden, Iran](https://link.springer.com/article/10.1007/s10668-022-02820-7) by Azizi, Z., & Miraki, M. (2024)
+
+* [Cutting the Greenness Index into 12 Monthly Slices: How Intra-Annual NDVI Dynamics Help Decipher Drought Responses in Mixed Forest Tree Species](https://www.mdpi.com/2072-4292/16/2/389) by Acosta-Hernández, A. C., Pompa-García, M., Martínez-Rivas, J. A., & Vivar-Vivar, E. D. (2024)
+
+* [Coupling UAV and satellite data for tree species identification to map the distribution of Caspian poplar](https://link.springer.com/article/10.1007/s10980-024-01846-8) by Miraki, M., Sohrabi, H., Fatehi, P., & Kneubuehler, M. (2024)
+
+* [Diameter estimation based on LiDAR point clouds at stand level of loblolly pine plantations](https://research.fs.usda.gov/treesearch/679920) by Talmage, C., Weng, Y., Zhang, Y., & Grogan, J. (2024)
+
+* [A Lidar-based Method for 3D Urban Forest Evaluation and Microclimate Assessment, a Case Study in Portland, Oregon, USA](https://essopenarchive.org/doi/full/10.22541/essoar.170914530.09781933) by Yao, X., and Minho, K. (2024)
+
+* [Remote Estimation of Above Ground Forest Biomass Using LiDAR and Drone Imagery](https://ieeexplore.ieee.org/abstract/document/10754716) by Parlato, C., Loftus, N., McGrath, S., Narman, H.S. and Gage, R. (2024)
 
 * [UAV-based LiDAR and Multispectral images for forest trait retrieval](https://meetingorganizer.copernicus.org/EGU24/EGU24-19456.html) by Vignali, L., Panigada, C., Tagliabue, G., Savinelli, B., Garzonio, R., Colombo, & Rossini, M. (2024)
 
-* [Coupling UAV and satellite data for tree species identification to map the distribution of Caspian poplar](https://link.springer.com/article/10.1007/s10980-024-01846-8) by Miraki, M., Sohrabi, H., Fatehi, P., & Kneubuehler, M. (2024)
+* [Use of unmanned aerial vehicles for estimating carbon storage in subtropical shrubland aboveground biomass](https://www.scielo.org.mx/scielo.php?pid=S2007-40182024000200005&script=sci_arttext) by Vega-Puga, M. G., Romo-León, J. R., Castellanos, A. E., Castillo-Gámez, R. A., & Garatuza-Payán, J. (2024)
 
 ### 2023
 

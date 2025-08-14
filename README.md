@@ -46,6 +46,9 @@ This library implements techniques developed in the following studies:
 
 The following is a non-exhaustive list of studies that use the ForestTools library. Several of these papers discuss topics such as algorithm parameterization, and may be informative for users of this library.
 
+> 📈 [LiDAR Applications in Forest Inventories](https://storymaps.arcgis.com/stories/70d46fc80a594e4f9701096e9dc22160)  
+> Check out this ArcGIS StoryMap showcasing a forest inventory analysis in Kisatchie National Forest (Louisiana, USA) using the tree detection and segmentation algorithms implemented in ForestTools.
+
 ### 2025
 
 * [Photogrammetry to Assess the Recovery of a Forest: Case Study of Guadalupe Island](https://www.investigacionesgeograficas.unam.mx/index.php/rig/article/view/60914) by Vera-Ortega, L. A., Hinojosa, A., & Luna, L. (2025)

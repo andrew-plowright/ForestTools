@@ -1,8 +1,12 @@
 # ForestTools
 
+## ForestTools 1.0.4 (2025-12-24)
+
+Removed the `imager` dependency, which appears to be deprecated. Instead, the [CImg](https://cimg.eu/reference/overview.html) header file `CImg.h` is now bundled with `ForestTools`, which provides the watershed segmentation functionality used by `mcws`.
+
 ## ForestTools 1.0.3 (2024-01-15)
 
-Updated compability with newest `GLCMTextures` package.
+Updated compatibility with newest `GLCMTextures` package.
 
 ## ForestTools 1.0.2 (2024-04-27)
 

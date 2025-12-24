@@ -32,7 +32,7 @@ a \code{rook} neighborhood.}
 \item{IDfield}{character. Name of field for unique tree identifier}
 
 \item{resolution_round}{integer. The raster resolution is used to compute the dimensions of the search windows. By default, this resolution is rounded
-to 5 decimal places. The number of decimal places can be changed using this parameter. Increasing this value is also a work-around for errors
+to 5 decimal places. The number of decimal places can be changed using this parameter. Increasing this value is also a work-around for warnings
 relating to non-square cell sizes.}
 }
 \value{

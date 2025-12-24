@@ -2,13 +2,13 @@
 
 ### Local development environment
 - OS: Linux Mint version 22
-- R version: 4.3.3
+- R version: 4.5.1
 - Locale: en_CA.UTF-8
 - Compiler: gcc (Ubuntu 13.3.0-6ubuntu2~24.04) 13.3.0
 
 ### Remote environments
-* Windows Server 2022 via r-hub
 * Windows Server 2022 via check_win_devel
+* Windows Server 2022 via r-hub
 * Ubuntu Linux 24.04 via r-hub
 * macOS 13.7.2 via r-hub
 * macOS 14.7.2 via r-hub

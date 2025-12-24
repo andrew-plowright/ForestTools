@@ -1,6 +1,6 @@
 #' Marker-Controlled Watershed Segmentation
 #'
-#' This function implements the \link[imager]{watershed} function to segment (i.e.: outline) crowns from a CHM (canopy height model).
+#' This function implements the watershed function to segment (i.e.: outline) crowns from a CHM (canopy height model).
 #' Segmentation is guided by the point locations of treetops, typically detected using the \link{vwf} function.
 #' See Meyer & Beucher (1990) for details on watershed segmentation.
 #'
@@ -92,21 +92,24 @@ mcws <- function(treetops, CHM, minHeight = 0, format = "raster", OSGeoPath = NU
   CHM_mask <- CHM < minHeight
   CHM_mask[is.na(CHM)] <- TRUE
 
-  # Replace NAs temporarily with 0s (the 'imager' functions cannot handle NA values)
+  # Replace NAs temporarily with 0s (the watershed function cannot handle NA values)
   CHM[CHM_mask] <- 0
 
   # Convert treetops to a raster
   treetops_ras <- terra::rasterize(treetops, CHM, field = IDfield, background = 0)
-
-  # Convert data to 'img' files
-  CHM_img   <- imager::as.cimg(terra::as.matrix(CHM, wide = TRUE))
-  ttops_img <- imager::as.cimg(terra::as.matrix(treetops_ras, wide = TRUE))
-
-  # Apply watershed function
-  ws_img <- imager::watershed(ttops_img, CHM_img)
-
-  # Convert watershed back to raster
-  ws_ras <- terra::rast(as.matrix(ws_img), extent = terra::rast(CHM), crs = terra::crs(CHM))
+  
+  # Convert terra rasters to matrices
+  seeds_mat    <- terra::as.matrix(treetops_ras, wide = TRUE)
+  priority_mat <- terra::as.matrix(CHM, wide = TRUE)
+  
+  # Call the C++ watershed function
+  ws_mat <- watershed_cpp(seeds_mat, priority_mat)
+  
+  # Convert back to SpatRaster
+  ws_ras <- terra::rast(treetops_ras)       # template
+  terra::values(ws_ras) <- ws_mat
+  
+  # Apply mask
   ws_ras[CHM_mask] <- NA
 
 

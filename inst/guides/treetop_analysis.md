@@ -104,8 +104,7 @@ where each crown outline is represented by a *segment*. Once a set of
 treetops have been detected from a canopy height model, the `mcws`
 function can be used for this purpose.
 
-The `mcws` function implements the `watershed` algorithm from the
-[imager](https://cran.r-project.org/package=imager/imager.pdf) library.
+The `mcws` function implements the `watershed` algorithm from the `imager` library.
 Watershed algorithms are frequently used in topographical analysis to
 outline drainage basins. Given the morphological similarity between an
 inverted canopy and a terrain model, this same process can be used to

@@ -34,7 +34,7 @@ crowns as either a \code{SpatRaster} class object, in which distinct crowns are 
 is represented by a polygon.
 }
 \description{
-This function implements the \link[imager]{watershed} function to segment (i.e.: outline) crowns from a CHM (canopy height model).
+This function implements the watershed function to segment (i.e.: outline) crowns from a CHM (canopy height model).
 Segmentation is guided by the point locations of treetops, typically detected using the \link{vwf} function.
 See Meyer & Beucher (1990) for details on watershed segmentation.
 }

@@ -7,7 +7,7 @@ Authors@R: c(
     person("Andrew", "Plowright", email = "andrew.plowright@alumni.ubc.ca", role = c("aut", "cre")),
     person("Jean-Romain", "Roussel", email = "jean-romain.roussel.1@ulaval.ca", role = c("ctb"), comment = "Contributed to segment-based GLCM segmentation"))
 Description: Tools for analyzing remote sensing forest data, including functions for detecting treetops from canopy models, outlining tree crowns, and calculating textural metrics.
-Depends: R (>= 4.5)
+Depends: R (>= 4.4)
 License: GPL-3
 Encoding: UTF-8
 LazyData: true

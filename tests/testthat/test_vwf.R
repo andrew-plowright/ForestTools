@@ -41,6 +41,11 @@
 
   test_that("vwf: produces warnings for lat/lon CRS", {
 
+    # This test fails when on rhub's macOS checks since
+    # its environment doesn't install and configure PROJ
+    # correctly
+    skip_on_os("mac")
+    
     win_fun <- function(x){x * 0.05 + 0.8}
     min_hgt <- 1
 
